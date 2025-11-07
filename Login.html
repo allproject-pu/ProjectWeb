@@ -20,6 +20,7 @@
     </header>
     <main class="login-main">
         <h2>เข้าสู่ระบบ</h2>
+
         <form action="/login-process" method="POST" class="login-form">
 
             <div class="form-group">
@@ -32,11 +33,22 @@
                 <a href="/forgot-password" class="forgot-password-link">ลืมรหัสผ่าน?</a>
             </div>
 
+
             <input class="btn" type="submit" value="เข้าสู่ระบบ">
             <button class="btn btn--white" type="button" onclick="'/register'">ลงทะเบียน</button>
         </form>
     </main>
-    <footer></footer>
+
+    <footer class="login-footer">
+        <div class="footer-links">
+            <a href="/terms">ข้อตกลงการใช้งาน</a>
+            <span>|</span>
+            <a href="/privacy">นโยบายความเป็นส่วนตัว</a>
+        </div>
+        <p class="copyright-text">
+            &copy; 2025 MODJOY. All rights reserved.
+        </p>
+    </footer>
 </body>
 
 </html>

@@ -71,18 +71,9 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 15px; /* นี่คือตัวที่มาแทน <br> ครับ! */
+    gap: 15px;
     width: 100%;
 }
-
-/* label {
-    color: #000;
-    text-align: center;
-    font-size: 13px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: normal;
-} */
 
 /* Button */
 .btn {
@@ -152,6 +143,7 @@ body {
 }
 
 .forgot-password-link {
+    width: 100%;
     text-align: right;
     font-size: 13px;
     font-weight: 400;
@@ -163,4 +155,46 @@ body {
 .forgot-password-link:hover {
     text-decoration: underline;
     color: var(--primary-color);
+}
+
+/* Footer */
+.login-footer {
+    width: 100%;
+    padding: 30px 20px;
+    padding-bottom: calc(30px + env(safe-area-inset-bottom));
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.footer-links {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.footer-links a {
+    color: var(--text-secondary); /* สีเทาอ่อน */
+    font-size: 13px;
+    font-weight: 400;
+    text-decoration: none;
+}
+
+.footer-links a:hover {
+    color: var(--primary-color); /* สีส้ม */
+    text-decoration: underline;
+}
+
+.footer-links span {
+    color: var(--text-secondary);
+    font-size: 13px;
+}
+
+.copyright-text {
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 400;
+    text-align: center;
 }
