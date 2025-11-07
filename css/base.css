@@ -36,3 +36,8 @@
     color: var(--text-light);
     border-color: var(--primary-color-light);
 }
+
+.a-btn {
+    display: flex;
+    justify-content: center;
+}

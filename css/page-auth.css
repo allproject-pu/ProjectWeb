@@ -98,7 +98,6 @@ body {
     border-radius: 8px;
     color: var(--text-dark);
     font-size: 16px;
-    font-weight: 600;
     height: 40px;
     width: 100%;
     padding: 15px;
@@ -172,21 +171,12 @@ body {
     width: 90%;
     max-width: 450px;
     margin: 0 auto;
-    /* จัดให้อยู่ตรงกลาง */
     padding: 0px 20px;
     text-align: center;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 15px;
-    /* ระยะห่างระหว่าง <p> และ <a> */
-}
-
-.message-container p {
-    font-size: 16px;
-    color: #333;
-    /* ใช้สีเทาเข้มเพื่อให้อ่านง่าย */
-    line-height: 1.6;
 }
 
 /* สไตล์สำหรับลิงก์อีเมลแอดมิน */
@@ -194,17 +184,13 @@ body {
     font-size: 18px;
     font-weight: 600;
     color: var(--primary-color);
-    /* ใช้สีส้มหลัก */
     text-decoration: none;
     word-break: break-all;
-    /* ป้องกันอีเมลยาวล้นจอ */
 
     padding: 10px 15px;
     background-color: #fafafa;
-    /* พื้นหลังสีเทาอ่อนมาก */
     border-radius: 8px;
     border: 1px dashed var(--border-color);
-    /* ใช้เส้นประให้ดูเด่น */
     transition: background-color 0.2s;
 }
 
@@ -217,24 +203,18 @@ body {
     margin-top: 25px;
 }
 
-.a-btn {
-    display: flex;
-    justify-content: center;
-}
-
 /* ============================================
   สไตล์สำหรับหน้าลงทะเบียน
 ============================================
 */
 /* main */
-.Register-main {
+.register-main {
     text-align: center;
     font-size: 24px;
     padding: 20px 0;
 }
 
-
-.Register-main h2 {
+.register-main h2 {
     color: var(--primary-color);
     font-size: 28px;
     font-weight: 700;
@@ -248,9 +228,11 @@ body {
     gap: 15px;
     width: 100%;
 }
+
 .form-group:first-of-type {
     margin-bottom: 0;
 }
+
 .permission {
     font-size: 12px;
     color: var(--text-secondary);
@@ -258,10 +240,12 @@ body {
     max-width: 400px;
     text-align: left;
 }
+
 .or-login {
     font-size: 14px;
     color: var(--text-secondary);
 }
+
 .alreadyhave {
     font-size: 14px;
     color: var(--primary-color);
@@ -279,29 +263,24 @@ body {
 }
 
 .name-group label {
+    display: block;
     color: var(--text-dark);
     font-size: 13px;
     font-weight: 400;
-    text-align: left;
     margin-bottom: 5px;
-    width: 100%;
 }
-.usenamebox {
-    text-align: left;
-    align-items: center;
-    width: 46%;
-}
-.lastnamebox {
-    text-align: left;
-    width: 46%;
-}
+
 .name-group input {
     border: var(--border-color) solid 1px;
     border-radius: 8px;
     color: var(--text-dark);
     font-size: 16px;
-    font-weight: 600;
     height: 40px;
     width: 100%;
     padding: 15px;
+}
+
+.usenamebox,.lastnamebox {
+    text-align: left;
+    width: 48%;
 }
