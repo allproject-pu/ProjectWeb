@@ -89,6 +89,7 @@ body {
     font-size: 16px;
     font-weight: 600;
     cursor: pointer;
+    text-decoration: none;
     transition: all 0.2s;
 }
 
@@ -176,14 +177,16 @@ body {
 }
 
 .footer-links a {
-    color: var(--text-secondary); /* สีเทาอ่อน */
+    color: var(--text-secondary);
+    /* สีเทาอ่อน */
     font-size: 13px;
     font-weight: 400;
     text-decoration: none;
 }
 
 .footer-links a:hover {
-    color: var(--primary-color); /* สีส้ม */
+    color: var(--primary-color);
+    /* สีส้ม */
     text-decoration: underline;
 }
 
@@ -197,4 +200,63 @@ body {
     font-size: 12px;
     font-weight: 400;
     text-align: center;
+}
+
+/* ============================================
+  สไตล์สำหรับหน้าลืมรหัสผ่าน
+============================================
+*/
+
+.message-container {
+    width: 90%;
+    max-width: 450px;
+    margin: 0 auto;
+    /* จัดให้อยู่ตรงกลาง */
+    padding: 0px 20px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    /* ระยะห่างระหว่าง <p> และ <a> */
+}
+
+.message-container p {
+    font-size: 16px;
+    color: #333;
+    /* ใช้สีเทาเข้มเพื่อให้อ่านง่าย */
+    line-height: 1.6;
+}
+
+/* สไตล์สำหรับลิงก์อีเมลแอดมิน */
+.admin-email-link {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--primary-color);
+    /* ใช้สีส้มหลัก */
+    text-decoration: none;
+    word-break: break-all;
+    /* ป้องกันอีเมลยาวล้นจอ */
+
+    padding: 10px 15px;
+    background-color: #fafafa;
+    /* พื้นหลังสีเทาอ่อนมาก */
+    border-radius: 8px;
+    border: 1px dashed var(--border-color);
+    /* ใช้เส้นประให้ดูเด่น */
+    transition: background-color 0.2s;
+}
+
+.admin-email-link:hover {
+    text-decoration: underline;
+    background-color: #f0f0f0;
+}
+
+#back-to-login {
+    margin-top: 25px;
+}
+
+.a-btn {
+    display: flex;
+    justify-content: center;
 }
