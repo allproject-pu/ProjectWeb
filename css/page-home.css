@@ -183,6 +183,17 @@ body {
     width: 100%;
     display: flex;
     justify-content: space-between;
+    flex-wrap: wrap
+}
+
+.frist-row-item-body h2 {
+    text-align: left;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
 }
 
 .second-row-item-body span {
@@ -191,6 +202,15 @@ body {
     gap: 0px;
 }
 
+.btn-room-item {
+    border: none;
+    width: 100%;
+    height: 35px;
+    background-image: linear-gradient(180deg, var(--primary-color-dark) -1.34%, var(--primary-gradient-start) 119.5%);
+    color: white;
+    font-size: 20px;
+    font-weight: 700;
+}
 
 /* add-home-header */
 .add-home-header {
