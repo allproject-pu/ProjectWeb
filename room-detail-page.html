@@ -4,9 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>MODJOY - หน้าแรก</title>
-    <link rel="stylesheet" href="./css/page-addroom.css">
+    <title>MODJOY - รายละเอียดกิจกรรม</title>
+    
     <link rel="stylesheet" href="./css/base.css">
+    <link rel="stylesheet" href="./css/page-add-room.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700&family=Inria+Sans&display=swap"
@@ -16,110 +17,108 @@
 
 <body>
     <header class="add-home-header">
-        <span class="material-symbols-outlined">
-            arrow_back_ios
-        </span>
+        <a class="material-symbols-outlined" href="/home-page.html">arrow_back_ios</a>
         <h2>รายละเอียดกิจกรรม</h2>
     </header>
+
     <main class="add-home-main">
-        <section class="add-room-container">
-            <div class="add-cover-upload">
-                <div class="add-cover-box">
-                    <img src="C:\Term2\Modjoy\ProjectWeb\Resource\img\bangmod.png" alt="background image" class="cover-image-display">
-                </div>
-                <p class="add-cover-hint">*เพิ่มรูปภาพกิจกรรมหรือสถานที่</p>
+        <div class="add-cover-upload">
+            <div class="add-cover-box">
+                <img src="\Resource\img\bangmod.png" alt="background image" class="cover-image-display">
+            </div>
+        </div>
+
+        <form action="/add-room.html" class="add-room-form">
+
+            <div class="form-group">
+                <label for="room-id">ไอดี</label>
+                66080658656
             </div>
 
-            <form action="/add-room.html" class="add-room-form">
+            <div class="form-group">
+                <label for="room-name">ชื่อห้อง</label>
+                อ่านแคลกันครับพวกลิง
+            </div>
 
-                <div class="form-group">
-                    <label for="room-id">ไอดี</label>
-                    66080658656
+            <div class="form-group">
+                <label for="place-name">ชื่อสถานที่</label>
+                <div id="tag-list-item">
+                    <span>N10</span>
                 </div>
+            </div>
 
-                <div class="form-group">
-                    <label for="room-name">ชื่อห้อง</label>
-                    อ่านแคลกันครับพวกลิง
+            <div class="form-group">
+                <label for="time">เวลา</label>
+                20:00
+                <span class="inline-separator">-</span>
+                21:00
+            </div>
+
+            <div class="form-group">
+                <label>วัน / เดือน / ปี</label>
+                8 / 11 / 2025
+            </div>
+
+            <div class="form-group">
+                <label for="detail">รายละเอียด</label>
+                <textarea readonly id="detail" name="detail"
+                    class="detail-textarea">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ullam, quia. Labore aliquid provident ut eaque commodi minus, quaerat sequi fuga sapiente magnam ex possimus quod error totam saepe et vitae accusamus non laboriosam obcaecati perspiciatis est? Accusantium fuga blanditiis eveniet provident quidem? Quod, at! Aspernatur iusto enim voluptatibus assumenda accusantium!</textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="tag">Tag :</label>
+                <div id="tag-list-item">
+                    <span>อ่านหนังสือ</span><span>calculus</span>
                 </div>
+            </div>
 
-                 <div class="form-group">
-                    <label for="place-name">ชื่อสถานที่</label>
-                    <div id="tag-list-item">
-                            <span>N10</span>
+            <div class="form-group">
+                <label for="owner">ผู้สร้าง : </label>
+                <div class="member-room-box">
+                    <div class="profile-member">
+                        <img src="\Resource\img\profile.jpg" alt="profile-image">
+                        สมศรี ใจดี
+                    </div>
+                    <div class="creditperson">
+                        100
+                        <img src="\Resource\img\credit.png" alt="credit-image">
                     </div>
                 </div>
+            </div>
 
-                <div class="form-group">
-                    <label for="time">เวลา</label>
-                        20:00
-                        <span class="inline-separator">-</span>
-                        21:00
-                </div>
-
-                <div class="form-group">
-                    <label>วัน / เดือน / ปี</label>
-                        8 / 11 / 2025
-                </div>
-
-                <div class="form-group">
-                    <label for="detail">รายละเอียด</label>
-                    <textarea id="detail" name="detail" class="detail-textarea">ผมอยากรู้ว่าคุณรู้สึกอย่างไร ผมมีแค่เท่านี้ ผมให้ได้แค่นี้ TT</textarea>
-                </div>
-
-                <div class="form-group">
-                    <label for="tag">Tag :</label>
-                    <div id="tag-list-item">
-                            <span>อ่านหนังสือ</span><span>calculus</span>
+            <div class="form-group">
+                <label for="member">ผู้เข้าร่วม : </label>
+                <div class="member-room-box">
+                    <div class="profile-member">
+                        <img src="\Resource\img\profile.jpg" alt="profile-image">
+                        สมศรี ใจดี
+                    </div>
+                    <div class="creditperson">
+                        100
+                        <img src="\Resource\img\credit.png" alt="credit-image">
                     </div>
                 </div>
-
-                <div class="form-group">
-                    <label for="owner">ผู้สร้าง : </label>
-                    <div class="member-room-box">
-                        <div class="profile-member">
-                            <img src="C:\Term2\Modjoy\ProjectWeb\Resource\img\profile.jpg" alt="profile-image">
-                            สมศรี ใจดี
-                        </div>
-                        <div class="creditperson">
-                            100
-                            <img src="C:\Term2\Modjoy\ProjectWeb\Resource\img\credit.png" alt="credit-image">
-                        </div>
+                <div class="member-room-box">
+                    <div class="profile-member">
+                        <img src="\Resource\img\profile.jpg" alt="profile-image">
+                        สมศรี ใจดี
+                    </div>
+                    <div class="creditperson">
+                        100
+                        <img src="\Resource\img\credit.png" alt="credit-image">
                     </div>
                 </div>
+            </div>
 
-                <div class="form-group">
-                    <label for="member">ผู้เข้าร่วม : </label>
-                    <div class="member-room-box">
-                        <div class="profile-member">
-                            <img src="C:\Term2\Modjoy\ProjectWeb\Resource\img\profile.jpg" alt="profile-image">
-                            สมศรี ใจดี
-                        </div>
-                        <div class="creditperson">
-                            100
-                            <img src="C:\Term2\Modjoy\ProjectWeb\Resource\img\credit.png" alt="credit-image">
-                        </div>
-                    </div>
-                    <div class="member-room-box">
-                        <div class="profile-member">
-                            <img src="C:\Term2\Modjoy\ProjectWeb\Resource\img\profile.jpg" alt="profile-image">
-                            สมศรี ใจดี
-                        </div>
-                        <div class="creditperson">
-                            100
-                            <img src="C:\Term2\Modjoy\ProjectWeb\Resource\img\credit.png" alt="credit-image">
-                        </div>
-                    </div>
-                </div>
 
-                
-                
-                <div class="btn-box">
-                    <button type="submit" class="btn">เข้าร่วม</button>
-                </div>
 
-            </form>
-        </section>
+            <div class="btn-box">
+                <button type="submit" class="btn">เข้าร่วม</button>
+            </div>
+
+        </form>
     </main>
+
     <footer class="login-footer">
         <div class="footer-links">
             <a href="/terms">ข้อตกลงการใช้งาน</a>
