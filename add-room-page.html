@@ -43,19 +43,19 @@
 
             <div class="form-group">
                 <label for="place-name">ชื่อสถานที่</label>
-                <input type="text" id="place-name" name="place-name" />
+                <input type="text" id="place-name" name="place-name">
             </div>
 
             <div class="form-group time-input-group">
-                <label for="time">เวลา</label>
-                <input type="time" class="time-input" placeholder="เริ่ม">
+                <label for="start-time">เวลา</label>
+                <input type="time" id="start-time" class="time-input" name="start_time" placeholder="เริ่ม">
                 <span class="inline-separator">-</span>
-                <input type="time" class="time-input" placeholder="สิ้นสุด" />
+                <input type="time" id="end_time" class="time-input" name="end_time" placeholder="สิ้นสุด">
             </div>
 
             <div class="form-group">
-                <label>วัน / เดือน / ปี</label>
-                <input type="date" class="date-input" placeholder="วัน">
+                <label for="date-input">วัน / เดือน / ปี</label>
+                <input type="date" id="date-input" class="date-input" name="activity_date" placeholder="วัน">
             </div>
 
             <div class="form-group">
@@ -66,18 +66,18 @@
             <div class="form-group">
                 <label for="tag">Tag :</label>
                 <div class="tag-group">
-                    <input type="text" id="tag" name="tag" />
-                    <button class="btn">+</button>
+                    <input type="text" id="tag" name="tag">
+                    <button type="button" class="btn">+</button>
                 </div>
             </div>
 
             <div class="btn-box">
                 <button type="submit" class="btn">สร้าง</button>
             </div>
-
         </form>
 
     </main>
+    
     <footer class="login-footer">
         <div class="footer-links">
             <a href="/terms">ข้อตกลงการใช้งาน</a>

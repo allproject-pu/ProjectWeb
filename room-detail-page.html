@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>MODJOY - รายละเอียดกิจกรรม</title>
-    
+
     <link rel="stylesheet" href="./css/base.css">
     <link rel="stylesheet" href="./css/page-add-room.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -22,58 +22,55 @@
     </header>
 
     <main class="add-home-main">
-        <div class="add-cover-upload">
-            <div class="add-cover-box">
-                <img src="\Resource\img\bangmod.png" alt="background image" class="cover-image-display">
-            </div>
+        <div class="add-cover-box">
+            <img src="\Resource\img\bangmod.png" alt="background image" class="cover-image-display">
         </div>
 
-        <form action="/add-room.html" class="detail-room-form">
-
+        <form action="/join-room" class="detail-room-form">
+            <input type="hidden" name="room_id" value="66080658656">
             <div class="form-group">
-                <label for="room-id">ไอดี</label>
+                <strong>ไอดี</strong>
                 66080658656
             </div>
 
             <div class="form-group">
-                <label for="room-name">ชื่อห้อง</label>
+                <strong>ชื่อห้อง</strong>
                 อ่านแคลกันครับพวกลิง
             </div>
 
             <div class="form-group">
-                <label for="place-name">ชื่อสถานที่</label>
-                <div id="tag-list-item">
-                    <span>N10</span>
-                </div>
+                <strong>ชื่อสถานที่</strong>
+                <span id="address-activity">ห้องสมุด N10</span>
             </div>
 
             <div class="form-group">
-                <label for="time">เวลา</label>
+                <strong>เวลา</strong>
                 20:00
                 <span class="inline-separator">-</span>
                 21:00
             </div>
 
             <div class="form-group">
-                <label>วัน / เดือน / ปี</label>
+                <strong>วัน / เดือน / ปี</strong>
                 8 / 11 / 2025
             </div>
 
             <div class="form-group">
-                <label for="detail">รายละเอียด</label>
+                <strong>รายละเอียด</strong>
                 <textarea readonly id="detail" name="detail"
                     class="detail-textarea">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ullam, quia. Labore aliquid provident ut eaque commodi minus, quaerat sequi fuga sapiente magnam ex possimus quod error totam saepe et vitae accusamus non laboriosam obcaecati perspiciatis est? Accusantium fuga blanditiis eveniet provident quidem? Quod, at! Aspernatur iusto enim voluptatibus assumenda accusantium!</textarea>
             </div>
 
             <div class="form-group">
-                <label for="tag">Tag :</label>
+                <strong>Tag :</strong>
                 <div id="tag-list-item">
                     <span>อ่านหนังสือ</span><span>calculus</span>
                 </div>
             </div>
 
             <div class="form-group">
-                <label for="owner">ผู้สร้าง : </label>
+                <strong>ผู้สร้าง : </strong>
+
                 <div class="member-room-box">
                     <div class="profile-member">
                         <img src="\Resource\img\profile.jpg" alt="profile-image">
@@ -87,7 +84,7 @@
             </div>
 
             <div class="form-group">
-                <label for="member">ผู้เข้าร่วม : </label>
+                <strong>ผู้เข้าร่วม : </strong>
                 <div class="member-room-box">
                     <div class="profile-member">
                         <img src="\Resource\img\profile.jpg" alt="profile-image">
@@ -109,8 +106,6 @@
                     </div>
                 </div>
             </div>
-
-
 
             <div class="btn-box">
                 <button type="submit" class="btn">เข้าร่วม</button>

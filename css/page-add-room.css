@@ -252,6 +252,7 @@ body {
     border: #FA5A16 solid 1px;
     border-radius: 3.5px;
     padding: 0px 10px;
+    margin-left: 5px;
 }
 
 .member-room-box {
@@ -306,4 +307,11 @@ body {
     overflow: auto;
     border: none;
     resize: none;
+}
+
+strong {
+    display: block;
+    font-weight: 600;
+    font-size: 18px;
+    margin-bottom: 2px;
 }
