@@ -34,11 +34,16 @@ body {
 }
 
 .add-home-header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+
     width: 100%;
     padding-top: calc(30px + env(safe-area-inset-top));
     padding-left: calc(20px + env(safe-area-inset-left));
     padding-right: calc(20px + env(safe-area-inset-right));
     padding-bottom: 18px;
+
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -183,58 +188,6 @@ body {
     border-radius: 10px 0px 0px 10px;
 }
 
-/* footer */
-.login-footer {
-    width: 100%;
-    padding: 30px 20px;
-    padding-bottom: calc(30px + env(safe-area-inset-bottom));
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 12px;
-}
-
-.footer-links {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.footer-links a {
-    color: var(--text-secondary);
-    /* สีเทาอ่อน */
-    font-size: 13px;
-    font-weight: 400;
-    text-decoration: none;
-}
-
-.footer-links a:hover {
-    color: var(--primary-color);
-    /* สีส้ม */
-    text-decoration: underline;
-}
-
-.footer-links span {
-    color: var(--text-secondary);
-    font-size: 13px;
-}
-
-.copyright-text {
-    color: var(--text-secondary);
-    font-size: 12px;
-    font-weight: 400;
-    text-align: center;
-}
-
-.hidden-file-input {
-    display: none;
-}
-
-.add-cover-label {
-    cursor: pointer;
-}
-
 /* more add room */
 .address-activity {
     color: #FA5A16;
@@ -326,4 +279,56 @@ strong {
     background-color: transparent;
     font-size: 20px;
     color: #FA4616;
+}
+
+/* footer */
+.login-footer {
+    width: 100%;
+    padding: 30px 20px;
+    padding-bottom: calc(30px + env(safe-area-inset-bottom));
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.footer-links {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.footer-links a {
+    color: var(--text-secondary);
+    /* สีเทาอ่อน */
+    font-size: 13px;
+    font-weight: 400;
+    text-decoration: none;
+}
+
+.footer-links a:hover {
+    color: var(--primary-color);
+    /* สีส้ม */
+    text-decoration: underline;
+}
+
+.footer-links span {
+    color: var(--text-secondary);
+    font-size: 13px;
+}
+
+.copyright-text {
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 400;
+    text-align: center;
+}
+
+.hidden-file-input {
+    display: none;
+}
+
+.add-cover-label {
+    cursor: pointer;
 }
