@@ -99,13 +99,14 @@ body {
 }
 
 .search-bar .material-symbols-outlined {
-    font-size: 24px;
+    font-size: 22px;
     position: absolute;
     right: 5px;
-    top: 3px;
+    top: 4px;
+    color: var(--text-secondary);
 }
 
-#search-input {
+.search-input {
     width: 100%;
     height: 100%;
     border: 1px solid var(--border-color);
@@ -114,12 +115,20 @@ body {
     font-size: 14px;
 }
 
+#filter-open-btn {
+    color: var(--text-secondary);
+}
+
+#filter-open-btn:hover {
+    color: black;
+}
+
 /* room-item */
 .rooms-List {
     width: 100%;
     display: grid;
     gap: 20px;
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
 }
 
 .room-item {
@@ -336,163 +345,159 @@ body {
     cursor: pointer;
 }
 
-/* --- CSS สำหรับ Sidebar --- */
-
-/* ม่าน (Overlay) */
-.overlay {
+/* --- CSS สำหรับ Filter Modal --- */
+/* ตัว Modal (กล่องขาว) */
+.filter-modal {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    /* สีดำโปร่งแสง 50% */
-    z-index: 1001;
+    top: 50%;
+    left: 50%;
+    width: 90%;
+    max-width: 450px;
+    max-height: 80vh;
+
+    background-color: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    z-index: 1002;
+
+    /* ซ่อนไว้ก่อน (มี transition) */
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+    transform: translate(-50%, -50%) scale(0.9);
+    transition: opacity 0.2s ease-out, transform 0.2s ease-out, visibility 0.2s;
 }
 
-.overlay.active {
+/* State "Active" (แสดง Modal) */
+.filter-modal.active {
     opacity: 1;
     visibility: visible;
+    transform: translate(-50%, -50%) scale(1);
 }
 
-/* ตัว Sidebar (กล่องหลัก) */
-.side-bar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100vh;
-    width: 300px;
-    background-color: #ffffff;
-    z-index: 1002;
-    display: flex;
-    flex-direction: column;
-
-    /* ซ่อนไว้ด้านซ้าย (Slide out) */
-    transform: translateX(-100%);
-    transition: transform 0.3s ease-in-out;
-}
-
-/* State "Active" (แสดง Sidebar) */
-.side-bar.active {
-    transform: translateX(0);
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-}
-
-/*ส่วนหัวโปรไฟล์ */
-.sidebar-header {
-    padding: calc(20px + env(safe-area-inset-top)) 20px 20px 20px;
-    color: var(--text-light);
-    background-image: url('/Resource/img/header-sidebar.png'), linear-gradient(235deg, #FA8816 0%, #FA4616 98.14%);
-    background-repeat: no-repeat;
-    background-position: top;
-    background-size: contain;
-}
-
-.sidebar-close-btn {
-    position: absolute;
-    top: calc(15px + env(safe-area-inset-top));
-    right: 15px;
-    color: var(--text-light);
-}
-
-.sidebar-profile-img {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    overflow: hidden;
-    border: 3px solid rgba(255, 255, 255, 0.8);
-}
-
-.sidebar-name-group {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 8px;
-}
-
-.sidebar-profile-img img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.sidebar-header h3 {
-    margin: 5px 0;
-    font-size: 24px;
-    overflow-wrap: anywhere;
-}
-
-.sidebar-header .creditperson {
-    display: flex;
-    align-items: center;
-    color: var(--text-light);
-    font-size: 20px;
-    gap: 5px;
-
-    background-color: #ffffff;
-    border-radius: 10px;
-    color: #333;
-    padding: 0px 5px 0px 8px;
-    height: 25px;
-}
-
-.sidebar-header .creditperson img {
-    width: 20px;
-}
-
-.sidebar-header p {
-    font-size: 16px;
-    opacity: 0.9;
-}
-
-
-/* รายการ Menu */
-.sidebar-links {
-    list-style: none;
-    padding: 15px 0;
-    margin: 0;
-    flex-grow: 1;
-    /* ทำให้ส่วนนี้ยืดเต็มที่ */
+/* ส่วนเนื้อหาข้างใน (ทำให้เลื่อนได้) */
+.filter-modal-content {
+    padding: 20px;
     overflow-y: auto;
-    /* ให้เลื่อนได้ถ้าลิงก์เยอะ */
+    /* ทำให้เนื้อหาเลื่อนได้ ถ้าสูงเกิน */
+    max-height: 80vh;
+    /* (ต้องตรงกับ max-height ของแม่) */
+    border-radius: 16px;
 }
 
-.sidebar-links li a {
+/* ส่วนหัว (หัวข้อ + ปุ่มปิด) */
+.filter-header {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 15px;
-    padding: 14px 25px;
-    text-decoration: none;
-    color: #333;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.filter-header h2 {
+    margin: 0;
+    color: var(--primary-color);
+    font-size: 20px;
+}
+
+.filter-close-btn {
+    color: var(--text-secondary);
+}
+
+/* 5. กลุ่มฟอร์ม */
+.filter-group {
+    margin-bottom: 18px;
+}
+
+.filter-group label {
+    display: block;
+    font-weight: 600;
     font-size: 16px;
+    margin-bottom: 6px;
+    color: var(--text-dark);
+}
+
+.filter-group input[type="time"],
+.filter-group input[type="date"],
+.filter-group input[type="number"],
+.filter-group input[type="text"] {
+    width: 100%;
+    height: 38px;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    background-color: #ffffff;
+    padding: 0 10px;
+    font-size: 16px;
+    font-family: var(--font-main);
+    outline: none;
+    box-sizing: border-box;
+}
+
+.filter-search-bar input[type="text"],
+.filter-tag-search input[type="text"] {
+    padding: 0 32px 0 10px;
+}
+
+
+.filter-group-row {
+    display: flex;
+    gap: 10px;
+}
+
+/* ช่องค้นหาใน Filter */
+.filter-search-bar {
+    position: relative;
+    margin-bottom: 10px;
+}
+
+.filter-search-bar .material-symbols-outlined {
+    position: absolute;
+    right: 10px;
+    top: 20%;
+    color: var(--text-secondary);
+    font-size: 22px;
+}
+
+/* 7. กลุ่มปุ่ม Tag (Tag Cloud) */
+.filter-tag-cloud {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.filter-tag-cloud .tag {
+    font-family: var(--font-main);
+    font-size: 14px;
+    padding: 5px 12px;
+    border-radius: 20px;
+    border: 1px solid var(--border-color);
+    background-color: #f9f9f9;
+    color: #555;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+/* สไตล์ปุ่ม Tag "เมื่อถูกเลือก" */
+.filter-tag-cloud .tag:hover {
+    background-color: #eee;
+}
+
+.filter-tag-cloud .tag.active {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: #ffffff;
     font-weight: 500;
 }
 
-.sidebar-links li a:hover {
-    background-color: #f3f3f3;
+.btn-box {
+    text-align: center;
 }
 
-.sidebar-links li a .material-symbols-outlined {
-    color: #777;
+/* ปุ่มค้นหาหลัก (สีส้ม) */
+.filter-submit-btn {
+    margin-top: 5px;
 }
 
-/* ลิงก์ที่กำลัง Active (กดไม่ได้) */
-
-.sidebar-links li.active-page a {
-    color: var(--primary-color);
-    font-weight: 700;
-    background-color: #fff3e8;
-}
-
-.sidebar-links li.active-page a .material-symbols-outlined {
-    color: var(--primary-color);
-}
-
-.sidebar-links li.active-page a {
-    pointer-events: none; /* ปิดการคลิก */
-    cursor: default;      /* เปลี่ยนเมาส์เป็นลูกศรปกติ */
+.filter-submit-btn:hover {
+    opacity: 0.9;
 }
