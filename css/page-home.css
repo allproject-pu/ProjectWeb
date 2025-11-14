@@ -20,6 +20,10 @@
 
 body {
     min-height: 100vh;
+    display: flex;
+    /* 1. ใช้ Flexbox */
+    flex-direction: column;
+    /* 2. เรียงบน-ล่าง */
 }
 
 .material-symbols-outlined {
@@ -69,6 +73,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    flex-grow: 1;
 }
 
 /* search-bar */
@@ -289,9 +294,6 @@ body {
     flex-direction: column;
     align-items: center;
     gap: 12px;
-    
-    position: relative;
-    bottom: 0;
 }
 
 .footer-links {

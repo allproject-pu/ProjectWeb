@@ -21,6 +21,10 @@
 
 body {
     min-height: 100vh;
+    display: flex;
+    /* 1. ใช้ Flexbox */
+    flex-direction: column;
+    /* 2. เรียงบน-ล่าง */
 }
 
 .material-symbols-outlined {
@@ -80,6 +84,7 @@ body {
     padding: 20px;
     display: flex;
     flex-direction: column;
+    flex-grow: 1;
 }
 
 .add-cover-box {
