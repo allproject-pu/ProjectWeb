@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>MODJOY - บัญชีของฉัน</title>
-    <link rel="stylesheet" href="./css/page-add-room.css">
     <link rel="stylesheet" href="./css/base.css">
     <link rel="stylesheet" href="./css\page-home.css">
     <link rel="stylesheet" href="./css/page-my-account.css">
@@ -17,7 +16,7 @@
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 
 <body>
-    <header class="add-home-header">
+    <header class="account-header">
         <a href="/home-page.html" class="material-symbols-outlined">
             arrow_back_ios
         </a>
@@ -35,30 +34,36 @@
                     <p class="name">มดตะนอย กัดเจ็บ</p>
                     <p class="email">Modtanoy.gadj@kmutt.ac.th</p>
                     <p class="profile-education">คณะวิทยาศาสตร์ ระดับชั้นปีที่ 2</p>
+                    <div class="creditperson">
+                        <span>100</span>
+                        <img src=".\Resource\img\credit.png" alt="credit-image">
+                    </div>
                 </div>
             </div>
-            <div class="creditperson-container">
-                <div class="creditperson">
-                <span>100</span>
-                <img src=".\Resource\img\credit.png" alt="credit-image">
-            </div>
+            
             </div>
             
             <div class="form-group">
-                <p>Tag :</p>
+                <strong>Tag ที่สนใจ :</strong>
                 <ul class="tag-list-item">
                     <li>อ่านหนังสือ</li>
                     <li>calculus</li>
                 </ul>
             </div>
 
-            <div class="profile-about">
-                <p class="section-label">เกี่ยวกับฉัน :</p>
-                <textarea class="about-textarea" readonly></textarea>
+            <div class="form-group">
+                <div class="profile-about">
+                    <strong>เกี่ยวกับฉัน :</strong>
+                    <textarea readonly id="about-detail"
+                        class="about-detail-textarea">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ullam, quia. Labore aliquid provident ut eaque commodi minus, quaerat sequi fuga sapiente magnam ex possimus quod error totam saepe et vitae accusamus non laboriosam obcaecati perspiciatis est? Accusantium fuga blanditiis eveniet provident quidem? Quod, at! Aspernatur iusto enim voluptatibus assumenda accusantium!</textarea>
+                </div>
             </div>
-            <div class="profile-button">
-                <button class="btn-edit">แก้ไขโปรไฟล์</button>
-                <button class="btn-history">ประวัติการเข้าร่วม</button>
+
+            <div class="form-group">
+                <div class="profile-button">
+                    <button class="account-mainbtn-edit">แก้ไขโปรไฟล์</button>
+                    <button class="btn-history">ประวัติการเข้าร่วม</button>
+                </div>
             </div>
         </section>
 
