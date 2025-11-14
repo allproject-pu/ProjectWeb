@@ -338,7 +338,7 @@ body {
 
 /* --- CSS สำหรับ Sidebar --- */
 
-/* 1. ม่าน (Overlay) */
+/* ม่าน (Overlay) */
 .overlay {
     position: fixed;
     top: 0;
@@ -358,14 +358,13 @@ body {
     visibility: visible;
 }
 
-/* 2. ตัว Sidebar (กล่องหลัก) */
+/* ตัว Sidebar (กล่องหลัก) */
 .side-bar {
     position: fixed;
     top: 0;
     left: 0;
     height: 100vh;
     width: 300px;
-    /* ความกว้างของ Sidebar (ปรับได้ตามชอบ) */
     background-color: #ffffff;
     z-index: 1002;
     display: flex;
@@ -376,13 +375,13 @@ body {
     transition: transform 0.3s ease-in-out;
 }
 
-/* 3. State "Active" (แสดง Sidebar) */
+/* State "Active" (แสดง Sidebar) */
 .side-bar.active {
     transform: translateX(0);
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
 }
 
-/* 4. ส่วนหัวโปรไฟล์ (สีส้ม) */
+/*ส่วนหัวโปรไฟล์ */
 .sidebar-header {
     padding: calc(20px + env(safe-area-inset-top)) 20px 20px 20px;
     color: var(--text-light);
@@ -451,7 +450,7 @@ body {
 }
 
 
-/* 5. รายการลิงก์ (สีขาว) */
+/* รายการ Menu */
 .sidebar-links {
     list-style: none;
     padding: 15px 0;
@@ -466,7 +465,6 @@ body {
     display: flex;
     align-items: center;
     gap: 15px;
-    /* ระยะห่างระหว่างไอคอนกับข้อความ */
     padding: 14px 25px;
     text-decoration: none;
     color: #333;
@@ -480,4 +478,21 @@ body {
 
 .sidebar-links li a .material-symbols-outlined {
     color: #777;
+}
+
+/* ลิงก์ที่กำลัง Active (กดไม่ได้) */
+
+.sidebar-links li.active-page a {
+    color: var(--primary-color);
+    font-weight: 700;
+    background-color: #fff3e8;
+}
+
+.sidebar-links li.active-page a .material-symbols-outlined {
+    color: var(--primary-color);
+}
+
+.sidebar-links li.active-page a {
+    pointer-events: none; /* ปิดการคลิก */
+    cursor: default;      /* เปลี่ยนเมาส์เป็นลูกศรปกติ */
 }
