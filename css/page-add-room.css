@@ -255,14 +255,7 @@ input[type="time"].time-input{
     resize: none;
 }
 
-strong {
-    display: block;
-    font-weight: 600;
-    font-size: 18px;
-    margin-bottom: 2px;
-}
-
-.form-group label {
+.form-group label ,strong{
     display: block;
     font-weight: 600;
     font-size: 18px;
