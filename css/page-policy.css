@@ -1,0 +1,78 @@
+/* --- สไตล์สำหรับหน้า Policy (เนื้อหา) --- */
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.policy-main {
+    flex-grow: 1; /* ทำให้ <main> ยืดเต็มพื้นที่ที่เหลือ */
+    background-color: #f4f4f4; /* สีพื้นหลังเทาอ่อน */
+    padding: 20px 10px; /* ระยะห่างขอบบนมือถือ */
+}
+
+/* 2. กล่องเนื้อหาหลัก (สำคัญมาก) */
+.policy-container {
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 20px 25px; /* ระยะห่างข้างในกล่อง */
+    
+    /* 3. ทำให้ Responsive */
+    max-width: 900px;  /* กว้างสุด 900px บนจอใหญ่ */
+    margin: 0 auto;    /* จัดกลางจอ (เมื่อจอใหญ่กว่า 900px) */
+    
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.policy-container h1 {
+    font-size: 28px;
+    color: var(--text-dark);
+    margin-bottom: 8px;
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 10px;
+}
+
+.policy-container .last-updated {
+    font-size: 14px;
+    color: var(--text-secondary);
+    font-style: italic;
+    margin-bottom: 20px;
+}
+
+.policy-container h2 {
+    font-size: 22px;
+    color: var(--text-dark);
+    margin-top: 30px;
+    margin-bottom: 10px;
+}
+
+.policy-container h3 {
+    font-size: 18px;
+    color: #333;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.policy-container p,
+.policy-container li {
+    font-size: 16px;
+    line-height: 1.7;
+    color: #444;
+    margin-bottom: 15px;
+}
+
+.policy-container ul,
+.policy-container ol {
+    padding-left: 25px;
+}
+
+/* 5. (ปรับแก้สำหรับจอ Desktop) */
+@media (min-width: 768px) {
+    .policy-main {
+        padding: 30px;
+    }
+    .policy-container {
+        padding: 30px 40px;
+    }
+}

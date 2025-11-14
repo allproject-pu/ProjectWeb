@@ -112,7 +112,7 @@ body {
     border: 1px solid var(--border-color);
     border-radius: 13px;
     padding: 0 27px 0 12px;
-    font-size: 14px;
+    font-size: 16px;
 }
 
 #filter-open-btn {
@@ -120,7 +120,7 @@ body {
 }
 
 #filter-open-btn:hover {
-    color: black;
+    color: #E85A34;
 }
 
 /* room-item */

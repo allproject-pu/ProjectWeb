@@ -1,0 +1,171 @@
+:root {
+    --primary-color: #FA5A16;
+    --primary-color-dark: #FA4616;
+    --primary-color-light: #fb8332;
+    --primary-gradient-start: #FA8816;
+    --text-light: #ffffff;
+    --text-dark: #000;
+    --text-secondary: #AEAEAE;
+    --border-color: #AEAEAE;
+    --font-main: "Kanit", "Inria Sans", sans-serif;
+}
+
+* {
+    font-family: var(--font-main);
+    font-style: normal;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.material-symbols-outlined {
+    text-decoration: none;
+    border: none;
+    background: none;
+}
+
+.material-symbols-outlined:hover {
+    cursor: pointer;
+}
+
+
+/* Header */
+.add-home-header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+
+    width: 100%;
+    padding-top: calc(30px + env(safe-area-inset-top));
+    padding-left: calc(20px + env(safe-area-inset-left));
+    padding-right: calc(20px + env(safe-area-inset-right));
+    padding-bottom: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+    background: linear-gradient(0deg, #FA8816 0.36%, #E85A34 99.64%);
+    background-size: cover;
+    color: var(--text-light);
+    box-shadow: 0 1px 1px 0 rgba(0, 0, 0, .05);
+}
+
+/* กล่องเปล่าฝั่งขวา */
+.add-home-header::after {
+    content: "";
+    width: 24px;
+}
+
+/* ไอคอนลูกศรซ้าย */
+.add-home-header .material-symbols-outlined {
+    color: #ffffff;
+    font-size: 26px;
+    font-weight: 700;
+}
+
+.add-home-header h2 {
+    flex: 1;
+    text-align: center;
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 38px;
+}
+
+/* Main */
+.settings-main {
+    flex-grow: 1; /* 1. ทำให้ <main> ยืดเต็มพื้นที่ */
+    background-color: #f3f3f3; /* 2. สีพื้นหลังเทาอ่อน (นิยมใช้ในหน้า Setting) */
+    padding: 20px;
+}
+
+
+.settings-container {
+    max-width: 800px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* ระยะห่างระหว่าง "หมวดหมู่" */
+}
+
+/* 4. กล่อง "หมวดหมู่" (Card) */
+.settings-group {
+    background-color: #ffffff;
+    border-radius: 12px;
+    overflow: hidden; /* ทำให้ขอบมนสวยงาม */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.settings-group-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--primary-color); /* (ใช้ตัวแปรสีส้มของคุณ) */
+    padding: 12px 16px;
+    background-color: #fffaf5; /* (ตัวอย่าง) สีส้มอ่อนๆ */
+    border-bottom: 1px solid #f0f0f0;
+}
+
+/* 5. รายการเมนูแต่ละอัน (ที่เป็น <a>) */
+.settings-item {
+    display: flex;
+    justify-content: space-between; /* (ดันลูกศรไปทางขวา) */
+    align-items: center;
+    padding: 16px;
+    text-decoration: none;
+    color: var(--text-dark);
+    font-size: 16px;
+    border-bottom: 1px solid #f0f0f0;
+    transition: background-color 0.2s;
+}
+
+.settings-item:last-child {
+    border-bottom: none; /* อันสุดท้ายไม่ต้องมีเส้นคั่น */
+}
+
+.settings-item:hover {
+    background-color: #f9f9f9;
+}
+
+.settings-item .material-symbols-outlined {
+    color: var(--text-secondary); /* สีเทา */
+}
+
+/* 6. ปุ่ม "ออกจากระบบ" (สีแดง) */
+.settings-item-logout {
+    /* รีเซ็ตสไตล์ปุ่ม */
+    width: 100%;
+    border: none;
+    background: none;
+    padding: 16px;
+    font-family: var(--font-main);
+    
+    /* จัดกลาง */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    
+    font-size: 16px;
+    color: #E74C3C; /* สีแดง (สำหรับการกระทำที่ควรระวัง) */
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.settings-item-logout:hover {
+    background-color: #fdf2f2; /* สีแดงอ่อนๆ เวลาชี้ */
+}
+
+/* 7. ส่วน "เวอร์ชัน" */
+.settings-about {
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 14px;
+    padding-top: 10px;
+}
