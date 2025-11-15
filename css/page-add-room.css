@@ -57,10 +57,10 @@ body {
 }
 
 /* กล่องเปล่าฝั่งขวา */
-/* .add-home-header::after {
+.header-blank {
     content: "";
     width: 24px;
-} */
+}
 
 /* ไอคอนลูกศรซ้าย */
 .add-home-header .material-symbols-outlined {
@@ -214,7 +214,7 @@ input#room-id {
 .creditperson img {
     width: 18px;
     height: 18px;
-    object-fit: cover;
+    object-fit: fill;
 }
 
 .creditperson .not-checked-in-icon {

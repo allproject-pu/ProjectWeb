@@ -60,6 +60,12 @@ body {
     box-shadow: 0 1px 1px 0 rgba(0, 0, 0, .05);
 }
 
+/* กล่องเปล่าฝั่งขวา */
+.header-blank {
+    content: "";
+    width: 24px;
+}
+
 /* ไอคอนลูกศรซ้าย */
 .account-header .material-symbols-outlined {
     color: #ffffff;
@@ -138,7 +144,7 @@ body {
 .account-profile-image img {
     width: 100%;
     height: 100%;
-    object-fit: fill;
+    object-fit: cover;
 }
 
 .creditperson-container {
@@ -565,7 +571,7 @@ strong {
 .profile-image-circle .profile-preview {
     width: 100%;
     height: 100%;
-    object-fit: fill;
+    object-fit: cover;
     border-radius: 100%;
     transition: filter 0.3s ease;
 }
