@@ -473,6 +473,92 @@ strong {
 }
 
 
+/* --- CSS สำหรับกล่อง Check-in (จากดีไซน์) --- */
+/* State 1: กล่องฟอร์ม */
+.check-in-container {
+    margin: auto;
+    width: 94%;
+    
+    display: none;
+    margin-top: 13px;
+    height: 41px;
+}
+
+.check-in-box {
+    display: none;
+    align-items: center;
+    width: 100%;
+    height: 41px;
+}
+
+.check-in-icon {
+    width: 40px;
+    font-size: 32px;
+    color: white;
+    background-color: var(--primary-color);
+    padding: 8px;
+    border-radius: 12px;
+    margin-right: 10px;
+}
+
+.check-in-input {
+    flex-grow: 1;
+    width: 100%;
+    height: 100%;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 0 10px 0 10px;
+    font-size: 16px;
+    font-family: var(--font-main);
+    background-color: #f3f3f3;
+
+    border-right: none;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    outline: none;
+}
+
+.check-in-btn {
+    width: 30%;
+    max-width: 150px;
+    height: 100%;
+    border: none;
+    border-radius: 12px;
+
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+
+    padding: 0 20px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    color: white;
+    background-color: var(--primary-color);
+}
+
+/* State 2: ข้อความ "เช็คชื่อแล้ว" */
+.checked-in-message {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    border-radius: 12px;
+
+    background-color: #f0fdf4;
+    border: 1px solid #22c55e;
+    color: #16a34a;
+
+    font-size: 18px;
+    font-weight: 600;
+    gap: 10px;
+}
+
+.checked-in-message .material-symbols-outlined {
+    font-size: 24px;
+}
+
+
 /* footer */
 .login-footer {
     width: 100%;

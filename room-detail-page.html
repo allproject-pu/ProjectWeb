@@ -8,12 +8,13 @@
 
     <link rel="stylesheet" href="./css/base.css">
     <link rel="stylesheet" href="./css/page-add-room.css">
+    <script src="/JavaScript/room-detail-page.js" defer></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700&family=Inria+Sans&display=swap"
         rel="stylesheet">
     <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=arrow_back_ios" />
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 
 <body>
     <header class="add-home-header">
@@ -110,11 +111,26 @@
                 </ul>
             </div>
 
-            <div class="btn-box">
-                <button type="submit" class="btn">เข้าร่วม</button>
+            <div class="btn-box" id="join-box">
+                <button type="button" class="btn" id="join-btn">เข้าร่วม</button>
             </div>
 
         </form>
+
+        <section class="check-in-container" id="check-in-container">
+            <form class="check-in-box" id="check-in-form">
+                <span class="material-symbols-outlined btn check-in-icon">qr_code_scanner</span>
+
+                <input type="text" class="check-in-input" name="check_in_code" placeholder="กรอกรหัสเช็คชื่อของห้อง" required>
+                <button type="submit" class="btn check-in-btn">ยืนยัน</button>
+            </form>
+
+            <div class="checked-in-message" id="checked-in-message">
+                <span class="material-symbols-outlined">check_circle</span>
+                <span>เช็คชื่อแล้ว</span>
+            </div>
+
+        </section>
     </main>
 
     <footer class="login-footer">
