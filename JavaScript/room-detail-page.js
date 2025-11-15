@@ -11,7 +11,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // --- 2. ค้นหา "ปุ่ม" ที่เป็นตัวกระตุ้น (Trigger) ---
     const joinButton = document.getElementById('join-btn');
+    const manageCheckInButton = document.getElementById('manage-check-in-btn');
 
+    const ownerRoom = true;
+    if (ownerRoom) {
+        joinButton.style.display = 'none';
+        manageCheckInButton.style.display = 'flex';
+    } else {
+        joinButton.style.display = 'inline-block';
+        manageCheckInButton.style.display = 'none';
+    }
 
     // --- 3. (Event 1) เมื่อคลิกปุ่ม "เข้าร่วม" ---
     if (joinButton) {
@@ -24,7 +33,7 @@ document.addEventListener("DOMContentLoaded", function () {
             joinBox.style.display = 'none';
 
             // (สำคัญ!) ใช้ 'flex' เพราะ CSS ของคุณกำหนดให้ .check-in-box เป็น display: flex
-            Check_In_Container.style.display = 'inline-block';
+            Check_In_Container.style.display = 'block';
             checkInForm.style.display = 'flex';
         });
     }

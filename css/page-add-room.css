@@ -143,6 +143,10 @@ input[type="time"].time-input {
     margin-top: 25px;
 }
 
+#manage-check-in-btn{
+    display: none;
+}
+
 .tag-group {
     display: flex;
     justify-content: center;
