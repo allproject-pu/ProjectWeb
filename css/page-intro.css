@@ -1,0 +1,12 @@
+:root {
+    --primary-color: #FA5A16;
+    --primary-color-dark: #FA4616;
+    --primary-color-light: #fb8332;
+    --primary-gradient-start: #FA8816;
+    --text-light: #ffffff;
+    --text-dark: #000;
+    --text-secondary: #AEAEAE;
+    --border-color: #AEAEAE;
+    --font-main: "Kanit", "Inria Sans", sans-serif;
+}
+
