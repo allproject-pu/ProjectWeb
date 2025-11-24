@@ -105,9 +105,9 @@ body {
 .settings-group-title {
     font-size: 16px;
     font-weight: 600;
-    color: var(--primary-color); /* (ใช้ตัวแปรสีส้มของคุณ) */
+    color: white; /* (ใช้ตัวแปรสีส้มของคุณ) */
     padding: 12px 16px;
-    background-color: #fffaf5; /* (ตัวอย่าง) สีส้มอ่อนๆ */
+    background-color: #ff6f00; /* (ตัวอย่าง) สีส้มอ่อนๆ */
     border-bottom: 1px solid #f0f0f0;
 }
 
@@ -152,7 +152,7 @@ body {
     text-align: center;
     
     font-size: 16px;
-    color: #E74C3C; /* สีแดง (สำหรับการกระทำที่ควรระวัง) */
+    color: var(--primary-color) ; /* สีแดง (สำหรับการกระทำที่ควรระวัง) */
     font-weight: 600;
     cursor: pointer;
     transition: background-color 0.2s;
@@ -161,7 +161,9 @@ body {
 .settings-item-logout:hover {
     background-color: #fdf2f2; /* สีแดงอ่อนๆ เวลาชี้ */
 }
-
+.settings-item #logout-icon {
+    color: var(--primary-color);
+}
 /* 7. ส่วน "เวอร์ชัน" */
 .settings-about {
     text-align: center;
