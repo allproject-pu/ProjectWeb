@@ -60,7 +60,7 @@ body {
     box-shadow: 0 1px 1px 0 rgba(0, 0, 0, .05);
 }
 
-.home-header .material-symbols-outlined {
+.home-header-mobile .material-symbols-outlined {
     color: white;
     font-size: 28px;
     font-weight: 700;
@@ -85,56 +85,46 @@ body {
         display: none;
     }
 
-    /* 2. แสดงและจัดสไตล์ Header คอมพิวเตอร์ (ตามรูปภาพ) */
     .home-header-desktop {
         display: flex;
         justify-content: space-between;
         align-items: center;
-
         width: 100%;
         height: 80px;
-        /* กำหนดความสูงให้พอดี */
         padding: 0 50px;
-        /* เว้นขอบซ้ายขวา */
-
         /* พื้นหลังสีส้มไล่เฉด (ตามธีมเดิม) */
         background: var(--primary-gradient-start);
-        background: linear-gradient(0deg, #FA8816 0.36%, #E85A34 99.64%);
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+background: linear-gradient(269deg, #FA7C16 -1.34%, #FA5A16 105.15%);        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         color: var(--text-light);
         position: sticky;
         top: 0;
         z-index: 1000;
     }
 
-    /* ปรับขนาดโลโก้ */
+    /* ขนาดโลโก้ */
     .desktop-logo img {
-        height: 50px;
-        /* ปรับความสูงโลโก้ตามต้องการ */
+        height: 45px;
         width: auto;
     }
 
-    /* กลุ่มทางขวา (เมนู + รูปโปรไฟล์) */
+    /* กลุ่มทางขวา */
     .desktop-right-group {
         display: flex;
         align-items: center;
         gap: 30px;
-        /* ระยะห่างระหว่างเมนูกับรูปโปรไฟล์ */
     }
 
     /* เมนูลิงก์ */
     .desktop-nav {
         display: flex;
         gap: 25px;
-        /* ระยะห่างระหว่างตัวหนังสือ */
     }
 
     .desktop-nav a {
         text-decoration: none;
         color: #ffffff;
         font-size: 18px;
-        font-weight: 600;
-        /* ตัวหนาหน่อยตามรูป */
+        font-weight: 500;
         transition: opacity 0.2s;
         font-family: var(--font-main);
     }
@@ -143,7 +133,7 @@ body {
         opacity: 0.8;
     }
 
-    /* รูปโปรไฟล์วงกลมสีขาว */
+    /* รูปโปรไฟล์ */
     .desktop-profile {
         width: 45px;
         height: 45px;
