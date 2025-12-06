@@ -272,3 +272,28 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
 });
+
+// --- ส่งข้อมูลฟอร์มสร้างห้องกิจกรรม (add-room-page.html) ---
+document.querySelector('.add-room-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    // (เทคนิค) อัปเดตค่า input tag ที่ซ่อนอยู่ก่อนส่ง ถ้าจำเป็น
+    // document.getElementById('tags-list-hidden').value = currentTags.join(',');
+
+    const formData = new FormData(this);
+    const data = Object.fromEntries(formData.entries());
+
+    const response = await fetch('/api/create-room', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+    });
+    
+    const result = await response.json();
+    if (result.success) {
+        alert('สร้างห้องสำเร็จ!');
+        window.location.href = '/home-page.html';
+    } else {
+        alert('สร้างห้องไม่สำเร็จ');
+    }
+});
