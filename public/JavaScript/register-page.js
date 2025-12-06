@@ -5,6 +5,17 @@ document.querySelector('.register-form').addEventListener('submit', async functi
     const formData = new FormData(this);
     const data = Object.fromEntries(formData.entries());
 
+    if (data.password !== data.confirm_password) {
+        alert('รหัสผ่านและยืนยันรหัสผ่านไม่ตรงกัน');
+        return;
+    }
+
+    data.allow = document.getElementById('allow').checked;
+    if  (!data.allow) {
+        alert('กรุณายอมรับเงื่อนไขการให้บริการ');
+        return;
+    }
+    
     try {
         // ส่งไป Backend
         const response = await fetch('/api/register', {
