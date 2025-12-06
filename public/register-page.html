@@ -43,15 +43,20 @@
                 <input type="password" name="password" id="password" required>
             </div>
             <div class="form-group">
-                <label for="password">ยืนยันรหัสผ่าน</label>
-                <input type="password" name="password" id="password" required>
+                <label for="confirm_password">ยืนยันรหัสผ่าน</label>
+                <input type="password" name="confirm_password" id="confirm_password" required>
             </div>
+
             <div class="permission">
                 <input type="checkbox" name="allow" id="allow">
                 <label for="allow">ยินยอมให้เปิดเผยข้อมูล</label>
             </div>
 
-            <input class="btn" type="submit" value="ลงทะเบียน">
+            <div class="btn-group">
+                <p id="notifi-text" class="notifi-text">การกดยินยอมให้เปิดเผยข้อมูล</p>
+                <input class="btn" type="submit" value="ลงทะเบียน">
+            </div>
+
             <div class="or-login">
                 <label for="login">หรือ</label>
                 <a href="./login-page.html" class="alreadyhave">มีบัญชีอยู่แล้ว?</a>

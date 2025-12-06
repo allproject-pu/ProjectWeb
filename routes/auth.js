@@ -6,7 +6,18 @@ router.post('/register', (req, res) => {
     const { email, username, lastname, password } = req.body;
     const sql = 'INSERT INTO users (email, username, lastname, password) VALUES (?, ?, ?, ?)';
     db.query(sql, [email, username, lastname, password], (err, result) => {
-        if (err) return res.json({ success: false, message: 'สมัคสมาชิกไม่สำเร็จ' });
+        if (err) {
+            console.error(err); // ดู Error เต็มๆ ใน Terminal
+
+            // เช็ครหัส Error ของ MySQL ว่าใช่รหัส "ข้อมูลซ้ำ" หรือไม่
+            if (err.code === 'ER_DUP_ENTRY') {
+                return res.json({ success: false, message: 'อีเมลนี้ถูกใช้งานไปแล้ว กรุณาใช้อีเมลอื่น' });
+            }
+
+            // กรณี Error อื่นๆ ทั่วไป
+            return res.json({ success: false, message: 'เกิดข้อผิดพลาดที่ระบบฐานข้อมูล' });
+        }
+
         res.json({ success: true, message: 'สมัครสมาชิกเรียบร้อย!' });
     });
 });
