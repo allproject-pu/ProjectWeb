@@ -26,12 +26,6 @@ document.querySelector('.login-form').addEventListener('submit', async function 
         const result = await response.json();
 
         if (result.success) {
-            if(data.remember_me) {
-                localStorage.setItem('user', JSON.stringify(result.user));
-            }else {
-                sessionStorage.setItem('user', JSON.stringify(result.user));
-            }
-
             window.location.href = '/home-page.html';
         } else {
             showError(result.message);
@@ -44,11 +38,8 @@ document.querySelector('.login-form').addEventListener('submit', async function 
 
 function showError(message) {
     notifiText.classList.remove('shake');
-
     void notifiText.offsetWidth;
-
     notifiText.classList.add('shake');
     notifiText.classList.add('show');
-
     notifiText.textContent = message;
 }
