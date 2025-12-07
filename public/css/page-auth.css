@@ -111,6 +111,8 @@ body {
     padding: 15px;
 }
 
+
+
 .forgot-password-container {
     width: 100%;
 }
@@ -306,9 +308,148 @@ body {
     width: 48%;
 }
 
-.notifi-text {
-    font-size: 12px;
-    color: red;
+/* สไตล์สำหรับข้อความแจ้งเตือน */
+#notifi-text {
+    font-size: 14px;
+    /* ปรับให้ใหญ่อ่านง่ายขึ้นนิดนึง */
+    color: #ff3b3b;
     text-align: center;
-    margin: 0;
+
+    /* ซ่อนไว้ก่อน */
+    display: none;
+    opacity: 0;
+
+    /* Animation การปรากฏ */
+    transition: opacity 0.3s ease-in-out;
+    font-weight: 500;
+}
+
+#notifi-text.show {
+    display: block;
+    opacity: 1;
+}
+
+/* Class สำหรับการสั่น (Shake) */
+#notifi-text.shake {
+    animation: shake 0.65s ease-in-out;
+    color: #ff3b3b;
+}
+
+/* Keyframes การสั่น */
+@keyframes shake {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    10%,
+    30%,
+    50%,
+    70%,
+    90% {
+        transform: translateX(-2px);
+    }
+
+    20%,
+    40%,
+    60%,
+    80% {
+        transform: translateX(2px);
+    }
+}
+
+/* เพิ่มสไตล์สำหรับเครื่องหมายดอกจันสีแดงในป้ายกำกับ */
+.register-form label span {
+    color: red;
+}
+
+/* --- Loading Overlay Styles --- */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    
+    background-color: rgba(0, 0, 0, 0.4); 
+    
+    z-index: 9999;
+    display: none;
+    
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    transition: all 1s ease-in-out;
+}
+
+.status-box {
+    width: 220px;
+    height: 200px;
+    background-color: white;
+    border-radius: 21px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    padding: 30px 30px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* Spinner */
+.spinner {
+    width: 60px;
+    height: 60px;
+    border: 6px solid #e5e5e5;
+    border-top: 6px solid #FA5A16;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+
+    margin: auto;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Success Icon*/
+.success-icon-circle {
+    width: 80px;
+    height: 80px;
+    background-color: #2ecc71;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(46, 204, 113, 0.4);
+    animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+    margin: auto;
+}
+
+.success-icon-circle span {
+    color: white;
+    font-size: 48px;
+    font-weight: bold;
+}
+
+.status-box p {
+    font-size: 20px;
+    color: #333;
+    font-weight: 600;
+}
+
+@keyframes popIn {
+    0% { transform: scale(0); }
+    80% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
