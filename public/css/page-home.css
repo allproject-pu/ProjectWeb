@@ -69,7 +69,8 @@ body {
 
 .home-main {
     width: 100%;
-    padding: 20px;
+    /* padding: 20px; */
+    padding: 0 20px;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -343,10 +344,11 @@ body {
 
 /* room-item */
 .rooms-List {
+    margin: auto;
     width: 100%;
     display: grid;
     gap: 20px;
-    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
 }
 
 .room-item {

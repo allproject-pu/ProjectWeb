@@ -1,0 +1,231 @@
+:root {
+  --primary-color: #fa5a16;
+
+  /* ตั้งค่าขนาดรูป Default (Desktop) */
+  --card-width: 36vw;
+  /* ใช้ aspect-ratio แทน height เพื่อรักษาสัดส่วน 1052:532 */
+  --card-ratio: 1052 / 532;
+  --card-height: calc(var(--card-width) / (1052 / 532));
+
+  --gap: 20px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f9f9f9;
+}
+
+.hero-carousel {
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 40px 0 0 0;
+}
+
+.carousel-container {
+  position: relative;
+  width: 100%;
+  max-width: 1400px;
+  height: calc(var(--card-height) + 80PX);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.carousel-track {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  /* ให้เต็ม container */
+  display: flex;
+  justify-content: center;
+
+  /* สำคัญ: อนุญาตให้รูปหลุดกรอบได้ใน desktop */
+  overflow: visible;
+}
+
+.carousel-slide {
+  position: absolute;
+  width: var(--card-width);
+  /* บังคับสัดส่วนรูปภาพ */
+  aspect-ratio: var(--card-ratio);
+  height: auto;
+  /* ให้ height คำนวณจาก width และ ratio */
+
+  border-radius: 16px;
+  transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1),
+    opacity 0.5s ease,
+    filter 0.5s ease,
+    box-shadow 0.5s ease;
+  will-change: transform, opacity;
+  overflow: hidden;
+  background: #000;
+}
+
+.carousel-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  pointer-events: none;
+}
+
+/* --- State ต่างๆ ของ Slide --- */
+
+/* Active (กลาง) */
+.carousel-slide.active {
+  transform: translateX(0) scale(1.1);
+  z-index: 10;
+  opacity: 1;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  filter: brightness(1.05);
+}
+
+/* Inactive (ข้างๆ) */
+.carousel-slide:not(.active) {
+  opacity: 0.7;
+  filter: brightness(0.6) blur(1px);
+  cursor: pointer;
+}
+
+/* --- Buttons Styles --- */
+.nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 50px;
+  height: 50px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.685);
+  backdrop-filter: blur(5px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  color: #333;
+}
+
+.nav-btn:hover {
+  background: #fa5a16;
+  color: #fff;
+  transform: translateY(-50%) scale(1.1);
+}
+
+.btn-left {
+  left: 20px;
+}
+
+.btn-right {
+  right: 20px;
+}
+
+.material-symbols-rounded {
+  font-size: 24px;
+}
+
+/* --- Dots --- */
+.carousel-nav {
+  position: absolute;
+  bottom: 20px;
+  /* ขยับขึ้นมาหน่อย */
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  z-index: 20;
+}
+
+.carousel-dot {
+  display: flex;
+  gap: 8px;
+  background: rgba(0, 0, 0, 0.1);
+  /* สีพื้นหลัง dots จางๆ */
+  padding: 8px 12px;
+  border-radius: 20px;
+  backdrop-filter: blur(2px);
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.dot.active {
+  background: var(--primary-color);
+  transform: scale(1.2);
+  opacity: 1;
+}
+
+/* --------------------------------------------------------- */
+/* --- Responsive: Mobile (จอเล็กกว่า 1024px) --- */
+/* --------------------------------------------------------- */
+@media (max-width: 1024px) {
+  :root {
+    /* ปรับขนาดรูปให้เกือบเต็มจอ */
+    --card-width: 90vw;
+  }
+
+  .hero-carousel {
+    padding: 5% 0 0 0;
+  }
+  .carousel-slide {
+    /* ยกเลิกการคำนวณตำแหน่งแบบ Desktop ชั่วคราว (เดี๋ยว JS จะคำนวณใหม่ แต่เราจะซ่อนมัน) */
+
+    /* ซ่อนรูปที่ไม่ใช่ Active */
+    opacity: 0 !important;
+    pointer-events: none;
+    /* ห้ามกดรูปที่ซ่อน */
+  }
+
+  /* โชว์เฉพาะรูป Active */
+  .carousel-slide.active {
+    opacity: 1 !important;
+    transform: translateX(0) scale(1) !important;
+    /* ไม่ต้องขยาย scale แล้ว */
+    pointer-events: auto;
+    position: relative;
+    /* เปลี่ยนเป็น relative เพื่อให้ Container ขยายตาม */
+  }
+
+  /* ปรับ Container ให้ height ยืดหดตามรูป */
+  .carousel-container {
+    height: auto;
+    height: 25vh;
+  }
+
+  .carousel-track {
+    /* เปลี่ยน layout เป็น stack ทับกัน หรือโชว์แค่ 1 */
+    display: grid;
+
+  }
+
+  /* ปรับปุ่มให้เล็กลงหน่อย หรือขยับตำแหน่ง */
+  .nav-btn {
+    width: 30px;
+    height: 30px;
+    background: rgba(255, 255, 255, 0);
+  }
+
+  .btn-left {
+    left: 10px;
+  }
+
+  .btn-right {
+    right: 10px;
+  }
+}
