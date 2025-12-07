@@ -28,7 +28,7 @@ router.post('/login', (req, res) => {
     db.query(sql, [email, password], (err, results) => {
         if (err) return res.status(500).json({ error: err });
         if (results.length > 0) res.json({ success: true, user: results[0] });
-        else res.json({ success: false, message: 'อีเมลหรือรหัสผ่านผิด' });
+        else res.json({ success: false, message: 'รหัสผ่านหรืออีเมลไม่ถูกต้อง' });
     });
 });
 
