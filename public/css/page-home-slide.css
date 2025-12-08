@@ -154,7 +154,7 @@ body {
   /* สีพื้นหลัง dots จางๆ */
   padding: 8px 12px;
   border-radius: 20px;
-  backdrop-filter: blur(2px);
+  backdrop-filter: blur(0px);
 }
 
 .dot {
@@ -179,6 +179,10 @@ body {
   :root {
     /* ปรับขนาดรูปให้เกือบเต็มจอ */
     --card-width: 90vw;
+  }
+
+  .hero-carousel{
+    padding: 20px 0 0 0;
   }
   .carousel-slide {
     /* ยกเลิกการคำนวณตำแหน่งแบบ Desktop ชั่วคราว (เดี๋ยว JS จะคำนวณใหม่ แต่เราจะซ่อนมัน) */
