@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="./css/base.css">
     <link rel="stylesheet" href="./css/page-home.css">
     <link rel="stylesheet" href="./css/page-auth.css">
+    <link rel="stylesheet" href="./css/header.css">
     <script src="./JavaScript/edit-room-page.js"></script>
     <script src="./JavaScript/filter.js" defer></script>
     <script src="./JavaScript/sidebar.js" defer></script>
@@ -61,47 +62,48 @@
     </nav>
 
     <div class="overlay" id="overlay"></div>
+    <header>
+        <div class="mobilechange-header">
+            <button class="material-symbols-outlined" id="sidebar-open-btn" aria-label="เปิดเมนู">menu</button>
+            <h2>ประวัติการเข้าร่วม</h2>
+            <span class="headerchange-blank"></span>
+        </div>
 
-    <header class="add-home-header">
-        <button class="material-symbols-outlined" id="sidebar-open-btn" aria-label="เปิดเมนู">menu</button>
-        <h2>ประวัติการเข้าร่วม</h2>
-        <span class="header-blank"></span>
-    </header>
+        <div class="home-header-desktop">
+            <a href="./home-page.html" class="desktop-logo"><img src="Resource/img/small-logo.png"
+                    alt="MODJOY Logo"></a>
+            <div class="desktop-right-group">
+                <nav class="desktop-nav">
+                    <a href="./home-page.html">หน้าหลัก</a>
+                    <a href="./created-room.html">กิจกรรมที่สร้าง</a>
+                    <a class="active" href="./history-page.html">ประวัติการเข้าร่วม</a>
+                    <a class="material-symbols-outlined" href="./add-room-page.html">add</a>
+                    <div class="profile-menu-container">
 
-    <header class="home-header-desktop">
-        <a href="./home-page.html" class="desktop-logo"><img src="Resource/img/small-logo.png" alt="MODJOY Logo"></a>
-        <div class="desktop-right-group">
-            <nav class="desktop-nav">
-                <a href="./home-page.html">หน้าหลัก</a>
-                <a href="./created-room.html">กิจกรรมที่สร้าง</a>
-                <a class="active" href="./history-page.html">ประวัติการเข้าร่วม</a>
-                <a class="material-symbols-outlined" href="./add-room-page.html">add</a>
-                <div class="profile-menu-container">
-
-                    <div class="desktop-profile" id="profile-menu-btn" onclick="toggleProfileMenu()">
-                        <img src="./Resource/img/profile.jpg" alt="profile-image">
-                    </div>
-
-                    <div class="profile-dropdown" id="profile-dropdown">
-                        <div class="dropdown-header">
-                            <div class="dropdown-img-large">
-                                <img src="./Resource/img/profile.jpg" alt="profile-large">
-                            </div>
-                            <p class="user-name">มดตะนอย กัดเจ็บ</p>
-                            <p class="user-email">niggadamdam911@gmail.com</p>
+                        <div class="desktop-profile" id="profile-menu-btn" onclick="toggleProfileMenu()">
+                            <img src="./Resource/img/profile.jpg" alt="profile-image">
                         </div>
 
-                        <ul class="dropdown-links">
-                            <li><a href="./my-account-page.html">แก้ไขโปรไฟล์</a></li>
-                            <li><a href="./settings-page.html">การตั้งค่า</a></li>
-                            <li><a href="./login-page.html" class="logout-item">ออกจากระบบ</a></li>
-                        </ul>
+                        <div class="profile-dropdown" id="profile-dropdown">
+                            <div class="dropdown-header">
+                                <div class="dropdown-img-large">
+                                    <img src="./Resource/img/profile.jpg" alt="profile-large">
+                                </div>
+                                <p class="user-name">มดตะนอย กัดเจ็บ</p>
+                                <p class="user-email">niggadamdam911@gmail.com</p>
+                            </div>
+
+                            <ul class="dropdown-links">
+                                <li><a href="./my-account-page.html">แก้ไขโปรไฟล์</a></li>
+                                <li><a href="./settings-page.html">การตั้งค่า</a></li>
+                                <li><a href="./login-page.html" id="logout-button" class="logout-item">ออกจากระบบ</a></li>
+                            </ul>
+                        </div>
                     </div>
-                </div>
-            </nav>
+                </nav>
+            </div>
         </div>
     </header>
-
     <main class="home-main">
         <div class="top-bar-search">
             <div class="search-bar">

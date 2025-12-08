@@ -1,0 +1,471 @@
+/* ---------- ADD ROOM ---------- */
+:root {
+    --primary-color: #FA5A16;
+    --primary-color-dark: #FA4616;
+    --primary-color-light: #fb8332;
+    --primary-gradient-start: #FA8816;
+    --text-light: #ffffff;
+    --text-dark: #000;
+    --text-secondary: #AEAEAE;
+    --border-color: #AEAEAE;
+    --font-main: "Kanit", "Inria Sans", sans-serif;
+}
+
+* {
+    font-family: var(--font-main);
+    font-style: normal;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* โมบายปกติ
+<header class="addhome-header">
+        <button type="button" class="material-symbols-outlined" onclick="history.back()">arrow_back_ios</button>
+        <h2>ชื่อหน้าของคุณ</h2>
+        <span class="header-blank"></span>
+</header> 
+*/
+
+.mobile-header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    height: 80px;
+    width: 100%;
+    padding-top: calc(10px + env(safe-area-inset-top));
+    padding-left: calc(20px + env(safe-area-inset-left));
+    padding-right: calc(20px + env(safe-area-inset-right));
+    padding-bottom: 0px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+    background: linear-gradient(0deg, #FA8816 0.36%, #E85A34 99.64%);
+    background-size: cover;
+    color: var(--text-light);
+    box-shadow: 0 1px 1px 0 rgba(0, 0, 0, .05);
+
+
+}
+
+/* กล่องเปล่าฝั่งขวา */
+.header-blank {
+    content: "";
+    width: 24px;
+}
+
+/* ไอคอนลูกศรซ้าย */
+.mobile-header .material-symbols-outlined {
+    color: #ffffff;
+    font-size: 28px;
+    font-weight: 700;
+}
+
+
+.mobile-header h2 {
+    flex: 1;
+    text-align: center;
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 38px;
+}
+/* โหมดสามารถสลับได้ */
+.mobilechange-header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    height: 80px;
+    width: 100%;
+    padding-top: calc(10px + env(safe-area-inset-top));
+    padding-left: calc(20px + env(safe-area-inset-left));
+    padding-right: calc(20px + env(safe-area-inset-right));
+    padding-bottom: 0px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+    background: linear-gradient(0deg, #FA8816 0.36%, #E85A34 99.64%);
+    background-size: cover;
+    color: var(--text-light);
+    box-shadow: 0 1px 1px 0 rgba(0, 0, 0, .05);
+}
+
+/* กล่องเปล่าฝั่งขวา */
+.headerchange-blank {
+    content: "";
+    width: 24px;
+}
+
+/* ไอคอนลูกศรซ้าย */
+.mobilechange-header .material-symbols-outlined {
+    color: #ffffff;
+    font-size: 28px;
+    font-weight: 700;
+}
+
+
+.mobilechange-header h2 {
+    flex: 1;
+    text-align: center;
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 38px;
+}
+/*
+โมบายมีปุ่มขวา
+
+<header class="account-header">
+        <button class="material-symbols-outlined" id="sidebar-open-btn" aria-label="เปิดเมนู">menu</button>
+        <h2>บัญชีของฉัน</h2>
+        <a class="material-symbols-outlined right-account-header" href="./settings-page.html">settings</a>
+    </header>
+*/
+.mobile-setting-header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    height: 80px;
+    width: 100%;
+    padding-top: calc(10px + env(safe-area-inset-left));
+    padding-left: calc(20px + env(safe-area-inset-left));
+    padding-right: calc(20px + env(safe-area-inset-right));
+    padding-bottom: 0px;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+    background: var(--primary-gradient-start);
+    background: linear-gradient(0deg, #FA8816 0.36%, #E85A34 99.64%);
+    background-size: cover;
+    color: var(--text-light);
+    box-shadow: 0 1px 1px 0 rgba(0, 0, 0, .05);
+}
+
+/* กล่องเปล่าฝั่งขวา */
+.header-blank {
+    content: "";
+    width: 24px;
+}
+
+/* ไอคอนลูกศรซ้าย */
+.mobile-setting-header .material-symbols-outlined {
+    color: #ffffff;
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.mobile-setting-header .right-account-header {
+    font-weight: 400;
+}
+
+.mobile-setting-header h2 {
+    flex: 1;
+    text-align: center;
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 38px;
+}
+/* โหมดสามารถสลับได้ */
+.mobilechange-setting-header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    height: 80px;
+    width: 100%;
+    padding-top: calc(10px + env(safe-area-inset-left));
+    padding-left: calc(20px + env(safe-area-inset-left));
+    padding-right: calc(20px + env(safe-area-inset-right));
+    padding-bottom: 0px;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+    background: var(--primary-gradient-start);
+    background: linear-gradient(0deg, #FA8816 0.36%, #E85A34 99.64%);
+    background-size: cover;
+    color: var(--text-light);
+    box-shadow: 0 1px 1px 0 rgba(0, 0, 0, .05);
+}
+
+/* กล่องเปล่าฝั่งขวา */
+.header-blank {
+    content: "";
+    width: 24px;
+}
+
+/* ไอคอนลูกศรซ้าย */
+.mobile-setting-header .material-symbols-outlined {
+    color: #ffffff;
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.mobile-setting-header .right-account-header {
+    font-weight: 400;
+}
+
+.mobile-setting-header h2 {
+    flex: 1;
+    text-align: center;
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 38px;
+}
+
+/*
+คอม @media screen and (min-width: 1024px) 
+<header class="home-header-desktop">
+        <a href="./home-page.html" class="desktop-logo"><img src="Resource/img/small-logo.png" alt="MODJOY Logo"></a>
+        <div class="desktop-right-group">
+            <nav class="desktop-nav">
+                <a class="active" href="./home-page.html">หน้าหลัก</a>
+                <a href="./created-room.html">กิจกรรมที่สร้าง</a>
+                <a href="./history-page.html">ประวัติการเข้าร่วม</a>
+                <a class="material-symbols-outlined" href="./add-room-page.html">add</a>
+                <div class="profile-menu-container">
+
+                    <div class="desktop-profile" id="profile-menu-btn" onclick="toggleProfileMenu()">
+                        <img src="./Resource/img/profile.jpg" alt="profile-image">
+                    </div>
+
+                    <div class="profile-dropdown" id="profile-dropdown">
+                        <div class="dropdown-header">
+                            <div class="dropdown-img-large">
+                                <img src="./Resource/img/profile.jpg" alt="profile-large">
+                            </div>
+                            <p class="user-name" id="user-name">Guest</p>
+                            <p class="user-email" id="user-email">guest@example.com</p>
+                        </div>
+
+                        <ul class="dropdown-links">
+                            <li><a href="./my-account-page.html">แก้ไขโปรไฟล์</a></li>
+                            <li><a href="./settings-page.html">การตั้งค่า</a></li>
+                            <li><a href="" class="logout-item" id="logout-btn">ออกจากระบบ</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+        </div>
+    </header>
+*/
+    .home-header-desktop{
+        display: none;
+    }
+    
+@media screen and (min-width: 1024px) {
+    .mobilechange-header{
+        display: none;
+    }
+    .mobilechange-setting-header{
+        display: none;
+    }
+    .home-header-desktop {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: sticky;
+        width: 100%;
+        height: 80px;
+        padding: 0 50px;
+        /* พื้นหลังสีส้มไล่เฉด (ตามธีมเดิม) */
+        background: linear-gradient(180deg, #FA5A16 0%, #FA8816 100%);
+        color: var(--text-light);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+
+    }
+
+    /* ขนาดโลโก้ */
+
+    .desktop-logo img {
+        display: block;
+        height: 45px;
+        ;
+    }
+
+    /* กลุ่มทางขวา */
+    .desktop-right-group {
+        display: flex;
+        align-items: center;
+        gap: 30px;
+    }
+
+    /* เมนูลิงก์ */
+    .desktop-nav {
+        display: flex;
+        gap: 25px;
+    }
+
+    .desktop-nav .material-symbols-outlined {
+        font-size: 30px;
+        color: #ffffff;
+        font-weight: 700;
+    }
+
+    .desktop-nav a {
+        text-decoration: none;
+        color: #ffffff;
+        font-size: 18px;
+        font-weight: 500;
+        transition: opacity 0.2s;
+        display: flex;
+        align-items: center;
+    }
+
+    .desktop-nav a:hover {
+        opacity: 0.8;
+    }
+
+    /* รูปโปรไฟล์ */
+    .desktop-profile {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        background-color: #ffffff;
+        overflow: hidden;
+        border: 2px solid #ffffff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+    }
+
+    .desktop-profile img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    /* --- CSS สำหรับ Profile Dropdown --- */
+
+    /* 1. คอนเทนเนอร์สำหรับจัดตำแหน่ง */
+    .profile-menu-container {
+        position: relative;
+        /* สำคัญ! เพื่อให้เมนูรู้ว่าต้องลอยอยู่ตรงไหน */
+    }
+
+    /* 2. กล่องเมนู (สีขาวขอบส้ม) */
+    .profile-dropdown {
+        display: none;
+        /* ซ่อนไว้ก่อน */
+
+        position: absolute;
+        top: 60px;
+        /* ระยะห่างจากปุ่มโปรไฟล์ลงมา */
+        right: 0;
+        /* ชิดขวา */
+        width: 260px;
+
+        background-color: white;
+        border: 3px solid #FA5A16;
+        /* ขอบสีส้มตามรูป */
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+        flex-direction: column;
+        overflow: hidden;
+        z-index: 1100;
+    }
+
+    /* คลาสสำหรับสั่งให้แสดงเมนู */
+    .profile-dropdown.active {
+        display: flex;
+    }
+
+    /* 3. ส่วนหัว (รูปใหญ่ + ชื่อ) */
+    .dropdown-header {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+        border-bottom: 1px solid #eee;
+    }
+
+    .dropdown-img-large {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background-color: #333;
+        /* พื้นหลังดำตามรูป */
+        overflow: hidden;
+        margin-bottom: 10px;
+    }
+
+    .dropdown-img-large img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .user-name {
+        font-size: 16px;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 2px;
+    }
+
+    .user-email {
+        font-size: 13px;
+        color: #888;
+    }
+
+    /* 4. รายการเมนู */
+    .dropdown-links {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        width: 100%;
+    }
+
+    .dropdown-links li {
+        width: 100%;
+    }
+
+    .dropdown-links a {
+        display: block;
+        width: 100%;
+        padding: 12px 0;
+        text-align: center;
+        text-decoration: none;
+        color: #333;
+        font-size: 14px;
+        border-bottom: 1px solid #f0f0f0;
+        transition: background-color 0.2s, color 0.2s;
+        font-family: var(--font-main);
+    }
+
+    .dropdown-links a:hover {
+        background-color: #fff3e0;
+        color: #FA5A16;
+    }
+
+    .dropdown-links li:last-child a {
+        border-bottom: none;
+    }
+
+    .desktop-nav a.active {
+        position: relative;
+        font-weight: bold;
+        opacity: 1;
+    }
+
+    .desktop-nav a.active::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background-color: #ffffff;
+        border-radius: 5px;
+    }
+}
