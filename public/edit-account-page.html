@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="./css/base.css">
     <link rel="stylesheet" href="./css/page-my-account.css">
     <link rel="stylesheet" href="./css/header.css">
-    <script src="/JavaScript/edit-account-page.js" defer></script>
+    <script src="./JavaScript/edit-account-page.js" defer></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700&family=Inria+Sans&display=swap"
@@ -17,10 +17,12 @@
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 
 <body>
-    <header class="mobile-header">
-        <button type="button" class="material-symbols-outlined" onclick="history.back()">arrow_back_ios</button>
-        <h2>แก้ไขโปรไฟล์</h2>
-        <span class="header-blank"></span>
+    <header class="desktop-header-wrapper">
+        <div class="mobile-header">
+            <button type="button" class="material-symbols-outlined" onclick="history.back()">arrow_back_ios</button>
+            <h2>แก้ไขโปรไฟล์</h2>
+            <span class="header-blank"></span>
+        </div>
     </header>
 
     <main class="account-main-edit">
@@ -30,7 +32,8 @@
             <div class="form-group">
                 <label for="cover-image-input" class="add-cover-label profile-uploader">
                     <div class="add-cover-box profile-image-circle" id="profile-image-container">
-                        <img title="Profile" src="/Resource/img/profile.jpg" class="profile-preview" id="profile-image-preview">
+                        <img title="Profile" src="/Resource/img/profile.jpg" class="profile-preview"
+                            id="profile-image-preview">
                         <span class="add-cover-plus" id="add-cover-icon">+</span>
                         <div class="edit-overlay">
                             <span class="material-symbols-outlined">photo_camera</span>

@@ -27,6 +27,7 @@ body {
   justify-content: center;
   overflow: hidden;
   padding: 40px 0 0 0;
+    
 }
 
 .carousel-container {
@@ -179,10 +180,6 @@ body {
     /* ปรับขนาดรูปให้เกือบเต็มจอ */
     --card-width: 90vw;
   }
-
-  .hero-carousel {
-    padding: 5% 0 0 0;
-  }
   .carousel-slide {
     /* ยกเลิกการคำนวณตำแหน่งแบบ Desktop ชั่วคราว (เดี๋ยว JS จะคำนวณใหม่ แต่เราจะซ่อนมัน) */
 
@@ -196,11 +193,13 @@ body {
   .carousel-slide.active {
     opacity: 1 !important;
     transform: translateX(0) scale(1) !important;
+    box-shadow: none;
+    filter: brightness(1.05);
     /* ไม่ต้องขยาย scale แล้ว */
     pointer-events: auto;
     position: relative;
     width: 100%;       /* บังคับให้จัดกึ่งกลางกรอบ */
-
+    margin:0 10px;
     /* เปลี่ยนเป็น relative เพื่อให้ Container ขยายตาม */
   }
 
