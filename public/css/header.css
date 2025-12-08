@@ -18,6 +18,7 @@
     box-sizing: border-box;
 }
 
+/* #region css โมบาย */
 /* โมบายปกติ
 <header class="addhome-header">
         <button type="button" class="material-symbols-outlined" onclick="history.back()">arrow_back_ios</button>
@@ -218,6 +219,7 @@
     font-weight: 600;
     line-height: 38px;
 }
+/* #endregion */
 
 /* #region css คอม */
 /*
@@ -258,7 +260,7 @@
     </header>
 */
 .home-header-desktop {
-    /* display: none; */
+    display: none;
 }
 
 .header-wrapper {
@@ -277,6 +279,7 @@
     height: 80px;
     z-index: 1000;
 }
+
 .home-header-desktop.active-bar {
     display: flex;
 }
