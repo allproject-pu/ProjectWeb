@@ -18,12 +18,19 @@
     box-sizing: border-box;
 }
 
+body,
+html {
+    /* ป้องกันไม่ให้มีอะไรดันทะลุความกว้างหน้าจอ */
+    overflow-x: hidden;
+    width: 100%;
+    position: relative;
+}
+
 body {
     min-height: 100vh;
     display: flex;
     /* 1. ใช้ Flexbox */
     flex-direction: column;
-    /* 2. เรียงบน-ล่าง */
 }
 
 .material-symbols-outlined {
@@ -61,6 +68,7 @@ body {
     box-shadow: 0 1px 1px 0 rgba(0, 0, 0, .05);
 }
 
+
 .home-header-mobile .material-symbols-outlined {
     color: white;
     font-size: 28px;
@@ -69,226 +77,14 @@ body {
 
 .home-main {
     width: 100%;
-    /* padding: 20px; */
-    padding: 0 20px;
+    box-sizing: border-box;
     height: 100%;
-    display: flex;
-    flex-direction: column;
     align-items: center;
     flex-grow: 1;
 }
 
 .home-header-desktop {
     display: none;
-}
-
-@media screen and (min-width: 1024px) {
-    .home-header-mobile {
-        display: none;
-    }
-
-    .home-header-desktop {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        width: 100%;
-        height: 80px;
-        padding: 0 50px;
-        /* พื้นหลังสีส้มไล่เฉด (ตามธีมเดิม) */
-        background: linear-gradient(180deg, #FA5A16 0%, #FA8816 100%);
-        color: var(--text-light);
-        position: sticky;
-        top: 0;
-        z-index: 1000;
-
-    }
-
-    /* ขนาดโลโก้ */
-
-    .desktop-logo img {
-        display: block;
-        height: 45px;
-        ;
-    }
-
-
-
-    /* กลุ่มทางขวา */
-    .desktop-right-group {
-        display: flex;
-        align-items: center;
-        gap: 30px;
-    }
-
-    /* เมนูลิงก์ */
-    .desktop-nav {
-        display: flex;
-        gap: 25px;
-    }
-
-    .desktop-nav .material-symbols-outlined {
-        font-size: 30px;
-        color: #ffffff;
-        font-weight: 700;
-    }
-
-    .desktop-nav a {
-        text-decoration: none;
-        color: #ffffff;
-        font-size: 18px;
-        font-weight: 500;
-        transition: opacity 0.2s;
-        display: flex;
-        align-items: center;
-    }
-
-    .desktop-nav a:hover {
-        opacity: 0.8;
-    }
-
-    /* รูปโปรไฟล์ */
-    .desktop-profile {
-        width: 45px;
-        height: 45px;
-        border-radius: 50%;
-        background-color: #ffffff;
-        overflow: hidden;
-        border: 2px solid #ffffff;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        cursor: pointer;
-    }
-
-    .desktop-profile img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-
-    /* --- CSS สำหรับ Profile Dropdown --- */
-
-    /* 1. คอนเทนเนอร์สำหรับจัดตำแหน่ง */
-    .profile-menu-container {
-        position: relative;
-        /* สำคัญ! เพื่อให้เมนูรู้ว่าต้องลอยอยู่ตรงไหน */
-    }
-
-    /* 2. กล่องเมนู (สีขาวขอบส้ม) */
-    .profile-dropdown {
-        display: none;
-        /* ซ่อนไว้ก่อน */
-
-        position: absolute;
-        top: 60px;
-        /* ระยะห่างจากปุ่มโปรไฟล์ลงมา */
-        right: 0;
-        /* ชิดขวา */
-        width: 260px;
-
-        background-color: white;
-        border: 3px solid #FA5A16;
-        /* ขอบสีส้มตามรูป */
-        border-radius: 12px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-
-        flex-direction: column;
-        overflow: hidden;
-        z-index: 1100;
-    }
-
-    /* คลาสสำหรับสั่งให้แสดงเมนู */
-    .profile-dropdown.active {
-        display: flex;
-    }
-
-    /* 3. ส่วนหัว (รูปใหญ่ + ชื่อ) */
-    .dropdown-header {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding: 20px;
-        border-bottom: 1px solid #eee;
-    }
-
-    .dropdown-img-large {
-        width: 80px;
-        height: 80px;
-        border-radius: 50%;
-        background-color: #333;
-        /* พื้นหลังดำตามรูป */
-        overflow: hidden;
-        margin-bottom: 10px;
-    }
-
-    .dropdown-img-large img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-
-    .user-name {
-        font-size: 16px;
-        font-weight: 600;
-        color: #333;
-        margin-bottom: 2px;
-    }
-
-    .user-email {
-        font-size: 13px;
-        color: #888;
-    }
-
-    /* 4. รายการเมนู */
-    .dropdown-links {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-        width: 100%;
-    }
-
-    .dropdown-links li {
-        width: 100%;
-    }
-
-    .dropdown-links a {
-        display: block;
-        width: 100%;
-        padding: 12px 0;
-        text-align: center;
-        text-decoration: none;
-        color: #333;
-        font-size: 14px;
-        border-bottom: 1px solid #f0f0f0;
-        transition: background-color 0.2s, color 0.2s;
-        font-family: var(--font-main);
-    }
-
-    .dropdown-links a:hover {
-        background-color: #fff3e0;
-        color: #FA5A16;
-    }
-
-    .dropdown-links li:last-child a {
-        border-bottom: none;
-    }
-
-    .desktop-nav a.active {
-        position: relative;
-        font-weight: bold;
-        opacity: 1;
-    }
-
-    .desktop-nav a.active::after {
-        content: '';
-        position: absolute;
-        bottom: -10px;
-        left: 0;
-        width: 100%;
-        height: 4px;
-        background-color: #ffffff;
-        border-radius: 5px;
-    }
 }
 
 /* search-bar */
@@ -298,7 +94,7 @@ body {
     justify-content: center;
     align-items: center;
     gap: 5px;
-    padding-bottom: 20px;
+    padding: 20px 0;
 }
 
 .top-bar-search .material-symbols-outlined {
@@ -345,10 +141,11 @@ body {
 /* room-item */
 .rooms-List {
     margin: auto;
-    width: 100%;
+width: auto;
     display: grid;
     gap: 20px;
-    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    padding: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
 }
 
 .room-item {
@@ -740,4 +537,13 @@ body {
 .history-detail-btn:hover {
     background: #717171;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+@media screen and (min-width: 1024px) {
+
+    .rooms-List{
+        grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)) !important;
+         
+    }
+    
 }

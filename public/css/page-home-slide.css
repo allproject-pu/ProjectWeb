@@ -41,13 +41,14 @@ body {
 }
 
 .carousel-track {
+      display: grid;
   position: relative;
   width: 100%;
   height: 100%;
   /* ให้เต็ม container */
   display: flex;
   justify-content: center;
-
+  min-height: var(--card-height);
   /* สำคัญ: อนุญาตให้รูปหลุดกรอบได้ใน desktop */
   overflow: visible;
 }
@@ -138,8 +139,7 @@ body {
 /* --- Dots --- */
 .carousel-nav {
   position: absolute;
-  bottom: 20px;
-  /* ขยับขึ้นมาหน่อย */
+  bottom: 0px;
   width: 100%;
   display: flex;
   justify-content: center;
@@ -199,19 +199,14 @@ body {
     /* ไม่ต้องขยาย scale แล้ว */
     pointer-events: auto;
     position: relative;
+    width: 100%;       /* บังคับให้จัดกึ่งกลางกรอบ */
+
     /* เปลี่ยนเป็น relative เพื่อให้ Container ขยายตาม */
   }
 
   /* ปรับ Container ให้ height ยืดหดตามรูป */
   .carousel-container {
     height: auto;
-    height: 25vh;
-  }
-
-  .carousel-track {
-    /* เปลี่ยน layout เป็น stack ทับกัน หรือโชว์แค่ 1 */
-    display: grid;
-
   }
 
   /* ปรับปุ่มให้เล็กลงหน่อย หรือขยับตำแหน่ง */

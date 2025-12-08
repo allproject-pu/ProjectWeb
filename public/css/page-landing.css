@@ -741,3 +741,76 @@ body {
     background: #717171;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
 }
+
+/* --- CSS สำหรับ Header ของ Guest (Desktop) --- */
+.auth-buttons-group {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+/* ปุ่มเข้าสู่ระบบ (ตัวหนังสือสีขาว) */
+.btn-auth-login {
+    text-decoration: none;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 500;
+    transition: opacity 0.2s;
+}
+
+.btn-auth-login:hover {
+    opacity: 0.8;
+}
+
+/* ปุ่มลงทะเบียน (พื้นหลังขาว ตัวหนังสือส้ม) */
+.btn-auth-register {
+    text-decoration: none;
+    background-color: #ffffff;
+    color: var(--primary-color);
+    font-size: 16px;
+    font-weight: 600;
+    padding: 8px 24px;
+    border-radius: 50px; /* ทรงแคปซูล */
+    transition: all 0.2s;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.btn-auth-register:hover {
+    background-color: #f0f0f0;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+/* --- CSS สำหรับ Sidebar ของ Guest (Mobile) --- */
+.sidebar-auth-action {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: auto; /* ดันลงด้านล่างถ้ารายการข้างบนน้อย */
+    border-top: 1px solid #eee;
+}
+
+.sidebar-btn-login {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    text-align: center;
+    border: 1px solid var(--primary-color);
+    color: var(--primary-color);
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.sidebar-btn-register {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    text-align: center;
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+}
