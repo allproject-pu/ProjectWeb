@@ -32,88 +32,72 @@
 <body>
     <!-- #region Side Bar Navigation -->
     <nav class="side-bar" id="sidebar">
-        <!-- Header -->
         <div class="sidebar-header">
             <button class="material-symbols-outlined sidebar-close-btn" id="sidebar-close-btn"
                 aria-label="ปิดเมนู">close</button>
             <div class="sidebar-profile-img">
-                <a href="./my-account-page.html"><img src="./Resource/img/profile.jpg" alt="Profile Picture"></a>
+                <!-- Member --><a href="./my-account-page.html"><img src="./Resource/img/profile.jpg" alt="Profile Picture"></a>
+                <!-- Gust --><img style="display: none;" src="./Resource/img/profile.jpg" alt="Profile Image">
             </div>
-
             <div class="sidebar-name-group">
-                <h3 id="sidebar-user-name">Guest</h3>
-                <div class="creditperson">
+                <h3 id="sidebar-user-name">ยินดีต้อนรับ</h3>
+                <!-- Member --><div class="creditperson">
                     <span id="sidebar-user-credit">100</span>
                     <img src="./Resource/img/credit.png" alt="credit icon">
                 </div>
             </div>
-
-            <p id="sidebar-user-email">guest@example.com</p>
+            <p id="sidebar-user-email">ค้นหากิจกรรมที่ใช่สำหรับคุณ</p>
         </div>
 
         <!-- Links -->
         <ul class="sidebar-links">
-            <li class="active-page"><a href="./home-page.html"><span
+            <!-- Global --><li class="active-page"><a href="./home-page.html"><span
                         class="material-symbols-outlined">home</span><span>หน้าแรก</span></a>
             </li>
-            <li><a href="./my-account-page.html"><span
+            <!-- Member --><li><a href="./my-account-page.html"><span
                         class="material-symbols-outlined">person</span><span>บัญชีของฉัน</span></a></li>
-            <li><a href="./created-room.html"><span
+            <!-- Member --><li><a href="./created-room.html"><span
                         class="material-symbols-outlined">check_box</span><span>กิจกรรมที่สร้าง</span></a></li>
-            <li><a href="./history-page.html"><span
+            <!-- Member --><li><a href="./history-page.html"><span
                         class="material-symbols-outlined">history</span><span>ประวัติการเข้าร่วม</span></a></li>
-            <li><a href="./settings-page.html"><span
+            <!-- Member --><li><a href="./settings-page.html"><span
                         class="material-symbols-outlined">settings</span><span>การตั้งค่า</span></a></li>
-            <li><a href="./login-page.html"><span
+            <!-- Member --><li><a href="./login-page.html"><span
                         class="material-symbols-outlined">logout</span><span>ออกจากระบบ</span></a>
             </li>
         </ul>
+        <!-- Gust --><div style="display: none;" class="sidebar-auth-action">
+            <a href="./login-page.html" class="sidebar-btn-login">เข้าสู่ระบบ</a>
+            <a href="./register-page.html" class="sidebar-btn-register">ลงทะเบียน</a>
+        </div>
     </nav>
-    <!-- #endregion -->
-
     <div class="overlay" id="overlay"></div>
+    <!-- #endregion -->
 
     <!-- #region header -->
     <header class="header-wrapper">
         <!-- #region home-header-mobile -->
-        <div class="mobile-header">
+        <div class="mobile-header active">
             <button class="material-symbols-outlined" id="sidebar-open-btn" aria-label="เปิดเมนู">menu</button>
             <a href="./home-page.html"><img src="Resource/img/small-logo.png" alt="MODJOY Logo"></a>
-            <a class="material-symbols-outlined" href="./add-room-page.html">add</a>
+            <!-- Member --><a class="material-symbols-outlined" href="./add-room-page.html">add</a>
+            <!-- Gust --><a style="display: none;" href="./login-page.html" class="login-btn">เข้าสู่ระบบ</a>
         </div>
         <!-- #endregion -->
 
-        <!-- #region home-header-desktop -->
-        <!-- Gust -->
-        <div class=""></div>
-        <div class="home-header-desktop active-bar">
-            <a href="./home-page.html" class="desktop-logo"><img src="Resource/img/small-logo.png"
-                    alt="MODJOY Logo"></a>
-
-            <div class="desktop-right-group">
-                <div class="auth-buttons-group">
-                    <a href="./login-page.html" class="btn-auth-login">เข้าสู่ระบบ</a>
-                    <a href="./register-page.html" class="btn-auth-register">ลงทะเบียน</a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Member -->
-        <div class="home-header-desktop none-active-bar">
-            <a href="./home-page.html" class="desktop-logo"><img src="Resource/img/small-logo.png"
-                    alt="MODJOY Logo"></a>
+        <!-- #region desktop-header -->
+        <div class="desktop-header">
+            <a href="./home-page.html" class="desktop-logo"><img src="Resource/img/small-logo.png" alt="MODJOY Logo"></a>
             <div class="desktop-right-group">
                 <nav class="desktop-nav">
-                    <a class="active" href="./home-page.html">หน้าหลัก</a>
-                    <a href="./created-room.html">กิจกรรมที่สร้าง</a>
-                    <a href="./history-page.html">ประวัติการเข้าร่วม</a>
-                    <a class="material-symbols-outlined" href="./add-room-page.html">add</a>
-                    <div class="profile-menu-container">
-
+                    <!-- Member --><a href="./home-page.html" class="active">หน้าหลัก</a>
+                    <!-- Member --><a href="./created-room.html">กิจกรรมที่สร้าง</a>
+                    <!-- Member --><a href="./history-page.html">ประวัติการเข้าร่วม</a>
+                    <!-- Member --><a href="./add-room-page.html" class="material-symbols-outlined">add</a>
+                    <!-- Member --><div class="profile-menu-container">
                         <div class="desktop-profile" id="profile-menu-btn" onclick="toggleProfileMenu()">
                             <img src="./Resource/img/profile.jpg" alt="profile-image">
                         </div>
-
                         <div class="profile-dropdown" id="profile-dropdown">
                             <div class="dropdown-header">
                                 <div class="dropdown-img-large">
@@ -130,6 +114,11 @@
                             </ul>
                         </div>
                     </div>
+
+                    <!-- Gust -->
+                        <a style="display: none;" href="./login-page.html" class="btn-auth-login">เข้าสู่ระบบ</a>
+                        <a style="display: none;" href="./register-page.html" class="btn-auth-register">ลงทะเบียน</a>
+                    
                 </nav>
             </div>
         </div>

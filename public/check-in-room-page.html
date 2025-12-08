@@ -16,10 +16,12 @@
 </head>
 
 <body>
-    <header class="mobile-header">
-        <button type="button" class="material-symbols-outlined" onclick="history.back()">arrow_back_ios</button>
-        <h2>จัดการการเช็คชื่อกิจกรรม</h2>
-        <span class="header-blank"></span>
+    <header class="header-wrapper">
+        <div class="mobile-header">
+            <button type="button" class="material-symbols-outlined" onclick="history.back()">arrow_back_ios</button>
+            <h2>จัดการการเช็คชื่อกิจกรรม</h2>
+            <span class="header-blank"></span>
+        </div>
     </header>
     <main class="add-home-main">
 
@@ -35,11 +37,12 @@
             <div class="info-group">
                 <div class="qr-container">
                     <div class="qr-imagebox">
-                        <img src="./Resource/img/qr-example.png" alt="QR Code Image" class="qr-code-image" id="room-qr-code">
+                        <img src="./Resource/img/qr-example.png" alt="QR Code Image" class="qr-code-image"
+                            id="room-qr-code">
                         <strong id="room-qr-text">JB12345</strong>
                     </div>
                 </div>
-                <span class="qr-expiry-text" id = "room-qr-expiry">เวลาหมดอายุ : 14:00</span>
+                <span class="qr-expiry-text" id="room-qr-expiry">เวลาหมดอายุ : 14:00</span>
             </div>
 
             <div class="info-group">

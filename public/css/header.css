@@ -26,6 +26,12 @@
         <span class="header-blank"></span>
 </header> 
 */
+.header-wrapper {
+    display: block;
+    width: 100%;
+    height: 80px;
+    position: relative;
+}
 
 .mobile-header {
     position: fixed;
@@ -69,6 +75,51 @@
     line-height: 38px;
 }
 
+.mobile-header .right-account-header {
+    font-weight: 400;
+}
+
+.login-btn {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.sidebar-auth-action {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: auto;
+    /* ดันลงด้านล่างถ้ารายการข้างบนน้อย */
+    border-top: 1px solid #eee;
+}
+
+.sidebar-btn-login {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    text-align: center;
+    border: 1px solid var(--primary-color);
+    color: var(--primary-color);
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.sidebar-btn-register {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    text-align: center;
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+}
+
 /*
 โมบายมีปุ่มขวา
 
@@ -78,15 +129,13 @@
         <a class="material-symbols-outlined right-account-header" href="./settings-page.html">settings</a>
     </header>
 */
-.mobile-header .right-account-header {
-    font-weight: 400;
-}
+
 /* #endregion */
 
 /* #region css คอม */
 /*
 คอม @media screen and (min-width: 1024px) 
-<header class="home-header-desktop">
+<header class="desktop-header">
         <a href="./home-page.html" class="desktop-logo"><img src="Resource/img/small-logo.png" alt="MODJOY Logo"></a>
         <div class="desktop-right-group">
             <nav class="desktop-nav">
@@ -108,59 +157,36 @@
                             <p class="user-name" id="user-name">Guest</p>
                             <p class="user-email" id="user-email">guest@example.com</p>
                         </div>
-
+                        
                         <ul class="dropdown-links">
-                            <li><a href="./my-account-page.html">แก้ไขโปรไฟล์</a></li>
-                            <li><a href="./settings-page.html">การตั้งค่า</a></li>
-                            <li><a href="" class="logout-item" id="logout-btn">ออกจากระบบ</a></li>
+                        <li><a href="./my-account-page.html">แก้ไขโปรไฟล์</a></li>
+                        <li><a href="./settings-page.html">การตั้งค่า</a></li>
+                        <li><a href="" class="logout-item" id="logout-btn">ออกจากระบบ</a></li>
                         </ul>
-                    </div>
-                </div>
-            </nav>
+                        </div>
+                        </div>
+                        </nav>
+                        
+                        </div>
+                        </header>
+                        */
 
-        </div>
-    </header>
-*/
-.home-header-desktop {
+.desktop-header {
     display: none;
 }
 
-.header-wrapper {
-    display: block;
-    width: 100%;
-    height: 80px;
-    position: relative;
-}
-
-/* ตัว Header ลอยติดบน */
-.home-header-desktop {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 80px;
-    z-index: 1000;
-}
-
-.home-header-desktop.active-bar {
-    display: flex;
-}
-.home-header-desktop.none-active-bar {
+.desktop-header.none-active-bar {
     display: none;
 }
 
 /* คอมพิวเตอร์ขนาดหน้าจอ 1024px ขึ้นไป */
 @media screen and (min-width: 1024px) {
-    .mobilechange-header {
+    .mobile-header.active {
         display: none;
     }
 
-    .mobilechange-setting-header {
-        display: none;
-    }
-
-    .home-header-desktop {
-        /* display: flex; */
+    .desktop-header {
+        display: flex;
         justify-content: space-between;
         align-items: center;
         position: fixed;
@@ -209,6 +235,33 @@
         align-items: center;
     }
 
+    .desktop-nav .btn-auth-register {
+        text-decoration: none;
+        background-color: #ffffff;
+        color: var(--primary-color);
+        font-size: 16px;
+        font-weight: 600;
+        padding: 8px 24px;
+        border-radius: 50px;
+        /* ทรงแคปซูล */
+        transition: all 0.2s;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .desktop-nav .btn-auth-login {
+        text-decoration: none;
+        color: #ffffff;
+        font-size: 16px;
+        font-weight: 500;
+        transition: opacity 0.2s;
+    }
+
+    .desktop-nav .btn-auth-register:hover {
+        background-color: #f0f0f0;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    }
+
     .desktop-nav a:hover {
         opacity: 0.8;
     }
@@ -233,32 +286,27 @@
         object-fit: cover;
     }
 
-    /* --- CSS สำหรับ Profile Dropdown --- */
-
-    /* 1. คอนเทนเนอร์สำหรับจัดตำแหน่ง */
     .profile-menu-container {
         position: relative;
         /* สำคัญ! เพื่อให้เมนูรู้ว่าต้องลอยอยู่ตรงไหน */
     }
 
     /* 2. กล่องเมนู (สีขาวขอบส้ม) */
+
     .profile-dropdown {
         display: none;
         /* ซ่อนไว้ก่อน */
-
         position: absolute;
         top: 60px;
         /* ระยะห่างจากปุ่มโปรไฟล์ลงมา */
         right: 0;
         /* ชิดขวา */
         width: 260px;
-
         background-color: white;
         border: 3px solid #FA5A16;
         /* ขอบสีส้มตามรูป */
         border-radius: 12px;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-
         flex-direction: column;
         overflow: hidden;
         z-index: 1100;
@@ -277,7 +325,6 @@
         padding: 20px;
         border-bottom: 1px solid #eee;
     }
-
     .dropdown-img-large {
         width: 80px;
         height: 80px;
@@ -294,12 +341,16 @@
         object-fit: cover;
     }
 
+
+
     .user-name {
         font-size: 16px;
         font-weight: 600;
         color: #333;
         margin-bottom: 2px;
     }
+
+
 
     .user-email {
         font-size: 13px;
@@ -339,177 +390,4 @@
     .dropdown-links li:last-child a {
         border-bottom: none;
     }
-
-    .desktop-nav a.active {
-        position: relative;
-        font-weight: bold;
-        opacity: 1;
-    }
-
-    .desktop-nav a.active::after {
-        content: '';
-        position: absolute;
-        bottom: -10px;
-        left: 0;
-        width: 100%;
-        height: 4px;
-        background-color: #ffffff;
-        border-radius: 5px;
-    }
 }
-
-/* --------------------------------------------------------------------- */
-/* header สำหรับ Landing page */
-.Guesthome-header-mobile {
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    height: 80px;
-
-    width: 100%;
-    padding-top: calc(10px + env(safe-area-inset-left));
-    padding-left: calc(20px + env(safe-area-inset-left));
-    padding-right: calc(20px + env(safe-area-inset-right));
-    padding-bottom: 0px;
-
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-
-    background: var(--primary-gradient-start);
-    background: linear-gradient(0deg, #FA8816 0.36%, #E85A34 99.64%);
-    background-size: cover;
-    color: var(--text-light);
-    box-shadow: 0 1px 1px 0 rgba(0, 0, 0, .05);
-}
-
-.Guesthome-header-mobile .material-symbols-outlined {
-    color: white;
-    font-size: 28px;
-    font-weight: 700;
-}
-
-
-
-.Guesthome-header-desktop {
-    display: none;
-}
-
-@media screen and (min-width: 1024px) {
-    .Guesthome-header-mobile {
-        display: none;
-    }
-    
-
-    .Guesthome-header-desktop {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        width: 100%;
-        height: 80px;
-        padding: 0 50px;
-        /* พื้นหลังสีส้มไล่เฉด (ตามธีมเดิม) */
-        background: linear-gradient(180deg, #FA5A16 0%, #FA8816 100%);
-        color: var(--text-light);
-        position: sticky;
-        top: 0;
-        z-index: 1000;
-
-    }
-
-    /* ขนาดโลโก้ */
-
-    .desktop-logo img {
-        display: block;
-        height: 45px;
-        ;
-    }
-
-
-
-    /* กลุ่มทางขวา */
-    .desktop-right-group {
-        display: flex;
-        align-items: center;
-        gap: 30px;
-    }
-
-   
-
- 
-}
-
-/* --- CSS สำหรับ Header ของ Guest (Desktop) --- */
-.auth-buttons-group {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-/* ปุ่มเข้าสู่ระบบ (ตัวหนังสือสีขาว) */
-.btn-auth-login {
-    text-decoration: none;
-    color: #ffffff;
-    font-size: 16px;
-    font-weight: 500;
-    transition: opacity 0.2s;
-}
-
-.btn-auth-login:hover {
-    opacity: 0.8;
-}
-
-/* ปุ่มลงทะเบียน (พื้นหลังขาว ตัวหนังสือส้ม) */
-.btn-auth-register {
-    text-decoration: none;
-    background-color: #ffffff;
-    color: var(--primary-color);
-    font-size: 16px;
-    font-weight: 600;
-    padding: 8px 24px;
-    border-radius: 50px; /* ทรงแคปซูล */
-    transition: all 0.2s;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.btn-auth-register:hover {
-    background-color: #f0f0f0;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-}
-
-/* --- CSS สำหรับ Sidebar ของ Guest (Mobile) --- */
-.sidebar-auth-action {
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-top: auto; /* ดันลงด้านล่างถ้ารายการข้างบนน้อย */
-    border-top: 1px solid #eee;
-}
-
-.sidebar-btn-login {
-    display: block;
-    width: 100%;
-    padding: 10px;
-    text-align: center;
-    border: 1px solid var(--primary-color);
-    color: var(--primary-color);
-    border-radius: 8px;
-    text-decoration: none;
-    font-weight: 500;
-}
-
-.sidebar-btn-register {
-    display: block;
-    width: 100%;
-    padding: 10px;
-    text-align: center;
-    background-color: var(--primary-color);
-    color: white;
-    border-radius: 8px;
-    text-decoration: none;
-    font-weight: 500;
-}   
-/* #endregion */
