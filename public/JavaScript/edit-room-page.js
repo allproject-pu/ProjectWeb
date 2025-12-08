@@ -1,67 +1,82 @@
-// รอให้หน้าเว็บโหลดเสร็จก่อน
 document.addEventListener("DOMContentLoaded", function () {
+    // #region ========== Custom Select สำหรับที่อยู่ (Address) ==========
 
-    // 1. หาองค์ประกอบทั้งหมดที่เราต้องใช้
-    const container = document.querySelector(".custom-select-container");
-    const displayInput = document.getElementById("address-input-display");
-    const hiddenInput = document.getElementById("address-input-hidden");
-    const optionsList = document.querySelector(".custom-options-list");
-    const allOptions = optionsList.querySelectorAll(".custom-option");
+    // #region init ตัวแปร หาองค์ประกอบ 
+    const addressDisplayInput = document.getElementById("address-input-display");
+    const addressHiddenInput = document.getElementById("address-input-hidden");
+    const addressOptionsList = document.querySelector("#address-options-list");
+    const availableAddresses = ["N7", "N10", "S2", "S3"];
+    // #endregion
 
-    // 2. เมื่อ "พิมพ์" ในช่องค้นหา (Keyup) -> ให้ "กรอง" (Filter)
-    displayInput.addEventListener("keyup", function () {
-        const filterValue = displayInput.value.toLowerCase();
-        optionsList.classList.add("show"); // เปิด list ตอนพิมพ์
+    // #region renderAddressesOption 
+    function renderAddressesOption() {
+        addressOptionsList.innerHTML = '';
+        availableAddresses.forEach(addressText => {
+            const option = document.createElement('div');
+            option.className = 'custom-option';
+            option.setAttribute('data-value', addressText);
+            option.textContent = addressText;
+            addressOptionsList.appendChild(option);
+        });
+    }
+    renderAddressesOption();
+    const allOptions = addressOptionsList.querySelectorAll('.custom-option');
+    // #endregion
+
+    // #region เมื่อ "พิมพ์" ในช่องค้นหา ให้กรอง 
+    addressDisplayInput.addEventListener("keyup", function () {
+        const filterValue = addressDisplayInput.value.toLowerCase();
+        addressOptionsList.classList.add("show");
 
         allOptions.forEach(option => {
             const text = option.textContent.toLowerCase();
             if (text.includes(filterValue)) {
-                option.style.display = "block"; // ถ้าตรง ให้แสดง
+                option.style.display = "block";
             } else {
-                option.style.display = "none"; // ถ้าไม่ตรง ให้ซ่อน
+                option.style.display = "none";
             }
         });
     });
+    // #endregion
 
-    // 3. เมื่อ "คลิก" ที่ช่องค้นหา -> ให้ "เปิด/ปิด" list
-    displayInput.addEventListener("click", function (e) {
-        e.stopPropagation(); // หยุดไม่ให้ event ลามไปถึง document
-        optionsList.classList.toggle("show");
+    // #region เมื่อคลิกที่ช่องค้นหาให้ "เปิด/ปิด" list 
+    addressDisplayInput.addEventListener("click", function (e) {
+        e.stopPropagation();
+        addressOptionsList.classList.toggle("show");
         // เมื่อคลิกเปิด ให้แสดงตัวเลือกทั้งหมด
         allOptions.forEach(option => {
             option.style.display = "block";
         });
     });
+    // #endregion
 
-    // 4. เมื่อ "คลิก" เลือกตัวเลือก (Option)
+    // #region เมื่อคลิก เลือกตัวเลือก (Option) 
     allOptions.forEach(option => {
         option.addEventListener("click", function () {
             const value = this.getAttribute("data-value");
             const text = this.textContent;
 
-            // 4.1. อัปเดตค่าในช่องแสดงผล (ให้ผู้ใช้เห็น)
-            displayInput.value = text;
+            addressDisplayInput.value = text;
+            addressHiddenInput.value = value;
 
-            // 4.2. อัปเดตค่าใน input ที่ซ่อนไว้ (สำหรับส่ง Form)
-            hiddenInput.value = value;
-
-            // 4.3. ปิด List
-            optionsList.classList.remove("show");
+            addressOptionsList.classList.remove("show");
         });
     });
+    // #endregion
 
-    // 5. เมื่อ "คลิก" ที่อื่นบนหน้าจอ -> ให้ "ปิด" list
+    // #region เมื่อคลิก ที่อื่นบนหน้าจอให้ "ปิด" list 
     document.addEventListener("click", function () {
-        if (optionsList.classList.contains("show")) {
-            optionsList.classList.remove("show");
+        if (addressOptionsList.classList.contains("show")) {
+            addressOptionsList.classList.remove("show");
         }
     });
-});
+    // #endregion
 
-document.addEventListener("DOMContentLoaded", function() {
+    // #endregion ========== Custom Select สำหรับที่อยู่ (Address) ==========
+
     // (Database) ใช้สำหรับ "แนะนำ" (Suggest) เท่านั้น
     const availableTags = [
-        "อ่านหนังสือ", "Calculus", "ติวฟรี", "เล่นเกม", 
+        "อ่านหนังสือ", "Calculus", "ติวฟรี", "เล่นเกม",
         "ดูหนัง", "ฟังเพลง", "Physics", "Art", "Coding"
     ];
     const MAX_TAGS = 5;
@@ -102,7 +117,7 @@ document.addEventListener("DOMContentLoaded", function() {
             tagInput.placeholder = "พิมพ์เพื่อค้นหา หรือเพิ่มแท็กใหม่...";
         }
     }
-    
+
     function removeTag(tagText) {
         currentTags = currentTags.filter(tag => tag !== tagText);
         renderTags();
@@ -110,17 +125,17 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function addTag(tagText) {
         const cleanTag = tagText.trim();
-        
+
         // 1. (Validation) เช็คว่าว่างเปล่าหรือไม่
         if (cleanTag === "") {
             return; // ไม่ทำอะไรเลย
         }
-        
+
         // 2. (Validation) เช็คว่าซ้ำหรือไม่
         // (เราเปลี่ยนเป็น .toLowerCase() เพื่อกัน "Cal" กับ "cal")
         const lowerCaseTag = cleanTag.toLowerCase();
         const existingTagsLower = currentTags.map(t => t.toLowerCase());
-        
+
         if (existingTagsLower.includes(lowerCaseTag)) {
             alert("คุณเพิ่มแท็กนี้ไปแล้ว");
             tagInput.value = '';
@@ -132,13 +147,13 @@ document.addEventListener("DOMContentLoaded", function() {
            เราไม่เช็ค !availableTags.includes(cleanTag) อีกต่อไป
            เพื่อให้ผู้ใช้ "เพิ่มแท็กใหม่" ได้
         */
-        
+
         // 4. (Validation) เช็คลิมิต 3 แท็ก (เหมือนเดิม)
         if (currentTags.length < MAX_TAGS) {
             currentTags.push(cleanTag); // (เพิ่มแท็กใหม่เข้าไปเลย)
             renderTags(); // อัปเดตหน้าจอ
         }
-        
+
         // 5. (เหมือนเดิม) เคลียร์ช่องพิมพ์
         tagInput.value = '';
         hideSuggestions();
@@ -158,17 +173,17 @@ document.addEventListener("DOMContentLoaded", function() {
             const item = document.createElement('div');
             item.className = 'suggestion-item';
             item.textContent = tagText;
-            
+
             // (ตรรกะ "คลิก = เติมข้อความ" เหมือนเดิม)
-            item.addEventListener('click', function() {
+            item.addEventListener('click', function () {
                 tagInput.value = tagText;
                 hideSuggestions();
                 tagInput.focus();
             });
-            
+
             suggestionsContainer.appendChild(item);
         });
-        
+
         suggestionsContainer.style.display = 'block';
     }
 
@@ -180,51 +195,51 @@ document.addEventListener("DOMContentLoaded", function() {
     // --- 4. เชื่อมต่อ Events (เหมือนเดิม) ---
 
     // (Event) เมื่อ "พิมพ์"
-    tagInput.addEventListener('keyup', function() {
+    tagInput.addEventListener('keyup', function () {
         const query = tagInput.value.toLowerCase();
         if (query.length === 0) {
             hideSuggestions();
             return;
         }
-        const filtered = availableTags.filter(tag => 
-            tag.toLowerCase().includes(query) && 
+        const filtered = availableTags.filter(tag =>
+            tag.toLowerCase().includes(query) &&
             !currentTags.map(t => t.toLowerCase()).includes(tag.toLowerCase())
         );
         showSuggestions(filtered);
     });
 
     // (Event) เมื่อ "คลิก" ปุ่ม +
-    addTagBtn.addEventListener('click', function() {
+    addTagBtn.addEventListener('click', function () {
         addTag(tagInput.value);
     });
 
     // (Event) เมื่อกด "Enter"
-    tagInput.addEventListener('keydown', function(event) {
+    tagInput.addEventListener('keydown', function (event) {
         if (event.key === 'Enter') {
-            event.preventDefault(); 
+            event.preventDefault();
             addTag(tagInput.value);
         }
     });
 
     // (Event) คลิกที่อื่น (เหมือนเดิม)
-    document.addEventListener('click', function(event) {
+    document.addEventListener('click', function (event) {
         if (!event.target.closest('.tag-input-container')) {
             hideSuggestions();
         }
     });
-    
+
     // --- 5. สั่งให้ทำงานครั้งแรก ---
     renderTags();
 });
 
 
 
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     // --- 1. หาองค์ประกอบทั้งหมดที่ต้องใช้ ---
     const imageContainer = document.getElementById('profile-image-container');
     const imagePreview = document.getElementById('profile-image-preview');
     const fileInput = document.getElementById('cover-image-input');
-    
+
     // --- 2. ฟังก์ชันสำหรับอัปเดต UI (หัวใจหลัก) ---
     function updateImagePreview(imageUrl) {
         if (imageUrl && imageUrl !== "") {
@@ -244,28 +259,28 @@ document.addEventListener("DOMContentLoaded", function() {
     function loadInitialData() {
         // (ตัวอย่างข้อมูลสมมติ)
         // ถ้าผู้ใช้มีรูปอยู่แล้ว ให้ใส่ URL
-        const userProfileUrl = "/Resource/img/bangmod.png"; 
+        const userProfileUrl = "/Resource/img/bangmod.png";
 
         updateImagePreview(userProfileUrl);
     }
-    
+
     // สั่งให้โหลดข้อมูล 1 ครั้งตอนเปิดหน้า
     loadInitialData();
 
 
     // --- 4. เมื่อผู้ใช้ "เลือกไฟล์ใหม่" ---
-    fileInput.addEventListener('change', function(event) {
+    fileInput.addEventListener('change', function (event) {
         const file = event.target.files[0];
-        
+
         if (file) {
             // ถ้าผู้ใช้เลือกไฟล์
             const reader = new FileReader();
-            
-            reader.onload = function(e) {
+
+            reader.onload = function (e) {
                 // e.target.result คือ URL (base64) ของรูปที่เพิ่งเลือก
                 updateImagePreview(e.target.result);
             };
-            
+
             // อ่านไฟล์ที่ผู้ใช้เลือก
             reader.readAsDataURL(file);
         }

@@ -1,4 +1,4 @@
-// #region ฟังก์ชันสำหรับ Logout
+// #region ฟังก์ชันสำหรับ Logout 
 async function handleLogout(event) {
     event.preventDefault();
 
@@ -19,6 +19,7 @@ async function handleLogout(event) {
 }
 // #endregion
 
+// #region ตรวจสอบสถานะการล็อกอิน เมื่อโหลดหน้า Home Page 
 document.addEventListener('DOMContentLoaded', async () => {
     const logoutButton = document.querySelectorAll('#logout-button');
     logoutButton.forEach(btn => {
@@ -75,13 +76,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     // #endregion
 });
+// #endregion
 
+// #region ฟังก์ชันเปิด/ปิดเมนูโปรไฟล์ 
 function toggleProfileMenu() {
     const dropdown = document.getElementById('profile-dropdown');
     dropdown.classList.toggle('active');
 }
+// #endregion
 
-// ฟังก์ชันเสริม: คลิกที่อื่นแล้วให้เมนูปิดเอง
+// #region ปิดเมนูโปรไฟล์เมื่อคลิกนอกพื้นที่ 
 document.addEventListener('click', function (event) {
     const container = document.querySelector('.profile-menu-container');
     const dropdown = document.getElementById('profile-dropdown');
@@ -91,3 +95,4 @@ document.addEventListener('click', function (event) {
         dropdown.classList.remove('active');
     }
 });
+// #endregion
