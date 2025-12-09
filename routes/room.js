@@ -99,4 +99,15 @@ router.get('/rooms', (req, res) => {
     // เปลี่ยน app.get เป็น router.get
 });
 
+// API: ดึงรายชื่อสถานที่ (เพื่อเอา ID ไปใส่ใน Dropdown)
+router.get('/locations', (req, res) => {
+    db.query('SELECT * FROM LOCATIONS', (err, results) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ error: 'Database error' });
+        }
+        res.json(results);
+    });
+});
+
 module.exports = router;

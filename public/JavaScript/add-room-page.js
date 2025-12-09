@@ -1,12 +1,5 @@
 // #region (DOMContentLoaded)
 document.addEventListener("DOMContentLoaded", function () {
-    // #region ======== Custom Select สำหรับที่อยู่ (Address) ========== 
-    // #region init ตัวแปร หาองค์ประกอบ 
-    const addressDisplayInput = document.getElementById("address-input-display");
-    const addressHiddenInput = document.getElementById("address-input-hidden");
-    const addressOptionsList = document.querySelector("#places-listbox");
-    const availableAddresses = ["N7", "N10", "S2", "S3"];
-
     // ป้องกันการกด Enter เพื่อ submit form
     document.querySelector('.add-room-form').addEventListener('keydown', function (e) {
         if (e.key === 'Enter') {
@@ -14,6 +7,25 @@ document.addEventListener("DOMContentLoaded", function () {
             return false;
         }
     });
+
+    // #region ======== Custom Select สำหรับที่อยู่ (Address) ========== 
+    // #region init ตัวแปร หาองค์ประกอบ 
+    const addressDisplayInput = document.getElementById("address-input-display");
+    const addressHiddenInput = document.getElementById("address-input-hidden");
+    const addressOptionsList = document.querySelector("#places-listbox");
+    let availableAddresses = [];
+
+    // ฟังก์ชันดึงสถานที่จาก Server
+    async function fetchLocations() {
+        try {
+            const res = await fetch('/api/locations');
+            const locations = await res.json();
+            availableAddresses = locations;
+        } catch (error) {
+            console.error("Error fetching locations:", error);
+        }
+    }
+    fetchLocations(); // เรียกทำงานทันที
     // #endregion
 
     // #region renderAddressesOption 
@@ -24,8 +36,8 @@ document.addEventListener("DOMContentLoaded", function () {
             option.className = 'custom-option';
             option.setAttribute('role', "option")
             option.setAttribute('aria-selected', "false")
-            option.setAttribute('data-value', addressText);
-            option.textContent = addressText;
+            option.setAttribute('data-value', addressText.LOCATION_ID);
+            option.textContent = addressText.LOCATION_NAME;
             addressOptionsList.appendChild(option);
         });
     }

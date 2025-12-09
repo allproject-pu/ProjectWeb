@@ -43,12 +43,12 @@
                     </div>
                 </label>
                 <p class="add-cover-hint">*เพิ่มรูปภาพกิจกรรมหรือสถานที่</p>
-                <input type="file" id="room-image-input" name="cover_image" class="hidden-file-input" accept="image/*">
+                <input type="file" id="room-image-input" name="room_image" class="hidden-file-input" accept="image/*">
             </div>
 
             <div class="form-group">
                 <label for="room-name">ชื่อห้อง</label>
-                <input type="text" id="room-name" name="room-name" required>
+                <input type="text" id="room-name" name="roomTitle" required>
             </div>
 
             <div class="form-group">
@@ -58,25 +58,25 @@
                         placeholder="พิมพ์ค้นหา หรือเลือกจากรายการ..." role="combobox" aria-autocomplete="list"
                         aria-expanded="false" aria-haspopup="listbox" aria-controls="places-listbox">
                     <div class="custom-options-list" id="places-listbox" role="listbox"></div>
-                    <input type="hidden" name="address-activity" id="address-input-hidden">
+                    <input type="hidden" name="roomLocation" id="address-input-hidden">
                 </div>
             </div>
 
             <div class="form-group time-input-group">
                 <label for="start-time">เวลา</label>
-                <input type="time" id="room-start-time" class="time-input" name="room-start-time" placeholder="เริ่ม">
+                <input type="time" id="room-start-time" class="time-input" name="roomEventStartTime" placeholder="เริ่ม">
                 <span class="inline-separator">-</span>
-                <input type="time" id="room-end-time" class="time-input" name="room-end-time" placeholder="สิ้นสุด">
+                <input type="time" id="room-end-time" class="time-input" name="roomEventEndTime" placeholder="สิ้นสุด">
             </div>
 
             <div class="form-group">
                 <label for="date-activity">วัน / เดือน / ปี</label>
-                <input type="date" id="room-event-date" class="date-input" name="room-event-date" placeholder="วัน">
+                <input type="date" id="room-event-date" class="date-input" name="roomEventDate" placeholder="วัน">
             </div>
 
             <div class="form-group">
                 <label for="room-detail">รายละเอียด</label>
-                <textarea id="room-detail" name="room-detail" class="detail-textarea"></textarea>
+                <textarea id="room-detail" name="roomDescription" class="detail-textarea"></textarea>
             </div>
 
             <div class="form-group">
@@ -95,7 +95,7 @@
             
             <div class="form-group">
                 <label for="room-capacity">จำนวนผู้เข้าร่วม :</label>
-                <input class='capacity input' type="number" id="room-capacity" name="room-capacity" min="1" max="100" value="10" required>
+                <input class='capacity input' type="number" id="room-capacity" name="roomCapacity" min="1" max="100" value="10" required>
             </div>
 
             <div class="btn-box">
