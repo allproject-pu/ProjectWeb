@@ -102,6 +102,7 @@ router.post('/create-room', upload.single('room_image'), async (req, res) => {
 });
 // #endregion
 
+// #region --- API ดึงข้อมูลห้องกิจกรรมทั้งหมด (get-rooms) --- 
 router.get('/rooms', async (req, res) => {
     try {
         const sql = `
@@ -137,5 +138,6 @@ router.get('/rooms', async (req, res) => {
         res.status(500).json({ success: false, message: 'Database error' });
     }
 });
+// #endregion
 
 module.exports = router;
