@@ -26,7 +26,7 @@ async function loadGlobalUserData() {
 
             const u = data.user;
             const fullName = `${u.fullname} ${u.lastname}`;
-            const imgSrc = u.profile_image || '/Resource/img/profile.jpg';
+            const imgSrc = u.profile_image || '/Resource/img/profile.png';
 
             // 1. อัปเดต Sidebar & Header
             if(sidebarUserName) sidebarUserName.textContent = fullName;

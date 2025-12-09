@@ -7,13 +7,11 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
-// กำหนดรหัสลับสำหรับสร้าง Token (สำคัญมาก)
 const JWT_SECRET = process.env.JWT_SECRET
 
-// --- Register  ---
+// #region register API Routes
 router.post('/register', async (req, res) => {
     const { email, fullname, lastname, password } = req.body;
-
     const sql = `INSERT INTO USERS (USER_EMAIL, USER_FNAME, USER_LNAME, USER_PASSWORD, USER_YEAR) VALUES (?, ?, ?, ?, 1)`;
     db.query(sql, [email, fullname, lastname, password], (err, result) => {
         if (err) {
@@ -26,12 +24,12 @@ router.post('/register', async (req, res) => {
         res.json({ success: true, message: 'สมัครสมาชิกเรียบร้อย!' });
     });
 });
+// #endregion
 
-// --- Login ---
+// #region login API Routes
 router.post('/login', (req, res) => {
     const { email, password } = req.body;
-
-    // ค้นหา User จาก Email ก่อน
+    
     const sql = 'SELECT * FROM USERS WHERE USER_EMAIL = ?';
     db.query(sql, [email], async (err, results) => {
         if (err) return res.status(500).json({ error: err });
@@ -79,6 +77,7 @@ router.post('/login', (req, res) => {
 
     });
 });
+// #endregion
 
 // --- API เช็คว่า User ล็อกอินอยู่ไหม (Me) ---
 router.get('/me', (req, res) => {

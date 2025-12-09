@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     document.getElementById('user-about-detail').value = user.about || '';
 
                 // เติมรูปภาพ
-                const userProfileUrl = user.profile_image || "./Resource/img/profile.jpg";
+                const userProfileUrl = user.profile_image || "./Resource/img/profile.png";
                 updateImagePreview(userProfileUrl);
 
                 // --- 3. เลือกค่าใน Dropdown ให้ตรงกับของเดิม ---
@@ -57,7 +57,6 @@ document.addEventListener("DOMContentLoaded", function () {
             console.error("Error loading data:", error);
         }
     }
-
     loadInitialData(); // เรียกใช้งาน
     // #endregion loadInitialData โหลดข้อมูลผู้ใช้ครั้งแรก ---
 
