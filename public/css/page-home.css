@@ -316,7 +316,7 @@ body {
     width: 100%;
     padding: 30px 20px;
     padding-bottom: calc(30px + env(safe-area-inset-bottom));
-
+    background: #ededed;
     display: flex;
     flex-direction: column;
     align-items: center;
