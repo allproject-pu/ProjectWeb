@@ -46,7 +46,7 @@ router.post('/create-room', upload.single('room_image'), async (req, res) => {
         const decoded = jwt.verify(token, JWT_SECRET);
         const leaderId = decoded.id;
         // 2. รับค่าจากฟอร์ม
-        const { roomTitle, roomEventStartTime, roomEventEndTime, roomEventDate, roomLocation, roomDescription, roomCapacity } = req.body;
+        const { roomTitle, roomEventStartTime, roomEventEndTime, roomEventDate, roomLocation, roomDescription, roomCapacity, tags } = req.body;
         // 3. จัดการรูปภาพ (ถ้ามี)
         let imagePath = '/Resource/img/bangmod.png'; // รูป Default
         if (req.file) {

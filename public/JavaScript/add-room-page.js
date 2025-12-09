@@ -287,61 +287,59 @@ document.addEventListener("DOMContentLoaded", function () {
     // #endregion
     // #endregion ======== Profile Image Uploader ==========
 
-});
-// #endregion
+    // #region --- ส่งข้อมูลฟอร์มสร้างห้องกิจกรรม ---
+    document.querySelector('.add-room-form').addEventListener('submit', async function (e) {
+        e.preventDefault();
 
-// #region --- ส่งข้อมูลฟอร์มสร้างห้องกิจกรรม ---
-document.querySelector('.add-room-form').addEventListener('submit', async function (e) {
-    e.preventDefault();
-
-    const submitBtn = document.querySelector('.add-room-form button[type="submit"]');
-    if (submitBtn) {
-        submitBtn.disabled = true;
-        submitBtn.innerText = 'กำลังสร้าง...';
-    }
-
-    try {
-        // ดึงข้อมูลจากฟอร์ม
-        const formData = new FormData(this);
-        const data = Object.fromEntries(formData.entries());
-
-        // ดึงค่าจาก Input ตาม ID (ต้องไปเช็ค HTML ให้ตรงกัน)
-        formData.append('roomTitle', document.getElementById('room-name').value);
-        formData.append('roomEventStartTime', document.getElementById('room-start-time').value);
-        formData.append('roomEventEndTime', document.getElementById('room-end-time').value);
-        formData.append('roomEventDate', document.getElementById('room-event-date').value);
-        formData.append('roomLocation', document.getElementById('address-input-hidden').value);
-        formData.append('roomDescription', document.getElementById('room-detail').value);
-        formData.append('roomCapacity', document.getElementById('room-capacity').value);
-        formData.append('tags', document.getElementById('tags-list-hidden').value);
-
-        // ส่งไฟล์รูป
-        if (fileInput && fileInput.files[0]) {
-            formData.append('room_image', fileInput.files[0]);
-        }
-
-        // ส่งไป Backend
-        const response = await fetch('/api/create-room', {
-            method: 'POST',
-            body: formData
-        });
-
-        const result = await response.json();
-
-        if (result.success) {
-            alert('สร้างห้องสำเร็จ!');
-            window.location.href = '/home-page.html'; // หรือไปหน้า detail ห้องใหม่
-        } else {
-            alert('เกิดข้อผิดพลาด: ' + result.message);
-        }
-    } catch (error) {
-        console.error(error);
-        alert('เชื่อมต่อ Server ไม่ได้');
-    } finally {
+        const submitBtn = document.querySelector('.add-room-form button[type="submit"]');
         if (submitBtn) {
-            submitBtn.disabled = false;
-            submitBtn.innerText = 'ยืนยันการสร้าง';
+            submitBtn.disabled = true;
+            submitBtn.innerText = 'กำลังสร้าง...';
         }
-    }
+
+        try {
+            // ดึงข้อมูลจากฟอร์ม
+            const formData = new FormData(this);
+
+            // ดึงค่าจาก Input ตาม ID (ต้องไปเช็ค HTML ให้ตรงกัน)
+            formData.append('roomTitle', document.getElementById('room-name').value);
+            formData.append('roomEventStartTime', document.getElementById('room-start-time').value);
+            formData.append('roomEventEndTime', document.getElementById('room-end-time').value);
+            formData.append('roomEventDate', document.getElementById('room-event-date').value);
+            formData.append('roomLocation', document.getElementById('address-input-hidden').value);
+            formData.append('roomDescription', document.getElementById('room-detail').value);
+            formData.append('roomCapacity', document.getElementById('room-capacity').value);
+            formData.append('tags', document.getElementById('tags-list-hidden').value);
+
+            // ส่งไฟล์รูป
+            if (fileInput && fileInput.files.length > 0) {
+                formData.append('room_image', fileInput.files[0]);
+            }
+
+            // ส่งไป Backend
+            const response = await fetch('/api/create-room', {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                alert('สร้างห้องสำเร็จ!');
+                window.location.href = '/home-page.html'; // หรือไปหน้า detail ห้องใหม่
+            } else {
+                alert('เกิดข้อผิดพลาด: ' + result.message);
+            }
+        } catch (error) {
+            console.error(error);
+            alert('เชื่อมต่อ Server ไม่ได้');
+        } finally {
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.innerText = 'ยืนยันการสร้าง';
+            }
+        }
+    });
+    // #endregion ----- ส่งข้อมูลฟอร์มสร้างห้องกิจกรรม -----
 });
 // #endregion
