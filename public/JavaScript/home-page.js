@@ -3,13 +3,9 @@ async function handleLogout(event) {
     event.preventDefault();
 
     try {
-        const response = await fetch('/api/logout', {
-            method: 'POST'
-        });
-
+        const response = await fetch('/api/logout', { method: 'POST' });
         const result = await response.json();
         if (result.success) {
-            alert('Logout Success:', result.success);
             window.location.href = '/login-page.html';
         }
     } catch (error) {
@@ -38,3 +34,12 @@ document.addEventListener('click', function (event) {
     }
 });
 // #endregion
+
+document.addEventListener('DOMContentLoaded', () => {
+
+    document.body.addEventListener('click', function (e) {
+        const logoutBtn = e.target.closest('.logout-button');
+        if (logoutBtn) handleLogout(e);
+    });
+
+});

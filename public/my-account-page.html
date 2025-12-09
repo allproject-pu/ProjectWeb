@@ -13,6 +13,7 @@
     <script src="./JavaScript/auth-guard.js"></script>
     <script src="./JavaScript/sidebar.js" defer></script>
     <script src="./JavaScript/home-page.js" defer></script>
+    <script src="./JavaScript/global-loader.js" defer></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700&family=Inria+Sans&display=swap"
@@ -51,8 +52,8 @@
                         class="material-symbols-outlined">history</span><span>ประวัติการเข้าร่วม</span></a></li>
             <li><a href="./settings-page.html"><span
                         class="material-symbols-outlined">settings</span><span>การตั้งค่า</span></a></li>
-            <li><a href="./login-page.html"><span
-                        class="material-symbols-outlined logout-button">logout</span><span>ออกจากระบบ</span></a>
+            <li><a href="./login-page.html" class="logout-button"><span
+                        class="material-symbols-outlined">logout</span><span>ออกจากระบบ</span></a>
             </li>
         </ul>
     </nav>
@@ -91,7 +92,7 @@
                             <ul class="dropdown-links">
                                 <li><a href="./my-account-page.html">แก้ไขโปรไฟล์</a></li>
                                 <li><a href="./settings-page.html">การตั้งค่า</a></li>
-                                <li><a href="./login-page.html" class="logout-item">ออกจากระบบ</a></li>
+                                <li><a href="./login-page.html" class="logout-button logout-item">ออกจากระบบ</a></li>
                             </ul>
                         </div>
                     </div>
