@@ -63,7 +63,6 @@ body {
 .add-room-form input[type="email"],
 .add-room-form input[type="date"],
 .add-room-form input[type="text"],
-.add-room-form input[type="number"],
 .add-room-form select,
 .add-room-form textarea,
 .detail-room-form textarea {
@@ -102,7 +101,18 @@ body {
 input[type="time"].time-input {
     padding: 0px 0px 0px 10px;
 }
-
+.add-room-form input[type="number"]{
+    height: 36px;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    background-color: #ffffff;
+    padding: 0px 10px;
+    font-size: 16px;
+    outline: none;
+    text-align: left;
+    box-sizing: border-box;
+    min-width: 8vw;
+}
 .capacity input{
     border: 2px solid var(--primary-color-light);
     text-align: right;
