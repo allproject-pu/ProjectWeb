@@ -52,6 +52,19 @@ document.addEventListener("DOMContentLoaded", function () {
                     const yearSelect = document.getElementById('select-years');
                     if (yearSelect) yearSelect.value = user.year;
                 }
+
+                // --- เติม Tag ที่มีอยู่เดิม ---
+                if (user.tags && Array.isArray(user.tags)) {
+                    // เคลียร์ค่าเก่าก่อน
+                    currentTags = [];
+
+                    // เติม Tag จาก DB ลงไป
+                    user.tags.forEach(tag => {
+                        currentTags.push(tag);
+                    });
+
+                    renderTags(); // สั่งวาดหน้าจอใหม่
+                }
             }
         } catch (error) {
             console.error("Error loading data:", error);
@@ -99,10 +112,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // #region ======== Tag Input สำหรับแท็ก User ========== 
     // #region init ตัวแปร หาองค์ประกอบ
-    const availableTags = [
-        "อ่านหนังสือ", "Calculus", "ติวฟรี", "เล่นเกม",
-        "ดูหนัง", "ฟังเพลง", "Physics", "Art", "Coding"
-    ];
+    let availableTags = [];
     const MAX_TAGS = 3;
     let currentTags = [];
     // #endregion
@@ -116,6 +126,19 @@ document.addEventListener("DOMContentLoaded", function () {
     // #endregion
 
     // #region ----- ฟังก์ชันหลัก (Core Functions) -----
+    // #region ฟังก์ชันดึง Tag ทั้งหมดจาก Server มาใส่ใน Suggestion
+    async function fetchAllTags() {
+        try {
+            const res = await fetch('/api/tags');
+            const tags = await res.json();
+            availableTags = tags; // อัปเดตตัวแปร global
+        } catch (error) {
+            console.error("Error fetching tags:", error);
+        }
+    }
+    fetchAllTags(); // เรียกทำงานทันที
+    // #endregion
+
     // #region ฟังก์ชัน hideSuggestions 
     function hideSuggestions() {
         suggestionsContainer.style.display = 'none';
@@ -260,11 +283,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const confirmBtn = document.querySelector('#save-btn');
     if (confirmBtn) {
         confirmBtn.addEventListener('click', async function (e) {
-            e.preventDefault(); // กันปุ่ม submit ธรรมดา
+            e.preventDefault();
 
-            // 1. เตรียมข้อมูลใส่ FormData
             const formData = new FormData();
-
             // ดึงค่าจาก Input
             formData.append('fullname', document.getElementById('user-fullname').value);
             formData.append('lastname', document.getElementById('user-lastname').value);
@@ -276,25 +297,24 @@ document.addEventListener("DOMContentLoaded", function () {
             // ดึงไฟล์รูปภาพ (ถ้ามีการเลือก)
             const fileInput = document.getElementById('cover-image-input');
             if (fileInput.files.length > 0) {
-                // ชื่อ 'profile_image' ต้องตรงกับ upload.single('...') ใน Backend
                 formData.append('profile_image', fileInput.files[0]);
             }
 
-            // 2. ส่งไป Backend
+            // ส่งไป Backend
             try {
                 confirmBtn.innerText = 'กำลังบันทึก...';
                 confirmBtn.disabled = true;
 
                 const response = await fetch('/api/update', {
                     method: 'POST',
-                    body: formData // ส่งไปทั้งก้อนเลย ไม่ต้อง set Content-Type (Browser จะจัดการเอง)
+                    body: formData
                 });
 
                 const result = await response.json();
 
                 if (result.success) {
                     alert('บันทึกข้อมูลเรียบร้อย!');
-                    window.location.href = '/my-account-page.html'; // กลับไปหน้า Profile
+                    window.location.href = '/my-account-page.html';
                 } else {
                     alert('เกิดข้อผิดพลาด: ' + result.message);
                 }
