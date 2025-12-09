@@ -311,8 +311,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         try {
             // ดึงข้อมูลจากฟอร์ม
-            const formData = new FormData(this);
-
+            const formData = new FormData();
             // ดึงค่าจาก Input ตาม ID (ต้องไปเช็ค HTML ให้ตรงกัน)
             formData.append('roomTitle', document.getElementById('room-name').value);
             formData.append('roomEventStartTime', document.getElementById('room-start-time').value);

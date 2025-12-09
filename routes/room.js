@@ -19,6 +19,17 @@ function dbQuery(sql, params) {
     });
 }
 
+// API: ดึงรายชื่อสถานที่ (เพื่อเอา ID ไปใส่ใน Dropdown)
+router.get('/locations', (req, res) => {
+    db.query('SELECT * FROM LOCATIONS', (err, results) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ error: 'Database error' });
+        }
+        res.json(results);
+    });
+});
+
 // --- Config Multer สำหรับอัปโหลดรูปปกห้อง ---
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -55,10 +66,7 @@ router.post('/create-room', upload.single('room_image'), async (req, res) => {
         // 4. บันทึกลงตาราง ROOMS
         const sql = `INSERT INTO ROOMS
                 (ROOM_TITLE, ROOM_EVENT_START_TIME, ROOM_EVENT_END_TIME, ROOM_EVENT_DATE, ROOM_EVENT_LOCATION, ROOM_DESCRIPTION, ROOM_LEADER_ID, ROOM_CAPACITY, ROOM_IMG, ROOM_STATUS)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending');`;
-        // (ในที่นี้เราใช้ location เป็นชื่อสถานที่ไปเลย ถ้าจะใช้ ID ต้องแก้ Logic เพิ่ม)
-        // **หมายเหตุ:** ถ้า location เป็น ID จาก Dropdown ให้ส่งเป็น ID แต่ถ้าเป็น Text ให้แก้ตารางรองรับ
-        // สมมติว่าส่งเป็น ID ของตาราง LOCATIONS
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending');`;
         let locationId = isNaN(roomLocation) ? null : roomLocation;
         const roomResult = await dbQuery(sql, [
             roomTitle, roomEventStartTime, roomEventEndTime, roomEventDate, locationId, roomDescription, leaderId, roomCapacity, imagePath
@@ -70,7 +78,7 @@ router.post('/create-room', upload.single('room_image'), async (req, res) => {
             VALUES (?, ?, 'present')`, [newRoomId, leaderId]);
 
         // 6. จัดการ Tags
-        if (tags) {
+        if (typeof tags !== 'undefined') {
             const tagList = tags.split(',').map(t => t.trim()).filter(t => t !== '');
 
             for (const tagName of tagList) {
@@ -92,22 +100,6 @@ router.post('/create-room', upload.single('room_image'), async (req, res) => {
         console.error(err);
         res.json({ success: false, message: 'เกิดข้อผิดพลาด: ' + err.message });
     }
-});
-
-router.get('/rooms', (req, res) => {
-    // ... ก๊อปปี้โค้ด get rooms เดิมมาใส่ ...
-    // เปลี่ยน app.get เป็น router.get
-});
-
-// API: ดึงรายชื่อสถานที่ (เพื่อเอา ID ไปใส่ใน Dropdown)
-router.get('/locations', (req, res) => {
-    db.query('SELECT * FROM LOCATIONS', (err, results) => {
-        if (err) {
-            console.error(err);
-            return res.status(500).json({ error: 'Database error' });
-        }
-        res.json(results);
-    });
 });
 
 module.exports = router;
