@@ -12,7 +12,7 @@ async function loadGlobalUserData() {
         // Header Dropdown
         const dropdownNames = document.querySelectorAll('.user-name'); // ใช้ class เพราะมีหลายที่
         const dropdownEmails = document.querySelectorAll('.user-email');
-        const dropdownImgs = document.querySelectorAll('img[alt="profile-image"], img[alt="profile-large"]');
+        const dropdownImgs = document.querySelectorAll('.my-profile-image, .profile-large-image');
 
         // --- Elements เฉพาะหน้า "บัญชีของฉัน" (My Account Page) ---
         const myAccountName = document.getElementById('user-name'); // ชื่อใหญ่ๆ
@@ -25,7 +25,7 @@ async function loadGlobalUserData() {
             document.body.classList.add('is-logged-in'); 
 
             const u = data.user;
-            const fullName = `${u.username} ${u.lastname}`;
+            const fullName = `${u.fullname} ${u.lastname}`;
             const imgSrc = u.profile_image || '/Resource/img/profile.jpg';
 
             // 1. อัปเดต Sidebar & Header

@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 // 1. เติมข้อมูลลง Input
                 if (document.getElementById('user-fullname'))
-                    document.getElementById('user-fullname').value = u.username || '';
+                    document.getElementById('user-fullname').value = u.fullname || '';
 
                 if (document.getElementById('user-lastname'))
                     document.getElementById('user-lastname').value = u.lastname || '';
@@ -233,4 +233,58 @@ document.addEventListener("DOMContentLoaded", function () {
     renderTags();
 
     // #endregion ======== จบ Tag Input สำหรับแท็ก User ==========
+
+    // #region ======== ส่วนบันทึกข้อมูล (Save) ========== 
+    const confirmBtn = document.querySelector('#save-btn');
+    if (confirmBtn) {
+        confirmBtn.addEventListener('click', async function (e) {
+            e.preventDefault(); // กันปุ่ม submit ธรรมดา
+
+            // 1. เตรียมข้อมูลใส่ FormData
+            const formData = new FormData();
+
+            // ดึงค่าจาก Input
+            formData.append('fullname', document.getElementById('user-fullname').value);
+            formData.append('lastname', document.getElementById('user-lastname').value);
+            formData.append('faculty', document.getElementById('select-faculty').value);
+            formData.append('year', document.getElementById('select-years').value);
+            formData.append('about', document.getElementById('user-about-detail').value);
+            formData.append('tags', document.getElementById('tags-list-hidden').value);
+
+            // ดึงไฟล์รูปภาพ (ถ้ามีการเลือก)
+            const fileInput = document.getElementById('cover-image-input');
+            if (fileInput.files.length > 0) {
+                // ชื่อ 'profile_image' ต้องตรงกับ upload.single('...') ใน Backend
+                formData.append('profile_image', fileInput.files[0]);
+            }
+
+            // 2. ส่งไป Backend
+            try {
+                confirmBtn.innerText = 'กำลังบันทึก...';
+                confirmBtn.disabled = true;
+
+                const response = await fetch('/api/update', {
+                    method: 'POST',
+                    body: formData // ส่งไปทั้งก้อนเลย ไม่ต้อง set Content-Type (Browser จะจัดการเอง)
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    alert('บันทึกข้อมูลเรียบร้อย!');
+                    window.location.href = '/my-account-page.html';
+                } else {
+                    alert('เกิดข้อผิดพลาด: ' + result.message);
+                }
+
+            } catch (error) {
+                console.error('Update Error:', error);
+                alert('เชื่อมต่อ Server ไม่ได้');
+            } finally {
+                confirmBtn.innerText = 'บันทึกการเปลี่ยนแปลง';
+                confirmBtn.disabled = false;
+            }
+        });
+    }
+    // #endregion ======== จบ ส่วนบันทึกข้อมูล (Save) ==========
 });

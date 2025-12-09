@@ -3,6 +3,10 @@ const router = express.Router();
 const db = require('../config/db');
 const jwt = require('jsonwebtoken');
 
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
+
 // กำหนดรหัสลับสำหรับสร้าง Token (สำคัญมาก)
 const JWT_SECRET = process.env.JWT_SECRET
 
@@ -106,7 +110,7 @@ router.get('/me', (req, res) => {
                     user: {
                         id: user.USER_ID,
                         email: user.USER_EMAIL,
-                        username: user.USER_FNAME,
+                        fullname: user.USER_FNAME,
                         lastname: user.USER_LNAME,
                         role: user.USER_ROLE,
                         credit: user.USER_CREDIT_SCORE || 0,
@@ -126,10 +130,79 @@ router.get('/me', (req, res) => {
     }
 });
 
-// --- 4. Logout ---
+// --- Logout ---
 router.post('/logout', (req, res) => {
     res.clearCookie('token'); // ลบ Cookie ทิ้ง
     res.json({ success: true });
+});
+
+// --- ตั้งค่าการเก็บไฟล์รูปภาพ (Multer Config) ---
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        const uploadPath = path.join(__dirname, '../public/uploads');
+        if (!fs.existsSync(uploadPath)) {
+            fs.mkdirSync(uploadPath, { recursive: true });
+        }
+        cb(null, uploadPath);
+    },
+    filename: function (req, file, cb) {
+        // ตั้งชื่อไฟล์ใหม่: user-(id)-(เวลา).นามสกุลเดิม (ป้องกันชื่อซ้ำ)
+        // เนื่องจากเรายังไม่รู้ ID ตอนนี้ ให้ใช้ timestamp ไปก่อน หรือแก้ทีหลัง
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        cb(null, 'profile-' + uniqueSuffix + path.extname(file.originalname));
+    }
+});
+const upload = multer({ storage: storage });
+
+// --- 5. API อัปเดตข้อมูลผู้ใช้ (Update Profile) ---
+// upload.single('profile_image') คือรับไฟล์จาก input name="profile_image"
+router.post('/update', upload.single('profile_image'), (req, res) => {
+    const token = req.cookies.token;
+    if (!token) return res.json({ success: false, message: 'ไม่พบสิทธิ์การใช้งาน' });
+
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const userId = decoded.id;
+
+        // รับค่า Text จากฟอร์ม
+        const { fullname, lastname, faculty, year, about, tags } = req.body;
+
+        // รับค่าไฟล์รูป (ถ้ามีการอัปโหลดใหม่)
+        let imagePath = null;
+        if (req.file) {
+            // ถ้ามีไฟล์ใหม่ ให้เก็บ Path เอาไว้ (ตัด public ออกเพราะเรา serve static ที่ root)
+            imagePath = '/uploads/' + req.file.filename;
+        }
+
+        // สร้าง SQL Query แบบ Dynamic (อัปเดตเฉพาะค่าที่ส่งมา)
+        // เทคนิค: ถ้า imagePath มีค่า ให้รวมเข้าไปในการอัปเดตด้วย
+        let sql = `UPDATE USERS SET USER_FNAME=?, USER_LNAME=?, USER_FACULTY=?, USER_YEAR=?, USER_DESCRIPTION=?`;
+        let params = [fullname, lastname, faculty, year, about];
+
+        if (imagePath) {
+            sql += `, USER_IMG=?`;
+            params.push(imagePath);
+        }
+
+        // อย่าลืม WHERE เพื่อระบุคน
+        sql += ` WHERE USER_ID=?`;
+        params.push(userId);
+
+        db.query(sql, params, (err, result) => {
+            if (err) {
+                console.error(err);
+                return res.json({ success: false, message: 'เกิดข้อผิดพลาดในการบันทึก' });
+            }
+
+            // (Optional: ตรงนี้คุณอาจจะเพิ่ม Logic บันทึก Tags ลงตาราง USERTAGS ด้วยก็ได้)
+
+            res.json({ success: true, message: 'อัปเดตข้อมูลสำเร็จ!' });
+        });
+
+    } catch (err) {
+        console.error(err);
+        res.json({ success: false, message: 'Session หมดอายุ' });
+    }
 });
 
 module.exports = router;

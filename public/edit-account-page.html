@@ -47,12 +47,12 @@
 
             <div class="form-group">
                 <label for="user-fullname">ชื่อ</label>
-                <input type="text" name="user-fullname" id="user-fullname" value="มดตะนอย" required>
+                <input type="text" name="user-fullname" id="user-fullname" required>
             </div>
 
             <div class="form-group">
                 <label for="user-lastname">นามสกุล</label>
-                <input type="text" name="user-lastname" id="user-lastname" value="กัดเจ็บ" required>
+                <input type="text" name="user-lastname" id="user-lastname" required>
             </div>
 
             <div class="form-group">
@@ -64,14 +64,12 @@
             <div class="form-group">
                 <label for="select-faculty">คณะ</label>
                 <select name="select-faculty" id="select-faculty">
-                    <option value="empty">-</option>
-                    <option value="วิทยาศาสตร์" selected>วิศวกรรมศาสตร์</option>
-                    <option value="วิทยาศาสตร์">ครุศาสตร์อุตสาหกรรมและเทคโนโลยี</option>
-                    <option value="วิทยาศาสตร์">วิทยาศาสตร์</option>
-                    <option value="วิทยาศาสตร์">เทคโนโลยีสารสนเทศ</option>
-                    <option value="วิทยาศาสตร์">สถาบันวิทยาการหุ่นยนต์ภาคสนาม</option>
-                    <option value="วิทยาศาสตร์">วิทยาลัยสหวิทยาการ</option>
-                    <option value="วิทยาศาสตร์">สถาปัตยกรรมศาสตร์และการออกแบบ</option>
+                    <option value="0">-</option>
+                    <option value="1" selected>วิศวกรรมศาสตร์</option>
+                    <option value="2">วิทยาศาสตร์</option>
+                    <option value="3">ครุศาสตร์อุตสาหกรรมฯ</option>
+                    <option value="4">เทคโนโลยีสารสนเทศ (SIT)</option>
+                    <option value="5">สถาปัตยกรรมศาสตร์</option>
                 </select>
             </div>
 
@@ -111,7 +109,7 @@
             </div>
 
             <div class="btn-box">
-                <button type="submit" class="btn">อัปเดต</button>
+                <button type="submit" class="btn" id="save-btn">อัปเดต</button>
             </div>
         </form>
 
