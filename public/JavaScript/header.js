@@ -1,21 +1,3 @@
-// #region ฟังก์ชันสำหรับ Logout 
-async function handleLogout(event) {
-    event.preventDefault();
-
-    try {
-        const response = await fetch('/api/logout', { method: 'POST' });
-        const result = await response.json();
-        if (result.success) {
-            window.location.href = '/login-page.html';
-        }
-    } catch (error) {
-        console.error('Logout Error:', error);
-        alert('Logout Error:', error);
-        window.location.href = '/login-page.html';
-    }
-}
-// #endregion
-
 // #region ฟังก์ชันเปิด/ปิดเมนูโปรไฟล์ 
 function toggleProfileMenu() {
     const dropdown = document.getElementById('profile-dropdown');
@@ -35,6 +17,22 @@ document.addEventListener('click', function (event) {
 });
 // #endregion
 
+// #region ฟังก์ชันสำหรับ Logout 
+async function handleLogout(event) {
+    event.preventDefault();
+
+    try {
+        const response = await fetch('/api/logout', { method: 'POST' });
+        const result = await response.json();
+        if (result.success) {
+            window.location.href = '/login-page.html';
+        }
+    } catch (error) {
+        console.error('Logout Error:', error);
+        alert('Logout Error:', error);
+        window.location.href = '/login-page.html';
+    }
+}
 document.addEventListener('DOMContentLoaded', () => {
 
     document.body.addEventListener('click', function (e) {
@@ -43,3 +41,4 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 });
+// #endregion
