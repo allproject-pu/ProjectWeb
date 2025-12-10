@@ -308,6 +308,24 @@ document.addEventListener("DOMContentLoaded", function () {
                 alert('กรุณาเลือก "สถานที่" จากรายการที่กำหนดให้เท่านั้น');
                 return;
             }
+
+            // ตรวจสอบวันที่ (ห้ามเป็นอดีต)
+            const dateInput = document.getElementById('room-event-date').value;
+            const selectedDate = new Date(dateInput);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0); // ตั้งเวลาเป็นเที่ยงคืนเพื่อเปรียบเทียบเฉพาะวันที่
+            if (selectedDate < today) {
+                alert('ไม่สามารถเลือกวันที่ในอดีตได้');
+                return;
+            }
+
+            // ตรวจสอบเวลา (เวลาจบ ต้องมากกว่า เวลาเริ่ม)
+            const startTime = document.getElementById('room-start-time').value;
+            const endTime = document.getElementById('room-end-time').value;
+            if (startTime >= endTime) {
+                alert('เวลาสิ้นสุดกิจกรรม ต้องอยู่หลังเวลาเริ่มเสมอ');
+                return;
+            }
             // ---------------------------------------------
 
             const submitBtn = createForm.querySelector('button[type="submit"]');
@@ -320,12 +338,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 // มันจะดึงข้อมูลทุกอย่างในฟอร์มมาให้หมด อ้างอิงจาก name attribute และ value
                 // เช่น <input name="roomTitle" value="My Room">
                 const formData = new FormData(this);
-                formData.set('tags', hiddenInput.value); // ใส่ค่าแท็กที่ซ่อนอยู่
+                formData.set('tags', hiddenInput.value);
 
-                // ส่งไฟล์รูป
-                if (fileInput && fileInput.files.length > 0){
-                    formData.append('room_image', fileInput.files[0]);
-                }
                 const response = await fetch('/api/create-room', {
                     method: 'POST',
                     body: formData
