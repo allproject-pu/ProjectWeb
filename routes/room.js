@@ -241,7 +241,7 @@ router.get('/room/:id/members', (req, res) => {
     // Join ตาราง ROOMMEMBERS กับ USERS เพื่อเอารูปและชื่อ
     const sql = `
         SELECT 
-            U.USER_ID, U.USER_FNAME, U.USER_LNAME, U.USER_IMG, U.USER_CREDIT_SCORE
+            U.USER_ID, U.USER_FNAME, U.USER_LNAME, U.USER_IMG, U.USER_CREDIT_SCORE , RM.ROOMMEMBER_STATUS, RM.ROOMMEMBER_CHECKIN_TIME
         FROM ROOMMEMBERS RM
         JOIN USERS U ON RM.USER_ID = U.USER_ID
         WHERE RM.ROOM_ID = ?
@@ -671,5 +671,69 @@ router.get('/my-history', async (req, res) => {
 });
 // #endregion
 
+// #region --- API เช็คชื่อเข้าร่วมกิจกรรม (check-in) ---
+router.post('/room/:id/check-in', async (req, res) => {
+    const token = req.cookies.token;
+    if (!token) return res.json({ success: false, message: 'กรุณาเข้าสู่ระบบ' });
 
+    const roomId = req.params.id;
+    const { code } = req.body; // รับรหัสจากหน้าบ้าน
+
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const userId = decoded.id;
+
+        // 1. ดึงข้อมูลห้อง (รหัสที่ถูกต้อง) และเช็คว่า User เป็นสมาชิกไหม
+        const checkSql = `
+            SELECT 
+                R.ROOM_CHECKIN_CODE,
+                R.ROOM_CHECKIN_EXPIRE,
+                RM.ROOMMEMBER_STATUS
+            FROM ROOMS R
+            JOIN ROOMMEMBERS RM ON R.ROOM_ID = RM.ROOM_ID
+            WHERE R.ROOM_ID = ? AND RM.USER_ID = ?
+        `;
+        const result = await dbQuery(checkSql, [roomId, userId]);
+
+        if (result.length === 0) {
+            return res.json({ success: false, message: 'คุณไม่ใช่สมาชิกของห้องนี้' });
+        }
+
+        const roomData = result[0];
+        // 2. ตรวจสอบรหัส
+        if (roomData.ROOMMEMBER_STATUS === 'present') {
+            return res.json({ success: false, message: 'คุณเช็คชื่อเข้าร่วมกิจกรรมนี้ไปแล้ว' });
+        }
+
+        if (!roomData.ROOM_CHECKIN_CODE || !roomData.ROOM_CHECKIN_EXPIRE) {
+            return res.json({ success: false, message: 'ห้องนี้ยังไม่ได้เปิดการเช็คชื่อ (ติดต่อหัวหน้าห้อง)' });
+        }
+
+        if (new Date() > new Date(roomData.ROOM_CHECKIN_EXPIRE)) {
+            return res.json({ success: false, message: 'รหัสเช็คชื่อหมดอายุแล้ว' });
+        }
+
+        if (roomData.ROOM_CHECKIN_CODE !== code) {
+            return res.json({ success: false, message: 'รหัสเช็คชื่อไม่ถูกต้อง' });
+        }
+
+        // 3. บันทึกเวลาเช็คชื่อ และ แจกเครดิต (ถ้ามีระบบเครดิต)
+        const updateSql = `
+            UPDATE ROOMMEMBERS 
+            SET ROOMMEMBER_CHECKIN_TIME = NOW(), 
+                ROOMMEMBER_STATUS = 'present'
+            WHERE ROOM_ID = ? AND USER_ID = ?
+        `;
+        await dbQuery(updateSql, [roomId, userId]);
+
+        await dbQuery('UPDATE USERS SET USER_CREDIT_SCORE = USER_CREDIT_SCORE + 10 WHERE USER_ID = ?', [userId]);
+
+        res.json({ success: true, message: 'เช็คชื่อสำเร็จ!' });
+
+    } catch (err) {
+        console.error(err);
+        res.json({ success: false, message: 'Error: ' + err.message });
+    }
+});
+// #endregion
 module.exports = router;
