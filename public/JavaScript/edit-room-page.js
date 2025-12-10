@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 document.addEventListener('DOMContentLoaded', async () => {
-    // #region ======== ป้องกันการกด Enter เพื่อ submit form ==========
+    // #region ======== ป้องกันการกด Enter เพื่อ submit form ========
     document.querySelector('.add-room-form').addEventListener('keydown', function (e) {
         if (e.key === 'Enter') {
             e.preventDefault();
@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
     // #endregion ======== ป้องกันการกด Enter เพื่อ submit form ==========
 
-    // #region ดึงรหัสห้องจาก URL 
+    // #region ======== ดึงรหัสห้องจาก URL ======== 
     const params = new URLSearchParams(window.location.search);
     const roomId = params.get('id');
     if (!roomId) {
@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     // #endregion
 
-    // #region ======== Custom Select สำหรับที่อยู่ (Address) ========== 
+    // #region ======== Custom Select สำหรับที่อยู่ (Address) ======== 
     // #region init ตัวแปร หาองค์ประกอบ 
     const addressDisplayInput = document.getElementById("address-input-display");
     const addressHiddenInput = document.getElementById("address-input-hidden");
@@ -106,7 +106,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // #endregion
     // #endregion ========== Custom Select สำหรับที่อยู่ (Address) ==========
 
-    // #region ======== Tag Input สำหรับแท็กห้อง (Room Tags) ========== 
+    // #region ======== Tag Input สำหรับแท็กห้อง (Room Tags) ======== 
     // #region init ตัวแปร หาองค์ประกอบ
     let availableTags = [];
     const MAX_TAGS = 5;
@@ -266,7 +266,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     renderTags();
     // #endregion ======== Tag Input สำหรับแท็กห้อง (Room Tags) ==========
 
-    // #region ======== Image Uploader ========== 
+    // #region ======== Image Uploader ======== 
     // #region init ตัวแปร หาองค์ประกอบ 
     const imageContainer = document.getElementById('room-image-container');
     const imagePreview = document.getElementById('room-image-preview');
@@ -315,7 +315,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 // เติมข้อมูล Text
                 document.getElementById('room-id').value = r.ROOM_ID;
                 document.getElementById('room-name').value = r.ROOM_TITLE;
-                document.getElementById('room-event-date').value = new Date(r.ROOM_EVENT_DATE).toISOString().split('T')[0];
+                document.getElementById('room-event-date').value = r.ROOM_EVENT_DATE;
                 document.getElementById('room-start-time').value = r.ROOM_EVENT_START_TIME;
                 document.getElementById('room-end-time').value = r.ROOM_EVENT_END_TIME;
                 document.getElementById('room-capacity').value = r.ROOM_CAPACITY;
@@ -343,14 +343,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             console.error('Error loading room:', error);
         }
     }
-    // (ต้องรอให้ fetchLocations เสร็จก่อนค่อยโหลดข้อมูลห้อง จะได้ Map ชื่อสถานที่ถูก ถ้าทำได้)
     await loadRoomData();
 
     // 2. ส่วนบันทึกการแก้ไข (Submit)
     const editForm = document.querySelector('.add-room-form'); // ค่อยเปลี่ยนชื่อ class ให้เป็น edit-room-form ทีหลัง
 
     if (editForm) {
-        editForm.addEventListener('submit', async (e) => {
+        editForm.addEventListener('submit', async function (e) {
             e.preventDefault();
 
             // --- VALIDATION ZONE (ตรวจสอบความถูกต้อง) ---
@@ -386,7 +385,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 return;
             }
             // ---------------------------------------------
-
             const submitBtn = editForm.querySelector('button[type="submit"]');
             if (submitBtn) {
                 submitBtn.disabled = true;
@@ -394,7 +392,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
 
             try {
-                const formData = new FormData(editForm);
+                const formData = new FormData(this);
                 formData.set('location', document.getElementById('address-input-hidden').value);
                 formData.set('tags', document.getElementById('tags-list-hidden').value);
 

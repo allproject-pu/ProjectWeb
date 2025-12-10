@@ -327,7 +327,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 return;
             }
             // ---------------------------------------------
-
             const submitBtn = createForm.querySelector('button[type="submit"]');
             if (submitBtn) {
                 submitBtn.disabled = true;
