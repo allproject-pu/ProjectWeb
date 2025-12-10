@@ -329,6 +329,10 @@ router.post('/update-room/:id', upload.single('room_image'), async (req, res) =>
 });
 // #endregion
 
+// #region --- API ดึงข้อมูลห้องกิจกรรมทั้งหมด (get-rooms) พร้อม Filter/Search ---
+router.get('/rooms', async (req, res) => {
+    try {
+        const { search, date, start_time, end_time, locations, tags } = req.query;
 
         let whereClauses = [];
         let queryParams = [];
@@ -336,7 +340,6 @@ router.post('/update-room/:id', upload.single('room_image'), async (req, res) =>
         let tagsJoin = "";
         let locationJoin = "LEFT JOIN LOCATIONS l ON r.ROOM_EVENT_LOCATION = l.LOCATION_ID";
 
-<<<<<<< HEAD
         // 1. เงื่อนไขการค้นหา (search input)
         if (search) {
             whereClauses.push("r.ROOM_TITLE LIKE ?");
@@ -416,6 +419,95 @@ router.post('/update-room/:id', upload.single('room_image'), async (req, res) =>
         // เรียกใช้ Query
         const rooms = await dbQuery(sql, queryParams);
         res.json({ success: true, rooms });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ success: false, message: 'Database error' });
+    }
+});
+// #endregion
+
+// #region --- API ดึงห้องกิจกรรมที่สร้างโดย User ปัจจุบัน (my-created-rooms) ---
+router.get('/my-created-rooms', async (req, res) => {
+    const token = req.cookies.token;
+    if (!token) return res.json({ success: false, message: 'กรุณาเข้าสู่ระบบ' });
+
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const userId = decoded.id;
+
+        // รับค่า Query Params (search, date, tags, etc.) เหมือน API /rooms
+        const { search, date, start_time, end_time, locations, tags } = req.query;
+
+        let whereClauses = [];
+        let queryParams = [];
+
+        // 1. เงื่อนไขสำคัญที่สุด: ต้องเป็นห้องของ User คนนี้เท่านั้น
+        whereClauses.push("r.ROOM_LEADER_ID = ?");
+        queryParams.push(userId);
+
+        // 2. เงื่อนไขการค้นหาอื่นๆ (ก๊อปปี้ Logic มาจาก /rooms)
+        if (search) {
+            whereClauses.push("r.ROOM_TITLE LIKE ?");
+            queryParams.push(`%${search}%`);
+        }
+        if (date) {
+            whereClauses.push("r.ROOM_EVENT_DATE >= ?");
+            queryParams.push(date);
+        }
+        if (start_time && end_time) {
+            whereClauses.push("r.ROOM_EVENT_START_TIME >= ? AND r.ROOM_EVENT_END_TIME <= ?");
+            queryParams.push(start_time, end_time);
+        } else if (start_time) {
+            whereClauses.push("r.ROOM_EVENT_START_TIME >= ?");
+            queryParams.push(start_time);
+        } else if (end_time) {
+            whereClauses.push("r.ROOM_EVENT_END_TIME <= ?");
+            queryParams.push(end_time);
+        }
+        if (locations) {
+            const locationNames = locations.split(',').map(name => name.trim()).filter(name => name !== '');
+            if (locationNames.length > 0) {
+                whereClauses.push(`l.LOCATION_NAME IN (?)`);
+                queryParams.push(locationNames);
+            }
+        }
+        if (tags) {
+            const tagList = tags.split(',').map(t => t.trim()).filter(t => t !== '');
+            if (tagList.length > 0) {
+                whereClauses.push(`t.TAG_NAME IN (?)`);
+                queryParams.push(tagList);
+            }
+        }
+
+        const whereSql = whereClauses.length > 0 ? `WHERE ${whereClauses.join(' AND ')}` : '';
+
+        // SQL Query (ใช้ DISTINCT เหมือนเดิม)
+        const sql = `
+            SELECT 
+                r.ROOM_ID,
+                r.ROOM_TITLE,
+                r.ROOM_EVENT_DATE,
+                TIME_FORMAT(r.ROOM_EVENT_START_TIME, '%H:%i') AS formatted_start_time,
+                TIME_FORMAT(r.ROOM_EVENT_END_TIME, '%H:%i') AS formatted_end_time,
+                r.ROOM_CAPACITY,
+                r.ROOM_IMG,
+                r.ROOM_STATUS, 
+                l.LOCATION_NAME,
+                COUNT(DISTINCT rm.USER_ID) AS member_count,
+                GROUP_CONCAT(DISTINCT t.TAG_NAME) AS tags
+            FROM ROOMS r
+            LEFT JOIN LOCATIONS l ON r.ROOM_EVENT_LOCATION = l.LOCATION_ID
+            LEFT JOIN ROOMMEMBERS rm ON r.ROOM_ID = rm.ROOM_ID
+            LEFT JOIN ROOMTAGS rt ON r.ROOM_ID = rt.ROOM_ID
+            LEFT JOIN TAGS t ON rt.TAG_ID = t.TAG_ID
+            ${whereSql}
+            GROUP BY r.ROOM_ID
+            ORDER BY r.ROOM_ID DESC
+        `;
+
+        const rooms = await dbQuery(sql, queryParams);
+        res.json({ success: true, rooms });
+
     } catch (err) {
         console.error(err);
         res.status(500).json({ success: false, message: 'Database error' });
