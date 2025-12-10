@@ -88,7 +88,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             if (currentUserId && room.ROOM_LEADER_ID == currentUserId) {
                 const editBtn = document.getElementById('edit-room-btn');
-
+                const headerBlank = document.querySelector('.header-blank');
+                if (headerBlank) headerBlank.style.display = 'none'; // ซ่อนช่องว่าง
                 if (editBtn) editBtn.style.display = 'block'; // โชว์ปุ่ม
                 if (editBtn) editBtn.href = `/edit-room-page.html?id=${room.ROOM_ID}`;
             }

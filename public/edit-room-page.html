@@ -28,10 +28,10 @@
         </div>
     </header>
     <main class="add-home-main">
-        <form action="" class="add-room-form">
+        <form class="add-room-form">
             <div class="form-group">
                 <label for="room-image-input" class="add-cover-label profile-uploader">
-                    <div class="add-cover-box" id="room-image-container">
+                    <div class="add-cover-box has-image" id="room-image-container">
                         <img title="Bangmod" src="./Resource/img/bangmod.png" class="profile-preview"
                             id="room-image-preview">
                         <span class="add-cover-plus" id="add-cover-icon">+</span>
@@ -42,47 +42,48 @@
                     </div>
                 </label>
                 <p class="add-cover-hint">*เพิ่มรูปภาพกิจกรรมหรือสถานที่</p>
-                <input title="InputImageRoom" type="file" id="room-image-input" name="cover_image"
-                    class="hidden-file-input" accept="image/*">
+                <input type="file" id="room-image-input" name="room_image" class="hidden-file-input" accept="image/*">
             </div>
 
             <div class="form-group">
                 <label for="room-id">ไอดี</label>
-                <input readonly type="text" id="room-id" name="room-id" required value="66080658656">
+                <input readonly type="text" id="room-id" name="roomId" required value="00">
             </div>
 
             <div class="form-group">
                 <label for="room-name">ชื่อกิจกรรม</label>
-                <input type="text" id="room-name" name="room-name" required value="อ่านแคลกันครับพวกลิง">
+                <input type="text" id="room-name" name="roomTitle" required value="TitleRoom">
             </div>
 
             <div class="form-group">
                 <label for="address-input-display">ชื่อสถานที่</label>
                 <div class="custom-select-container">
-                    <input type="text" id="address-input-display" class="custom-select-input"
-                        placeholder="พิมพ์ค้นหา หรือเลือกจากรายการ...">
-                    <div class="custom-options-list" id="address-options-list"></div>
-                    <input type="hidden" name="address-activity" id="address-input-hidden">
+                    <input type="text" class="custom-select-input" id="address-input-display"
+                        placeholder="พิมพ์ค้นหา หรือเลือกจากรายการ..." role="combobox" aria-autocomplete="list"
+                        aria-expanded="false" aria-haspopup="listbox" aria-controls="places-listbox" required>
+                    <div class="custom-options-list" id="places-listbox" role="listbox"></div>
+                    <input type="hidden" name="roomLocation" id="address-input-hidden">
                 </div>
             </div>
 
             <div class="form-group time-input-group">
-                <label for="start-time">เวลา</label>
-                <input type="time" id="start-time" class="time-input" name="start_time" placeholder="เริ่ม"
-                    value="20:00">
+                <label for="room-start-time">เวลา</label>
+                <input type="time" id="room-start-time" class="time-input" name="roomEventStartTime" placeholder="เริ่ม"
+                    value="00:00" required>
                 <span class="inline-separator">-</span>
-                <input type="time" id="end-time" class="time-input" name="end-time" placeholder="สิ้นสุด" value="21:00">
+                <input type="time" id="room-end-time" class="time-input" name="roomEventEndTime" placeholder="สิ้นสุด"
+                    value="00:00" required>
             </div>
 
             <div class="form-group">
-                <label for="date-activity">วัน / เดือน / ปี</label>
-                <input type="date" id="date-activity" class="date-input" name="date-activity" placeholder="วัน"
-                    value="2025-11-08">
+                <label for="room-event-date">วัน / เดือน / ปี</label>
+                <input type="date" id="room-event-date" class="date-input" name="roomEventDate" placeholder="วัน" required
+                    value="0000-00-00">
             </div>
 
             <div class="form-group">
                 <label for="room-detail">รายละเอียด</label>
-                <textarea id="room-detail" name="room-detail"
+                <textarea id="room-detail" name="roomDescription" required
                     class="detail-textarea">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Iste impedit tempora nam provident ratione odio distinctio eveniet quas corrupti ex quaerat eaque numquam ad reiciendis, quisquam explicabo eligendi illo? Aliquam.</textarea>
             </div>
 
@@ -94,17 +95,21 @@
                         <button type="button" class="btn" id="add-tag-btn">+</button>
                     </div>
 
-                    <div class="tag-suggestions" id="tag-suggestions">
-                    </div>
+                    <div class="tag-suggestions" id="tag-suggestions"></div>
                 </div>
-                <ul class="tag-list-item" id="tag-list-display">
-                </ul>
-                <input type="hidden" name="tags_list" id="tags-list-hidden" value="">
+                <ul class="tag-list-item" id="tag-list-display"></ul>
+                <input type="hidden" name="tags" id="tags-list-hidden" value="" required>
                 <p class="tag-helper-text">เลือกจากแท็กที่มีให้ หรือพิมพ์แท็กใหม่ (สูงสุด 5 อัน)</p>
             </div>
 
+            <div class="form-group">
+                <label for="room-capacity">จำนวนผู้เข้าร่วม :</label>
+                <input class='capacity input' type="number" id="room-capacity" name="roomCapacity" min="2" max="100"
+                    value="10" required>
+            </div>
+
             <div class="btn-box">
-                <button type="submit" class="btn">อัปเดต</button>
+                <button type="submit" class="btn">อัปเดตข้อมูลห้องกิจกรรม</button>
             </div>
         </form>
 

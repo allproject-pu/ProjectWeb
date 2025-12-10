@@ -195,4 +195,83 @@ router.get('/room/:id/members', (req, res) => {
 });
 // #endregion
 
+// #region --- API แก้ไขข้อมูลห้องกิจกรรม (update-room/:id) ---
+router.post('/update-room/:id', upload.single('room_image'), async (req, res) => {
+    const token = req.cookies.token;
+    if (!token) return res.json({ success: false, message: 'กรุณาเข้าสู่ระบบ' });
+
+    const roomId = req.params.id;
+
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET || 'my_super_secret_key_1234');
+        const userId = decoded.id;
+
+        // 1. เช็คก่อนว่า User คนนี้เป็นเจ้าของห้องนี้จริงไหม?
+        const checkOwner = await dbQuery('SELECT ROOM_LEADER_ID FROM ROOMS WHERE ROOM_ID = ?', [roomId]);
+        
+        if (checkOwner.length === 0) {
+            return res.json({ success: false, message: 'ไม่พบห้องกิจกรรม' });
+        }
+        if (checkOwner[0].ROOM_LEADER_ID != userId) {
+            return res.json({ success: false, message: 'คุณไม่มีสิทธิ์แก้ไขห้องนี้' });
+        }
+
+        // 2. รับค่าที่ส่งมาแก้ไข
+        const { 
+            title, date, start_time, end_time, 
+            location, capacity, detail, tags 
+        } = req.body;
+
+        // 3. จัดการรูปภาพ (ถ้าไม่อัปโหลดใหม่ ให้ใช้รูปเดิม -> ไม่ต้องอัปเดตคอลัมน์ ROOM_IMG)
+        let imageUpdateSql = "";
+        let params = [title, date, start_time, end_time, location, capacity, detail];
+
+        if (req.file) {
+            const imagePath = '/uploads/rooms/' + req.file.filename;
+            imageUpdateSql = ", ROOM_IMG = ?";
+            params.push(imagePath);
+        }
+
+        // ใส่ roomId ปิดท้าย params
+        params.push(roomId);
+
+        // 4. อัปเดตตาราง ROOMS
+        const sql = `
+            UPDATE ROOMS 
+            SET ROOM_TITLE=?, ROOM_EVENT_DATE=?, ROOM_EVENT_START_TIME=?, ROOM_EVENT_END_TIME=?, 
+                ROOM_EVENT_LOCATION=?, ROOM_CAPACITY=?, ROOM_DESCRIPTION=? ${imageUpdateSql}
+            WHERE ROOM_ID = ?
+        `;
+        
+        await dbQuery(sql, params);
+
+        // 5. จัดการ Tags (ลบของเก่า -> ใส่ของใหม่)
+        if (typeof tags !== 'undefined') {
+            // ลบ Tag เดิมของห้องนี้
+            await dbQuery('DELETE FROM ROOMTAGS WHERE ROOM_ID = ?', [roomId]);
+
+            if (tags.trim() !== '') {
+                const tagList = tags.split(',').map(t => t.trim()).filter(t => t !== '');
+                for (const tagName of tagList) {
+                    let tagId;
+                    const existingTags = await dbQuery('SELECT TAG_ID FROM TAGS WHERE TAG_NAME = ?', [tagName]);
+                    if (existingTags.length > 0) {
+                        tagId = existingTags[0].TAG_ID;
+                    } else {
+                        const newTag = await dbQuery('INSERT INTO TAGS (TAG_NAME) VALUES (?)', [tagName]);
+                        tagId = newTag.insertId;
+                    }
+                    await dbQuery('INSERT INTO ROOMTAGS (ROOM_ID, TAG_ID) VALUES (?, ?)', [roomId, tagId]);
+                }
+            }
+        }
+
+        res.json({ success: true, message: 'แก้ไขข้อมูลสำเร็จ!' });
+
+    } catch (err) {
+        console.error(err);
+        res.json({ success: false, message: 'เกิดข้อผิดพลาด: ' + err.message });
+    }
+});
+// #endregion
 module.exports = router;

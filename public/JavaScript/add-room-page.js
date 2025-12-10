@@ -245,13 +245,13 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
     // #endregion
-    // #endregion ----- EventListeners -----
+    // #endregion ----- EventListeners  -----
 
     // --- สั่งให้ทำงานครั้งแรก ---
     renderTags();
-    // #endregion ----- จบ Tag Input สำหรับแท็กห้อง (Room Tags) -----
+    // #endregion ======== Tag Input สำหรับแท็กห้อง (Room Tags) ==========
 
-    // #region ======== Profile Image Uploader ==========
+    // #region ======== Image Uploader ==========
     // #region init ตัวแปร หาองค์ประกอบ 
     const imageContainer = document.getElementById('room-image-container');
     const imagePreview = document.getElementById('room-image-preview');
@@ -285,7 +285,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // #endregion
-    // #endregion ======== Profile Image Uploader ==========
+    // #endregion ======== Image Uploader ==========
 
     // #region ======== ส่งข้อมูลฟอร์มสร้างห้องกิจกรรม (Submit Form) ==========
     const createForm = document.querySelector('.add-room-form');
@@ -362,7 +362,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             }
         });
-        // #endregion ======== ส่งข้อมูลฟอร์มสร้างห้องกิจกรรม ==========
     }
+    // #endregion ======== ส่งข้อมูลฟอร์มสร้างห้องกิจกรรม ==========
 });
-// #endregion
