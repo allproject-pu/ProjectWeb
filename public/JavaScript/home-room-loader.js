@@ -1,23 +1,36 @@
 document.addEventListener('DOMContentLoaded', loadRooms);
-
-async function loadRooms() {
+export { loadRooms };
+async function loadRooms(filterParams = {}) {
     try {
-        const res = await fetch('/api/rooms');
+        const list = document.getElementById('rooms-list');
+        list.innerHTML = '<li>กำลังค้นหากิจกรรม...</li>'; // แสดงสถานะ loading
+        
+        // สร้าง URL Query String จาก Object
+        const queryString = new URLSearchParams(filterParams).toString();
+        
+        // ใช้ fetch เพื่อดึงข้อมูลพร้อม Query String
+        const res = await fetch(`/api/rooms?${queryString}`);
         const data = await res.json();
 
-        if (!data.success) return;
+        if (!data.success) {
+            list.innerHTML = '<li>ไม่สามารถโหลดห้องกิจกรรมได้</li>';
+            return;
+        }
 
-        const list = document.getElementById('rooms-list');
         list.innerHTML = '';
-
-        data.rooms.forEach(room => {
-            list.appendChild(createRoomItem(room));
-        });
+        if (data.rooms.length === 0) {
+            list.innerHTML = '<li style="text-align:center; padding: 20px;">ไม่พบห้องกิจกรรมตามเงื่อนไขที่ระบุ</li>';
+        } else {
+            data.rooms.forEach(room => {
+                list.appendChild(createRoomItem(room));
+            });
+        }
     } catch (err) {
         console.error(err);
+        document.getElementById('rooms-list').innerHTML = '<li>เกิดข้อผิดพลาดในการเชื่อมต่อ</li>';
     }
 }
-
+    
 function createRoomItem(room) {
     const li = document.createElement('li');
     li.className = 'room-item';
@@ -78,4 +91,6 @@ function createRoomItem(room) {
         </article>
     `;
     return li;
+
+
 }

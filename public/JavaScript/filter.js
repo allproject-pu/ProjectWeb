@@ -1,3 +1,6 @@
+
+import { loadRooms } from './home-room-loader.js';
+
 document.addEventListener("DOMContentLoaded", function () {
     // #region init ตัวแปร 
     const filterModal = document.getElementById('filter-modal');
@@ -83,23 +86,37 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // รวบรวมข้อมูลฟอร์มทั้งหมด (ตอนนี้มี hidden inputs แล้ว)
         const formData = new FormData(filterForm);
+        const filterParams = {
+            date: formData.get('filter_date'),
+            start_time: formData.get('filter_start_time'),
+            end_time: formData.get('filter_end_time'),
+            locations: selectedLocations.join(','), // ใช้จากตัวแปรที่รวบรวมไว้
+            tags: selectedTags.join(',') // ใช้จากตัวแปรที่รวบรวมไว้
+        };
 
-        // พิมพ์ข้อมูลทั้งหมดออกมาดูใน Console
-        console.log("----- Filter Data -----");
-        for (let [key, value] of formData.entries()) {
-            console.log(`${key}: ${value}`);
-        }
+        // **เรียกฟังก์ชัน loadRooms เพื่อดึงข้อมูลใหม่**
+        // โดยส่งค่า filterParams ที่กรองแล้ว
+        loadRooms(filterParams);
 
         // ปิด Modal
         closeFilterModal();
-
-        // ส่ง formData นี้ไปที่เซิร์ฟเวอร์ด้วย fetch()
-        // fetch('/search-filter', { method: 'POST', body: formData })
-        //   .then(response => response.json())
-        //   .then(data => {
-        //       console.log('Search results:', data);
-        //       // (อัปเดตหน้า .rooms-List ด้วยข้อมูลใหม่)
-        //   });
     });
     // #endregion
+
+    // **C. เพิ่ม Logic สำหรับแถบค้นหาหลัก (Top Bar Search)**
+
+    const searchInput = document.getElementById('search-input');
+    const searchButton = document.querySelector('.top-bar-search button:not(#filter-open-btn)');
+    if (searchInput && searchButton) {
+        // ใช้งานเมื่อกดปุ่ม Search
+        searchButton.addEventListener('click', () => {
+            loadRooms({ search: searchInput.value });
+        });
+        // ใช้งานเมื่อกด Enter ในช่อง Search
+        searchInput.addEventListener('keypress', (event) => {
+            if (event.key === 'Enter') {
+                loadRooms({ search: searchInput.value });
+            }
+        });
+    }
 });
