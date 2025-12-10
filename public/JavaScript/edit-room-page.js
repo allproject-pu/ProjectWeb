@@ -315,7 +315,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                 // เติมข้อมูล Text
                 document.getElementById('room-id').value = r.ROOM_ID;
                 document.getElementById('room-name').value = r.ROOM_TITLE;
-                document.getElementById('room-event-date').value = new Date(r.ROOM_EVENT_DATE).toISOString().split('T')[0];
+                // แปลงวันที่โดยใช้ Local Time (เวลาเครื่อง) ไม่ใช่ UTC
+                const dateObj = new Date(r.ROOM_EVENT_DATE);
+                const year = dateObj.getFullYear();
+                const month = String(dateObj.getMonth() + 1).padStart(2, '0'); // เดือนเริ่มที่ 0 ต้อง +1
+                const day = String(dateObj.getDate()).padStart(2, '0');
+                document.getElementById('room-event-date').value = `${year}-${month}-${day}`;
                 document.getElementById('room-start-time').value = r.ROOM_EVENT_START_TIME;
                 document.getElementById('room-end-time').value = r.ROOM_EVENT_END_TIME;
                 document.getElementById('room-capacity').value = r.ROOM_CAPACITY;
