@@ -90,7 +90,7 @@ async function fetchAndRenderRoom(roomId, currentUserId, currentUserRole) {
             const unownerControls = document.getElementById('unowner-room-btns');
             const joinBtn = document.getElementById('join-room-btn');
             const leaveBtn = document.getElementById('leave-room-btn');
-            const fullBtn = document.getElementById('room-full-btn');
+            const fullMessage = document.getElementById('full-room-message');
             const checkInForm = document.getElementById('check-in-form');
             const checkedInMessage = document.getElementById('checked-in-message');
 
@@ -102,7 +102,7 @@ async function fetchAndRenderRoom(roomId, currentUserId, currentUserRole) {
             if (unownerControls) unownerControls.style.display = 'none';
             if (joinBtn) joinBtn.style.display = 'none';
             if (leaveBtn) leaveBtn.style.display = 'none';
-            if (fullBtn) fullBtn.style.display = 'none';
+            if (fullMessage) fullMessage.style.display = 'none';
             if (manageCheckInBtn) manageCheckInBtn.style.display = 'none';
             if (checkInForm) checkInForm.style.display = 'none';
             if (checkedInMessage) checkedInMessage.style.display = 'none';
@@ -132,7 +132,7 @@ async function fetchAndRenderRoom(roomId, currentUserId, currentUserRole) {
             } else if (isFull) {
                 // กรณี: ห้องเต็ม -> โชว์ปุ่มแจ้งเต็ม
                 if (unownerControls) unownerControls.style.display = 'flex';
-                if (fullBtn) fullBtn.style.display = 'block'; // โชว์ปุ่มแจ้งเต็ม
+                if (fullMessage) fullMessage.style.display = 'flex'; // โชว์ปุ่มแจ้งเต็ม
             } else {
                 // กรณี: ยังไม่เป็นสมาชิก และห้องยังไม่เต็ม -> โชว์ปุ่มเข้าร่วม
                 if (unownerControls) unownerControls.style.display = 'flex';
