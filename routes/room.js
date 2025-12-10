@@ -65,13 +65,12 @@ router.post('/create-room', upload.single('room_image'), async (req, res) => {
         let imagePath = '/Resource/img/bangmod.png'; // รูป Default
         if (req.file) imagePath = '/uploads/rooms/' + req.file.filename;
 
+        let params = [roomTitle, roomEventStartTime, roomEventEndTime, roomEventDate, roomLocation, roomDescription, leaderId, roomCapacity, imagePath];
         // บันทึกลงตาราง ROOMS
         const sql = `INSERT INTO ROOMS
                 (ROOM_TITLE, ROOM_EVENT_START_TIME, ROOM_EVENT_END_TIME, ROOM_EVENT_DATE, ROOM_EVENT_LOCATION, ROOM_DESCRIPTION, ROOM_LEADER_ID, ROOM_CAPACITY, ROOM_IMG, ROOM_STATUS)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending');`;
-        const roomResult = await dbQuery(sql, [
-            roomTitle, roomEventStartTime, roomEventEndTime, roomEventDate, roomLocation, roomDescription, leaderId, roomCapacity, imagePath
-        ]);
+        const roomResult = await dbQuery(sql, params);
         const newRoomId = roomResult.insertId;
         // เอาคนสร้าง จับยัดเป็นสมาชิกคนแรก (Leader) ใน ROOMMEMBERS
         await dbQuery(`
@@ -201,30 +200,23 @@ router.post('/update-room/:id', upload.single('room_image'), async (req, res) =>
     if (!token) return res.json({ success: false, message: 'กรุณาเข้าสู่ระบบ' });
 
     const roomId = req.params.id;
-
     try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET || 'my_super_secret_key_1234');
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
         const userId = decoded.id;
 
         // 1. เช็คก่อนว่า User คนนี้เป็นเจ้าของห้องนี้จริงไหม?
         const checkOwner = await dbQuery('SELECT ROOM_LEADER_ID FROM ROOMS WHERE ROOM_ID = ?', [roomId]);
-        
-        if (checkOwner.length === 0) {
+        if (checkOwner.length === 0)
             return res.json({ success: false, message: 'ไม่พบห้องกิจกรรม' });
-        }
-        if (checkOwner[0].ROOM_LEADER_ID != userId) {
+        if (checkOwner[0].ROOM_LEADER_ID != userId)
             return res.json({ success: false, message: 'คุณไม่มีสิทธิ์แก้ไขห้องนี้' });
-        }
 
         // 2. รับค่าที่ส่งมาแก้ไข
-        const { 
-            title, date, start_time, end_time, 
-            location, capacity, detail, tags 
-        } = req.body;
+        const { roomTitle, roomEventDate, roomEventStartTime, roomEventEndTime, roomLocation, roomCapacity, roomDescription, tags } = req.body;
 
         // 3. จัดการรูปภาพ (ถ้าไม่อัปโหลดใหม่ ให้ใช้รูปเดิม -> ไม่ต้องอัปเดตคอลัมน์ ROOM_IMG)
         let imageUpdateSql = "";
-        let params = [title, date, start_time, end_time, location, capacity, detail];
+        let params = [roomTitle, roomEventDate, roomEventStartTime, roomEventEndTime, roomLocation, roomCapacity, roomDescription];
 
         if (req.file) {
             const imagePath = '/uploads/rooms/' + req.file.filename;
@@ -249,7 +241,7 @@ router.post('/update-room/:id', upload.single('room_image'), async (req, res) =>
         if (typeof tags !== 'undefined') {
             // ลบ Tag เดิมของห้องนี้
             await dbQuery('DELETE FROM ROOMTAGS WHERE ROOM_ID = ?', [roomId]);
-
+            // เพิ่ม Tag ใหม่
             if (tags.trim() !== '') {
                 const tagList = tags.split(',').map(t => t.trim()).filter(t => t !== '');
                 for (const tagName of tagList) {
@@ -265,9 +257,7 @@ router.post('/update-room/:id', upload.single('room_image'), async (req, res) =>
                 }
             }
         }
-
         res.json({ success: true, message: 'แก้ไขข้อมูลสำเร็จ!' });
-
     } catch (err) {
         console.error(err);
         res.json({ success: false, message: 'เกิดข้อผิดพลาด: ' + err.message });
