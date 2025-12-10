@@ -68,11 +68,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // 1. ดึงข้อมูล User ปัจจุบันก่อน
     let currentUserId = null;
+    let currentUserRole = null;
     try {
         const userRes = await fetch('/api/me');
         const userData = await userRes.json();
         if (userData.loggedIn) {
             currentUserId = userData.user.id;
+            currentUserRole = userData.user.role;
         }
     } catch (err) { console.error('Auth Check Error', err); }
 
@@ -86,7 +88,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             renderRoomDetail(room);
             fetchRoomMembers(roomId);
 
-            if (currentUserId && room.ROOM_LEADER_ID == currentUserId) {
+            if (currentUserId && (room.ROOM_LEADER_ID == currentUserId || currentUserRole === 'admin')) {
                 const editBtn = document.getElementById('edit-room-btn');
                 const headerBlank = document.querySelector('.header-blank');
                 if (headerBlank) headerBlank.style.display = 'none'; // ซ่อนช่องว่าง

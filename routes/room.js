@@ -203,12 +203,13 @@ router.post('/update-room/:id', upload.single('room_image'), async (req, res) =>
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         const userId = decoded.id;
+        const userRole = decoded.role;
 
         // 1. เช็คก่อนว่า User คนนี้เป็นเจ้าของห้องนี้จริงไหม?
         const checkOwner = await dbQuery('SELECT ROOM_LEADER_ID FROM ROOMS WHERE ROOM_ID = ?', [roomId]);
         if (checkOwner.length === 0)
             return res.json({ success: false, message: 'ไม่พบห้องกิจกรรม' });
-        if (checkOwner[0].ROOM_LEADER_ID != userId)
+        if (checkOwner[0].ROOM_LEADER_ID != userId && userRole !== 'admin')
             return res.json({ success: false, message: 'คุณไม่มีสิทธิ์แก้ไขห้องนี้' });
 
         // 2. รับค่าที่ส่งมาแก้ไข
