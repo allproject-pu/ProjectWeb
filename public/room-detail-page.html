@@ -23,13 +23,13 @@
         <div class="mobile-header">
             <button type="button" class="material-symbols-outlined" onclick="history.back()">arrow_back_ios</button>
             <h2>รายละเอียดกิจกรรม</h2>
-            <a href="./edit-room-page.html" class="material-symbols-outlined">edit_square</a>
+            <a style="display: none;" href="" class="material-symbols-outlined" id="edit-room-btn">edit_square</a>
         </div>
     </header>
 
     <main class="add-home-main">
         <form action="./join-room" class="detail-room-form">
-            <input type="hidden" name="room-id" value="66080658656">
+            <input type="hidden" name="room-id" id="detail-room-id-hidden" value="">
 
             <div class="form-group">
                 <div class="add-cover-box">

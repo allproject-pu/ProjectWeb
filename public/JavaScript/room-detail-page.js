@@ -57,15 +57,24 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // #region --- ดึงข้อมูลห้องกิจกรรมจาก API และแสดงผล --- 
 document.addEventListener('DOMContentLoaded', async () => {
-    // 1. ดึง ID จาก URL (เช่น ?id=15)
+    // ดึง ID จาก URL (เช่น ?id=15)
     const params = new URLSearchParams(window.location.search);
     const roomId = params.get('id');
 
     if (!roomId) {
-        alert('ไม่พบรหัสห้องกิจกรรม');
         window.location.href = '/home-page.html';
         return;
     }
+
+    // 1. ดึงข้อมูล User ปัจจุบันก่อน
+    let currentUserId = null;
+    try {
+        const userRes = await fetch('/api/me');
+        const userData = await userRes.json();
+        if (userData.loggedIn) {
+            currentUserId = userData.user.id;
+        }
+    } catch (err) { console.error('Auth Check Error', err); }
 
     try {
         // 2. เรียก API ไปดึงข้อมูลห้อง
@@ -75,8 +84,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (data.success) {
             const room = data.room;
             renderRoomDetail(room);
-
             fetchRoomMembers(roomId);
+
+            if (currentUserId && room.ROOM_LEADER_ID == currentUserId) {
+                const editBtn = document.getElementById('edit-room-btn');
+
+                if (editBtn) editBtn.style.display = 'block'; // โชว์ปุ่ม
+                if (editBtn) editBtn.href = `/edit-room-page.html?id=${room.ROOM_ID}`;
+            }
         } else {
             alert('ไม่พบข้อมูลห้องกิจกรรม');
             window.location.href = '/home-page.html';
@@ -95,6 +110,8 @@ function renderRoomDetail(room) {
 
     // รหัสห้อง
     setText('detail-room-id', room.ROOM_ID);
+    const roomIdhidden = document.getElementById('detail-room-id-hidden');
+    if (roomIdhidden) roomIdhidden.value = room.ROOM_ID;
 
     // ชื่อห้อง
     setText('detail-room-title', room.ROOM_TITLE);
@@ -147,7 +164,7 @@ function setText(id, text) {
 
 // #region ฟังก์ชันดึงและแสดงสมาชิก
 async function fetchRoomMembers(roomId) {
-    try {   
+    try {
         const res = await fetch(`/api/room/${roomId}/members`);
         const data = await res.json();
 
@@ -176,7 +193,7 @@ async function fetchRoomMembers(roomId) {
                         <img src="/Resource/img/credit.png" alt="credit-image">
                     </div>
                 `;
-                
+
                 listContainer.appendChild(li);
             });
         }
