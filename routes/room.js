@@ -215,7 +215,6 @@ router.delete('/delete-room/:id', async (req, res) => {
         await dbQuery('DELETE FROM ROOMS WHERE ROOM_ID = ?', [roomId]);
 
         res.json({ success: true, message: 'ลบห้องกิจกรรมเรียบร้อยแล้ว' });
-
     } catch (err) {
         console.error(err);
         res.json({ success: false, message: 'เกิดข้อผิดพลาด: ' + err.message });
