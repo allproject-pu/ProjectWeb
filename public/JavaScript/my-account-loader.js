@@ -1,59 +1,55 @@
-// public/JavaScript/history-room-loader.js
-
 document.addEventListener("DOMContentLoaded", function () {
-    if (document.getElementById('rooms-list') && window.location.pathname.includes('history-page')) {
-        loadMyHistoryRooms();
-    }
+    loadMyJoinedRooms();
 });
 
-export async function loadMyHistoryRooms(filterParams = {}) {
+async function loadMyJoinedRooms() {
     const list = document.getElementById('rooms-list');
-    const message = document.getElementById('message');
     if (!list) return;
 
     try {
-        list.innerHTML = '<li>กำลังค้นหาประวัติ...</li>';
-        const queryString = new URLSearchParams(filterParams).toString();
+        // แสดง Loading
+        list.innerHTML = '<h3 style="text-align:center; width:100%; color:#AEAEAE;">กำลังโหลดข้อมูล...</h3>';
 
-        // เรียก API ประวัติ
-        const response = await fetch(`/api/my-history?${queryString}`);
+        const response = await fetch('/api/my-joined-active-rooms');
         const data = await response.json();
 
         if (!data.success) {
-            if (data.message === 'กรุณาเข้าสู่ระบบ') {
-                window.location.href = '/login-page.html';
-                return;
-            }
-            message.innerHTML = 'ไม่สามารถโหลดข้อมูลได้';
+            list.innerHTML = `<h3 style="text-align:center; width:100%; color:#AEAEAE;">${data.message || 'เกิดข้อผิดพลาด'}</h3>`;
             return;
         }
 
         list.innerHTML = '';
 
         if (data.rooms.length === 0) {
-            message.innerHTML = 'ไม่พบประวัติการเข้าร่วมกิจกรรม';
+            list.innerHTML = '<h3 style="text-align:center; width:100%; color:#AEAEAE; padding:20px;">ยังไม่มีกิจกรรมที่เข้าร่วมเร็วๆ นี้</h3>';
         } else {
             data.rooms.forEach(room => {
-                list.appendChild(createHistoryRoomItem(room));
+                list.appendChild(createRoomItem(room));
             });
         }
+
     } catch (error) {
-        console.error('Error loading history:', error);
-        message.innerHTML = 'เกิดข้อผิดพลาดในการเชื่อมต่อ';
+        console.error('Error:', error);
+        list.innerHTML = '<h3 style="text-align:center; width:100%; color:#AEAEAE;">ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้</h3>';
     }
 }
 
-function createHistoryRoomItem(room) {
+// ฟังก์ชันสร้าง HTML การ์ด (เหมือนกับใน created-room-loader แต่ปรับให้ใช้ได้ทั่วไป)
+function createRoomItem(room) {
     const li = document.createElement('li');
     li.className = 'room-item';
 
     const date = new Date(room.ROOM_EVENT_DATE);
     const day = date.getDate();
     const month = date.toLocaleString('th-TH', { month: 'short' });
-    const tagsHTML = room.tags ? room.tags.split(',').map(tag => `<li>${tag}</li>`).join('') : '<li>-</li>';
+    
+    // จัดการ Tags
+    const tagsHTML = room.tags 
+        ? room.tags.split(',').map(tag => `<li>${tag}</li>`).join('') 
+        : '<li>-</li>';
+        
+    // รูปภาพ
     const bgImage = room.ROOM_IMG ? room.ROOM_IMG : '/Resource/img/bangmod.png';
-
-    // เพิ่ม Badge "จบแล้ว"
 
     li.innerHTML = `
         <article style="display:flex; flex-direction:column; height:100%;">
@@ -99,8 +95,8 @@ function createHistoryRoomItem(room) {
 
             <a class="btn-room-item a-btn"
                href="./room-detail-page.html?id=${room.ROOM_ID}" 
-               style="display:flex; justify-content:center; align-items:center; text-decoration:none; background-color: #6c757d;">
-               ดูย้อนหลัง
+               style="display:flex; justify-content:center; align-items:center; text-decoration:none;">
+               ดูรายละเอียด
             </a>
         </article>
     `;

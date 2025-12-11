@@ -736,4 +736,54 @@ router.post('/room/:id/check-in', async (req, res) => {
     }
 });
 // #endregion
+
+// #region --- API ดึงกิจกรรมที่กำลังเข้าร่วม (Active / Upcoming) ---
+router.get('/my-joined-active-rooms', async (req, res) => {
+    const token = req.cookies.token;
+    if (!token) return res.json({ success: false, message: 'กรุณาเข้าสู่ระบบ' });
+
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const userId = decoded.id;
+
+        // SQL Query:
+        // 1. JOIN ROOMMEMBERS: เพื่อดูว่า User นี้เข้าร่วมห้องไหนบ้าง
+        // 2. WHERE เงื่อนไขเวลา: วันที่จัดกิจกรรม ต้องมากกว่าหรือเท่ากับ ปัจจุบัน (ยังไม่จบ)
+        const sql = `
+            SELECT 
+                r.ROOM_ID,
+                r.ROOM_TITLE,
+                r.ROOM_EVENT_DATE,
+                TIME_FORMAT(r.ROOM_EVENT_START_TIME, '%H:%i') AS formatted_start_time,
+                TIME_FORMAT(r.ROOM_EVENT_END_TIME, '%H:%i') AS formatted_end_time,
+                r.ROOM_CAPACITY,
+                r.ROOM_IMG,
+                r.ROOM_STATUS, 
+                l.LOCATION_NAME,
+                (SELECT COUNT(USER_ID) FROM ROOMMEMBERS WHERE ROOM_ID = r.ROOM_ID) AS member_count,
+                GROUP_CONCAT(DISTINCT t.TAG_NAME) AS tags
+            FROM ROOMS r
+            JOIN ROOMMEMBERS rm ON r.ROOM_ID = rm.ROOM_ID
+            LEFT JOIN LOCATIONS l ON r.ROOM_EVENT_LOCATION = l.LOCATION_ID
+            LEFT JOIN ROOMTAGS rt ON r.ROOM_ID = rt.ROOM_ID
+            LEFT JOIN TAGS t ON rt.TAG_ID = t.TAG_ID
+            WHERE rm.USER_ID = ? 
+            AND (
+                r.ROOM_EVENT_DATE > CURRENT_DATE() OR 
+                (r.ROOM_EVENT_DATE = CURRENT_DATE() AND r.ROOM_EVENT_END_TIME > CURRENT_TIME())
+            )
+            GROUP BY r.ROOM_ID
+            ORDER BY r.ROOM_EVENT_DATE ASC, r.ROOM_EVENT_START_TIME ASC
+        `;
+
+        const rooms = await dbQuery(sql, [userId]);
+        res.json({ success: true, rooms });
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ success: false, message: 'Database error' });
+    }
+});
+// #endregion
+
 module.exports = router;

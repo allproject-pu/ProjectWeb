@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>MODJOY - ประวัติการเข้าร่วม</title>
-    <link rel="stylesheet" href="./css/page-add-room.css">
+    <!-- <link rel="stylesheet" href="./css/page-add-room.css"> -->
     <link rel="stylesheet" href="./css/base.css">
     <link rel="stylesheet" href="./css/page-home.css">
     <link rel="stylesheet" href="./css/page-auth.css">
@@ -90,7 +90,8 @@
                         <div class="profile-dropdown" id="profile-dropdown">
                             <div class="dropdown-header">
                                 <div class="dropdown-img-large">
-                                    <img src="./Resource/img/profile.png" alt="profile-large" class="profile-large-image">
+                                    <img src="./Resource/img/profile.png" alt="profile-large"
+                                        class="profile-large-image">
                                 </div>
                                 <p class="user-name">มดตะนอย กัดเจ็บ</p>
                                 <p class="user-email">niggadamdam911@gmail.com</p>
@@ -115,6 +116,7 @@
             </div>
             <button class="material-symbols-outlined" aria-label="ตัวกรอง" id="filter-open-btn">filter_alt</button>
         </div>
+        <h3 class='message' id="message"></h3>
         <ul class="rooms-List" id="rooms-list">
         </ul>
     </main>
@@ -158,37 +160,41 @@
                 </div>
 
                 <div class="filter-group">
-                    <label for="filter-location-search">ชื่อสถานที่</label>
-                    <div class="filter-search-bar">
-                        <input type="text" id="filter-location-search" placeholder="ค้นหาสถานที่...">
-                        <span class="material-symbols-outlined">search</span>
+                    <label for="filter-location-input">ชื่อสถานที่</label>
+                    <div class="tag-input-container filter-search-bar">
+                        <div class="tag-group">
+                            <input type="text" class="custom-select-input" id="filter-location-input"
+                                placeholder="พิมพ์ค้นหา หรือเลือกจากรายการ..." role="combobox" aria-autocomplete="list"
+                                aria-expanded="false" aria-haspopup="listbox" aria-controls="filter-places-listbox">
+                            <button type="button" class="btn" id="filter-add-location-btn">+</button>
+                        </div>
+                        <div class="custom-options-list" id="filter-places-listbox" role="listbox"></div>
+                        <div id="location-suggestion-container" class="filter-tag-cloud"
+                            style="margin-top: 10px; margin-bottom: 10px;">
+                        </div>
                     </div>
-                    <div class="filter-tag-cloud" id="location-tag-cloud">
-                        <button type="button" class="tag" data-value="หอสมุด N10">หอสมุด N10</button>
-                        <button type="button" class="tag" data-value="N7">N7 ตึกวิทยาศาสตร์</button>
-                        <button type="button" class="tag" data-value="S2">S2</button>
-                        <button type="button" class="tag" data-value="S3">S3</button>
-                    </div>
-                    <input type="hidden" name="selected_locations" id="selected-locations">
+                    <ul class="tag-list-item" id="filter-location-list-display"></ul>
+                    <input type="hidden" name="roomLocation" id="filter-locations-hidden">
                 </div>
 
                 <div class="filter-group">
                     <label for="filter-tag-search">Tag</label>
-                    <div class="filter-search-bar">
-                        <input type="text" id="filter-tag-search" placeholder="ค้นหาแท็ก...">
-                        <span class="material-symbols-outlined">search</span>
+                    <div class="tag-input-container filter-search-bar">
+                        <div class="tag-group">
+                            <input type="text" id="filter-tag-search" name="room-tag"
+                                placeholder="พิมพ์เพื่อค้นหาแท็ก...">
+                            <button type="button" class="btn" id="filter-add-tag-btn">+</button>
+                        </div>
+
+                        <div class="tag-suggestions filter-tag-cloud" id="filter-tag-suggestions"></div>
                     </div>
-                    <div class="filter-tag-cloud" id="tag-tag-cloud">
-                        <button type="button" class="tag" data-value="Calculus">Calculus</button>
-                        <button type="button" class="tag" data-value="อ่านหนังสือ">อ่านหนังสือ</button>
-                        <button type="button" class="tag" data-value="ติวฟรี">ติวฟรี</button>
-                        <button type="button" class="tag" data-value="เล่นเกม">เล่นเกม</button>
-                    </div>
-                    <input type="hidden" name="selected_tags" id="selected-tags">
+                    <ul class="tag-list-item" id="filter-tag-list-display"></ul>
+                    <input type="hidden" name="selected_tags" id="selected-tags-hidden">
                 </div>
 
                 <div class="btn-box">
                     <button type="submit" class="btn filter-submit-btn">ค้นหา</button>
+                    <button type="clear" class="btn filter-clear-btn">ล้างรายการทั้งหมด</button>
                 </div>
             </form>
         </div>

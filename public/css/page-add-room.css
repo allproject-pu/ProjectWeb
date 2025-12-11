@@ -487,6 +487,53 @@ strong {
     filter: brightness(0.7);
 }
 
+/* 1. ทำให้ Modal เลื่อนขึ้นลงได้ หากเนื้อหายาวเกิน */
+.filter-modal-content {
+    max-height: 85vh; /* จำกัดความสูงไม่ให้เกินหน้าจอ */
+    overflow-y: auto; /* ถ้าเนื้อหาล้น ให้มี Scrollbar */
+    display: flex;
+    flex-direction: column;
+}
+
+/* 2. จัดระเบียบ Tag ให้เรียงแนวนอนสวยงาม */
+.filter-tag-cloud {
+    display: flex;
+    flex-wrap: wrap; /* ให้ขึ้นบรรทัดใหม่เมื่อสุดขอบ */
+    gap: 8px; /* ระยะห่างระหว่างปุ่ม */
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+/* 3. ตกแต่งปุ่ม Tag */
+.tag {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    background-color: #f0f0f0; /* สีพื้นหลังปกติ */
+    color: #333;
+    border: 1px solid #ddd;
+}
+
+.tag:hover {
+    background-color: #e0e0e0;
+}
+
+/* สีสำหรับตัวที่ถูกเลือก (Selected) */
+.tag.active {
+    background-color: #ff7f00; /* สีส้มตาม Theme */
+    color: white;
+    border-color: #ff7f00;
+}
+
+/* 4. ดันปุ่มกดให้ไปอยู่ล่างสุดเสมอ (Optional) */
+.btn-box {
+    margin-top: 20px;
+    padding-top: 10px;
+    border-top: 1px solid #eee;
+}
+
 
 /* --- CSS สำหรับกล่อง Check-in (จากดีไซน์) --- */
 .unowner-room-btns {

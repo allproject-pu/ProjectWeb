@@ -1,28 +1,24 @@
 // public/JavaScript/created-room-loader.js
 
-// ลบ Import ที่วนลูปตัวเองออกให้หมด
-// เราไม่จำเป็นต้อง import loadRooms ที่นี่ เพราะหน้านี้ใช้แต่ loadMyCreatedRooms
-
 document.addEventListener("DOMContentLoaded", function () {
-    // เช็คว่าอยู่ในหน้า created-room หรือไม่ เพื่อสั่งรันอัตโนมัติเมื่อเปิดหน้า
-    // ใช้ includes('created-room') เพื่อให้ครอบคลุมทั้ง .html หรือไม่มีนามสกุล
     if (document.getElementById('rooms-list') && window.location.pathname.includes('created-room')) {
         loadMyCreatedRooms();
     }
 });
 
-// Export ฟังก์ชันเพื่อให้ filter.js เรียกใช้ได้เมื่อมีการกดค้นหา
 export async function loadMyCreatedRooms(filterParams = {}) {
     const list = document.getElementById('rooms-list');
-    if (!list) return;
+    const message = document.getElementById('message'); // 1. ดึง Element message
+
+    if (!list || !message) return;
 
     try {
-        list.innerHTML = '<li>กำลังค้นหากิจกรรม...</li>';
+        // 2. สถานะ Loading: เคลียร์ลิสต์ และแสดงข้อความกำลังโหลด
+        list.innerHTML = '';
+        message.style.display = 'block';
+        message.innerText = 'กำลังค้นหากิจกรรม...';
 
-        // สร้าง Query String
         const queryString = new URLSearchParams(filterParams).toString();
-
-        // เรียก API /my-created-rooms (ซึ่งใน Backend เขียนไว้ถูกแล้วว่า WHERE ROOM_LEADER_ID = ?)
         const response = await fetch(`/api/my-created-rooms?${queryString}`);
         const data = await response.json();
 
@@ -31,26 +27,36 @@ export async function loadMyCreatedRooms(filterParams = {}) {
                 window.location.href = '/login-page.html';
                 return;
             }
-            list.innerHTML = '<li>ไม่สามารถโหลดข้อมูลได้</li>';
+            // 3. สถานะ Error: แจ้งเตือนเมื่อโหลดไม่ได้
+            message.innerText = 'ไม่สามารถโหลดข้อมูลได้';
             return;
         }
 
+        // เคลียร์ข้อมูลเก่าอีกครั้งเพื่อความชัวร์ (กรณีโหลดสำเร็จ)
         list.innerHTML = '';
 
         if (data.rooms.length === 0) {
-            list.innerHTML = '<li style="text-align:center; padding: 20px; width:100%;">ไม่พบกิจกรรมที่คุณสร้าง</li>';
+            // 4. สถานะ Empty: ไม่พบข้อมูล
+            message.innerText = 'ไม่พบกิจกรรมที่คุณสร้าง';
+            message.style.display = 'block';
         } else {
+            // 5. สถานะ Success: ซ่อนข้อความ และแสดงรายการห้อง
+            message.innerText = ''; 
+            message.style.display = 'none'; // ซ่อน element เพื่อไม่ให้กินพื้นที่
+
             data.rooms.forEach(room => {
                 list.appendChild(createRoomItem(room));
             });
         }
     } catch (error) {
         console.error('Error loading rooms:', error);
-        list.innerHTML = '<li>เกิดข้อผิดพลาดในการเชื่อมต่อ</li>';
+        // 6. สถานะ Network Error
+        message.innerText = 'เกิดข้อผิดพลาดในการเชื่อมต่อ';
+        message.style.display = 'block';
     }
 }
 
-// ฟังก์ชันสร้าง HTML การ์ด (ใช้เฉพาะในไฟล์นี้)
+// ฟังก์ชันสร้าง HTML การ์ด (เหมือนเดิม)
 function createRoomItem(room) {
     const li = document.createElement('li');
     li.className = 'room-item';

@@ -316,6 +316,13 @@ body {
     background-color: var(--primary-color);
 }
 
+.message{
+    text-align: center;
+    padding: 20px;
+    width: 100%;
+    font-size: 20px;
+    color: var(--text-secondary);
+}
 /* footer */
 .login-footer {
     width: 100%;

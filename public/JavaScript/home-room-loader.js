@@ -16,6 +16,7 @@ export { loadRooms };
 async function loadRooms(filterParams = {}) {
     try {
         const list = document.getElementById('rooms-list');
+        const message = document.getElementById('message');
         list.innerHTML = '<li>กำลังค้นหากิจกรรม...</li>'; // แสดงสถานะ loading
         
         // สร้าง URL Query String จาก Object
@@ -26,13 +27,13 @@ async function loadRooms(filterParams = {}) {
         const data = await res.json();
 
         if (!data.success) {
-            list.innerHTML = '<li>ไม่สามารถโหลดห้องกิจกรรมได้</li>';
+            message.innerHTML = 'ไม่สามารถโหลดห้องกิจกรรมได้';
             return;
         }
 
         list.innerHTML = '';
         if (data.rooms.length === 0) {
-            list.innerHTML = '<li style="text-align:center; padding: 20px;">ไม่พบห้องกิจกรรมตามเงื่อนไขที่ระบุ</li>';
+            message.innerHTML = 'ไม่พบห้องกิจกรรมตามเงื่อนไขที่ระบุ';
         } else {
             data.rooms.forEach(room => {
                 list.appendChild(createRoomItem(room));
@@ -40,7 +41,7 @@ async function loadRooms(filterParams = {}) {
         }
     } catch (err) {
         console.error(err);
-        document.getElementById('rooms-list').innerHTML = '<li>เกิดข้อผิดพลาดในการเชื่อมต่อ</li>';
+        message.innerHTML = 'เกิดข้อผิดพลาดในการเชื่อมต่อ';
     }
 }
     
