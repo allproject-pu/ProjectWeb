@@ -72,8 +72,8 @@ function renderCodeInfo(code, expireDateStr) {
     document.getElementById('room-password').textContent = code;
     
     if (expireDateStr) {
-        const expireTime = new Date(expireDateStr);
-        const timeStr = expireTime.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' });
+        const expireTime = new Date(expireDateStr.replace(' ', 'T')).getTime();
+        const timeStr = new Date(expireTime).toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' });
 
         const expiryElement = document.getElementById('room-expiry');
 
@@ -94,16 +94,18 @@ function renderCodeInfo(code, expireDateStr) {
             }
 
             // คำนวณนาทีและวินาที
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
             // จัดรูปแบบให้มีเลข 0 นำหน้าถ้าน้อยกว่า 10 (เช่น 09, 05)
+            const hoursStr = hours < 10 ? "0" + hours : hours;
             const minutesStr = minutes < 10 ? "0" + minutes : minutes;
             const secondsStr = seconds < 10 ? "0" + seconds : seconds;
 
             
             // แสดงผล
-            expiryElement.textContent = `เหลือเวลา: ${minutesStr}:${secondsStr} นาที (${timeStr}น.)`;
+            expiryElement.textContent = `เหลือเวลา: ${hoursStr} ชั่วโมง ${minutesStr} นาที ${secondsStr} วินาที (${timeStr}น.)`;
             expiryElement.style.color = ""; // สีปกติ
         };
         updateTimer();
