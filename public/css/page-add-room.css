@@ -655,7 +655,7 @@ strong {
 }
 
 .check-in-main {
-    width: 60vmax;
+    width: 800px;
     padding: 40px;
     margin: 0px auto 0 auto;
     flex-grow: 1;
