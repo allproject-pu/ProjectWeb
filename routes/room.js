@@ -174,6 +174,55 @@ router.post('/update-room/:id', upload.single('room_image'), async (req, res) =>
 });
 // #endregion
 
+// #region --- API ลบห้องกิจกรรม (delete-room/:id) --- 
+router.delete('/delete-room/:id', async (req, res) => {
+    const token = req.cookies.token;
+    if (!token) return res.json({ success: false, message: 'กรุณาเข้าสู่ระบบ' });
+
+    const roomId = req.params.id;
+
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const userId = decoded.id;
+        const userRole = decoded.role;
+
+        // 1. เช็คสิทธิ์ (ต้องเป็นเจ้าของ หรือ Admin)
+        const checkOwner = await dbQuery('SELECT ROOM_LEADER_ID, ROOM_IMG FROM ROOMS WHERE ROOM_ID = ?', [roomId]);
+
+        if (checkOwner.length === 0) return res.json({ success: false, message: 'ไม่พบห้องกิจกรรม' });
+
+        const room = checkOwner[0];
+
+        if (room.ROOM_LEADER_ID != userId && userRole !== 'admin') {
+            return res.json({ success: false, message: 'คุณไม่มีสิทธิ์ลบห้องนี้' });
+        }
+
+        // 2. ลบไฟล์รูปภาพออกจาก Server (ถ้าไม่ใช่รูป Default)
+        // เช็คว่ามีรูป และ path ไม่ใช่รูปใน folder Resource (ที่เป็นรูป default)
+        if (room.ROOM_IMG && !room.ROOM_IMG.includes('/Resource/img/')) {
+            // แปลง path URL กลับเป็น path เครื่อง (/uploads/rooms/...)
+            // หมายเหตุ: ต้องแน่ใจว่า path ใน DB เก็บแบบไหน (ในโค้ดเก่าเก็บเป็น /uploads/rooms/filename)
+            const fileName = path.basename(room.ROOM_IMG);
+            const filePath = path.join(__dirname, '../public/uploads/rooms', fileName);
+
+            if (fs.existsSync(filePath)) {
+                fs.unlinkSync(filePath); // ลบไฟล์
+            }
+        }
+
+        // 3. ลบข้อมูลจาก Database 
+        // (เนื่องจากตั้ง Foreign Key ON DELETE CASCADE ไว้แล้ว ข้อมูลใน ROOMMEMBERS, ROOMTAGS จะหายไปเอง)
+        await dbQuery('DELETE FROM ROOMS WHERE ROOM_ID = ?', [roomId]);
+
+        res.json({ success: true, message: 'ลบห้องกิจกรรมเรียบร้อยแล้ว' });
+
+    } catch (err) {
+        console.error(err);
+        res.json({ success: false, message: 'เกิดข้อผิดพลาด: ' + err.message });
+    }
+});
+// #endregion
+
 // #region --- API เข้าร่วมห้องกิจกรรม (join-room/:id) --- 
 router.post('/room/:id/join', async (req, res) => {
     const token = req.cookies.token;
