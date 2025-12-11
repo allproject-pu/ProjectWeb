@@ -518,14 +518,6 @@ strong {
     border-color: #ff7f00;
 }
 
-.delete-btn {
-    background-color: transparent;
-    border: none;
-    font-size: 16px;
-    color: #FA4616;
-    cursor: pointer;
-}
-
 /* 4. ดันปุ่มกดให้ไปอยู่ล่างสุดเสมอ (Optional) */
 .btn-box {
     margin-top: 20px;
