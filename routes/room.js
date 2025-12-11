@@ -851,6 +851,9 @@ router.post('/room/:id/generate-code', async (req, res) => {
         const roomCheck = await dbQuery(`
             SELECT 
                 ROOM_LEADER_ID,
+                ROOM_EVENT_DATE, 
+                ROOM_EVENT_START_TIME,
+                ROOM_EVENT_END_TIME,
                 -- คำนวณ A: เวลาปัจจุบัน จนถึง เวลาจบกิจกรรม (เหลืออีกกี่นาที?)
                 TIMESTAMPDIFF(MINUTE, NOW(), TIMESTAMP(ROOM_EVENT_DATE, ROOM_EVENT_END_TIME)) AS minutes_until_end,
                 -- คำนวณ B: ระยะเวลาของกิจกรรม (เริ่ม ถึง จบ ห่างกันกี่นาที?)
