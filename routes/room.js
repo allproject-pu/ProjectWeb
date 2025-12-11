@@ -410,6 +410,7 @@ router.get('/rooms', async (req, res) => {
             whereClauses.push("r.ROOM_TITLE LIKE ?");
             queryParams.push(`%${search}%`);
         }
+        whereClauses.push("TIMESTAMP(r.ROOM_EVENT_DATE, r.ROOM_EVENT_END_TIME) > NOW()");
         // 2. เงื่อนไขตัวกรองวันที่/เวลา
         if (date) {
             whereClauses.push("r.ROOM_EVENT_DATE >= ?");
@@ -728,7 +729,6 @@ router.get('/room/:id', (req, res) => {
         }
 
         if (results.length > 0) {
-            console.log(results[0]);
             res.json({ success: true, room: results[0] });
         } else {
             res.json({ success: false, message: 'ไม่พบห้องกิจกรรมนี้' });
