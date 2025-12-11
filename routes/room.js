@@ -190,7 +190,11 @@ router.post('/room/:id/join', async (req, res) => {
             SELECT 
                 r.ROOM_CAPACITY,
                 (SELECT COUNT(*) FROM ROOMMEMBERS WHERE ROOM_ID = r.ROOM_ID) as current_members,
-                (SELECT COUNT(*) FROM ROOMMEMBERS WHERE ROOM_ID = r.ROOM_ID AND USER_ID = ?) as is_joined
+                (SELECT COUNT(*) FROM ROOMMEMBERS WHERE ROOM_ID = r.ROOM_ID AND USER_ID = ?) as is_joined,
+                CASE 
+                    WHEN NOW() > TIMESTAMP(r.ROOM_EVENT_DATE, r.ROOM_EVENT_END_TIME) THEN 1 
+                    ELSE 0 
+                END AS is_ended
             FROM ROOMS r
             WHERE r.ROOM_ID = ?
         `, [userId, roomId]);
@@ -198,6 +202,8 @@ router.post('/room/:id/join', async (req, res) => {
         if (roomCheck.length === 0) return res.json({ success: false, message: 'ไม่พบห้องกิจกรรม' });
 
         const room = roomCheck[0];
+
+        if (room.is_ended === 1) return res.json({ success: false, message: 'กิจกรรมนี้จบไปแล้ว ไม่สามารถเข้าร่วมได้' });
 
         if (room.is_joined > 0) return res.json({ success: false, message: 'คุณเข้าร่วมกิจกรรมนี้ไปแล้ว' });
 
@@ -230,10 +236,18 @@ router.post('/room/:id/leave', async (req, res) => {
         const userId = decoded.id;
 
         // เช็คก่อนว่าเป็นเจ้าของห้องไหม? (เจ้าของห้ามออก ต้องลบห้องอย่างเดียว)
-        const room = await dbQuery('SELECT ROOM_LEADER_ID FROM ROOMS WHERE ROOM_ID = ?', [roomId]);
-        if (room.length > 0 && room[0].ROOM_LEADER_ID == userId) {
+        const room = await dbQuery(`
+            SELECT ROOM_LEADER_ID, ROOM_EVENT_DATE, ROOM_EVENT_START_TIME,
+                CASE 
+                    WHEN NOW() >= TIMESTAMP(ROOM_EVENT_DATE, ROOM_EVENT_START_TIME) THEN 1 
+                    ELSE 0 
+                END AS is_started
+            FROM ROOMS WHERE ROOM_ID = ?`, [roomId]);
+
+        if (room.length > 0 && room[0].ROOM_LEADER_ID == userId)
             return res.json({ success: false, message: 'เจ้าของห้องไม่สามารถกดออกได้ (ต้องลบห้องกิจกรรม)' });
-        }
+        if (room.is_started === 1)
+            return res.json({ success: false, message: 'ไม่สามารถยกเลิกได้ เนื่องจากกิจกรรมเริ่มไปแล้ว' });
 
         // ลบออกจากตาราง
         await dbQuery('DELETE FROM ROOMMEMBERS WHERE ROOM_ID = ? AND USER_ID = ?', [roomId, userId]);

@@ -1,4 +1,3 @@
-// #region --- ดึงข้อมูลห้องกิจกรรมจาก API และแสดงผล --- 
 document.addEventListener('DOMContentLoaded', async () => {
     const params = new URLSearchParams(window.location.search);
     const roomId = params.get('id');
@@ -21,8 +20,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     } catch (err) { console.error('Auth Check Error', err); }
     // 2. ดึงข้อมูลห้อง
     await fetchAndRenderRoom(roomId, currentUserId, currentUserRole);
+
+    // ตั้งเวลารีเฟรชข้อมูลทุก 30 วินาที
+    setInterval(() => {
+        // เรียกฟังก์ชันเดิมซ้ำ ข้อมูลในหน้าเว็บจะอัปเดตเอง
+        fetchAndRenderRoom(roomId, currentUserId, currentUserRole);
+    }, 30000); // 30000 ms = 30 วินาที
 });
 
+// #region --- ฟังก์ชันดึงข้อมูลห้องและแสดงผล ---
 async function fetchAndRenderRoom(roomId, currentUserId, currentUserRole) {
     try {
         // ดึงข้อมูลห้อง
@@ -170,12 +176,13 @@ async function fetchAndRenderRoom(roomId, currentUserId, currentUserRole) {
         console.error('Error:', error);
     }
 };
+// #endregion --- ดึงข้อมูลห้องกิจกรรมจาก API และแสดงผล ---
 
-// --- ฟังก์ชันส่งรหัสเช็คชื่อ ---
+// #region --- ฟังก์ชันส่งรหัสเช็คชื่อ ---
 async function handleCheckIn(roomId) {
     const codeInput = document.getElementById('check-in-input');
     const code = codeInput.value.trim();
-    if (!code) { alert('กรุณากรอกรหัสเช็คชื่อ'); return;}
+    if (!code) { alert('กรุณากรอกรหัสเช็คชื่อ'); return; }
 
     try {
         const res = await fetch(`/api/room/${roomId}/check-in`, {
@@ -196,6 +203,7 @@ async function handleCheckIn(roomId) {
         alert('เกิดข้อผิดพลาดในการเช็คชื่อ : ' + err.message);
     }
 }
+// #endregion
 
 // #region --- ฟังก์ชันแสดงข้อมูลห้องกิจกรรม ---
 function renderRoomDetail(room) {
@@ -322,6 +330,3 @@ async function handleLeaveRoom(roomId) {
     }
 }
 // #endregion
-
-// #endregion --- ดึงข้อมูลห้องกิจกรรมจาก API และแสดงผล ---
-
