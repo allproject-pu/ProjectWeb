@@ -297,6 +297,36 @@ document.addEventListener('DOMContentLoaded', async () => {
     // #endregion
     // #endregion ======== Image Uploader ==========
 
+    // --- ส่วนจัดการปุ่มลบ ---
+    const deleteBtn = document.getElementById('delete-room-btn');
+    if (deleteBtn) {
+        deleteBtn.addEventListener('click', async () => {
+            // Confirm ก่อนลบ
+            const confirmed = confirm('⚠️ คุณต้องการลบกิจกรรมนี้ใช่หรือไม่?\n(การกระทำนี้ไม่สามารถกู้คืนได้ และสมาชิกทุกคนจะถูกลบออก)');
+
+            if (!confirmed) return;
+
+            try {
+                // ส่งคำสั่งลบ
+                const response = await fetch(`/api/delete-room/${roomId}`, {
+                    method: 'DELETE'
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    alert('ลบห้องกิจกรรมสำเร็จ');
+                    window.location.href = '/home-page.html';
+                } else {
+                    alert('ไม่สามารถลบได้: ' + result.message);
+                }
+
+            } catch (err) {
+                console.error(err);
+                alert('เกิดข้อผิดพลาดในการเชื่อมต่อ');
+            }
+        });
+    }
+
     // #region ======== โหลดข้อมูลห้องกิจกรรมเดิมมาแสดง และ บันทึกการแก้ไข ======== 
     // 1. ฟังก์ชันดึงข้อมูลเดิมมาใส่ (Pre-fill)
     async function loadRoomData() {
