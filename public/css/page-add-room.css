@@ -326,23 +326,14 @@ strong {
 }
 
 /* check-in-page */
-.qr-imagebox {
-    max-width: 300px;
-    display: flex;
-    flex-direction: column;
+.room-password{
+    display: block;
+    font-size: 60px;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 12px;
     text-align: center;
-    margin: auto;
-    overflow: hidden;
-    color: white;
-    border-radius: 22px;
-    border: 1px solid #d0d0d0;
-    background: linear-gradient(178deg, #FA5A16 5.18%, #FFB52C 122.98%);
-}
-
-.qr-imagebox img {
-    max-width: 280px;
-    margin: 5px auto 2px;
-    aspect-ratio: 1 / 1;
+    letter-spacing: 3px;
 }
 
 .qr-imagebox strong {
@@ -527,6 +518,14 @@ strong {
     border-color: #ff7f00;
 }
 
+.delete-btn {
+    background-color: transparent;
+    border: none;
+    font-size: 16px;
+    color: #FA4616;
+    cursor: pointer;
+}
+
 /* 4. ดันปุ่มกดให้ไปอยู่ล่างสุดเสมอ (Optional) */
 .btn-box {
     margin-top: 20px;
@@ -660,7 +659,7 @@ strong {
     width: 100%;
     padding: 30px 20px;
     padding-bottom: calc(30px + env(safe-area-inset-bottom));
-
+    background: #ededed;
     display: flex;
     flex-direction: column;
     align-items: center;
