@@ -21,7 +21,8 @@ async function loadMyJoinedRooms() {
         list.innerHTML = '';
 
         if (data.rooms.length === 0) {
-            list.innerHTML = '<h3 style="text-align:center; width:100%; color:#AEAEAE; padding:20px;">ยังไม่มีกิจกรรมที่เข้าร่วมเร็วๆ นี้</h3>';
+            // แก้ไขบรรทัดนี้: เพิ่ม grid-column: 1 / -1; ลงไปใน style
+            list.innerHTML = '<h3 style="text-align:center; width:100%; grid-column: 1 / -1; color:#AEAEAE; padding:20px;">ยังไม่มีกิจกรรมที่เข้าร่วมเร็วๆ นี้</h3>';
         } else {
             data.rooms.forEach(room => {
                 list.appendChild(createRoomItem(room));
