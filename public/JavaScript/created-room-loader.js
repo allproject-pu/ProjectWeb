@@ -67,6 +67,15 @@ function createRoomItem(room) {
     const bgImage = room.ROOM_IMG ? room.ROOM_IMG : '/Resource/img/bangmod.png';
     const tagsHTML = room.tags ? room.tags.split(',').map(tag => `<li>${tag}</li>`).join('') : '<li>-</li>';
 
+    const endTime = new Date(room.ROOM_EVENT_DATE);
+    const [endHour, endMinute] = room.formatted_end_time.split(':');
+    endTime.setHours(endHour, endMinute, 0);
+
+    const now = new Date();
+
+
+    const btnClass = now > endTime ? 'btn-htsroom-item' : 'btn-room-item';
+
     li.innerHTML = `
         <article>
             <div class="header-item" style="background-image: url('${room.ROOM_IMG}');">
@@ -79,7 +88,6 @@ function createRoomItem(room) {
             <hr class="separator-line">
 
             <div class="body-item">
-
                 <div class="first-row-item-body">
                     <h2>${room.ROOM_TITLE}</h2>
                     <span class="people-activity">
@@ -108,13 +116,13 @@ function createRoomItem(room) {
                         </span>
                     </p>
                 </div>
-
             </div>
 
-            <a class="btn-room-item a-btn id='history-btn'"
+            <a class="${btnClass} a-btn"
                href="./room-detail-page.html?id=${room.ROOM_ID}">
                ดูรายละเอียด
             </a>
+
         </article>
     `;
     return li;
