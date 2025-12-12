@@ -39,7 +39,7 @@ router.post('/register', async (req, res) => {
 
 // #region --- API login ---
 router.post('/login', (req, res) => {
-    const { email, password } = req.body;
+    const { email, password, rememberMe } = req.body;
     const sql = 'SELECT * FROM USERS WHERE USER_EMAIL = ?';
     db.query(sql, [email], async (err, results) => {
         if (err) return res.status(500).json({ error: err });
@@ -53,6 +53,9 @@ router.post('/login', (req, res) => {
         }
 
         // ถ้า Login ผ่าน
+        // ถ้าติ๊ก Remember Me : 30 วัน, ถ้าไม่ติ๊ก: 1 วัน
+        const tokenLife = rememberMe ? '30d' : '1d';
+        const cookieLife = rememberMe ? 30 * 24 * 60 * 60 * 1000 : 24 * 60 * 60 * 1000;
         // สร้าง Token
         const token = jwt.sign(
             {
@@ -61,14 +64,14 @@ router.post('/login', (req, res) => {
                 role: user.USER_ROLE
             },
             JWT_SECRET,
-            { expiresIn: '1d' }
+            { expiresIn: tokenLife }
         );
 
         // ฝัง Token ลงใน Cookie ของ Browser
         res.cookie('token', token, {
             httpOnly: true, // JavaScript ฝั่งหน้าบ้านแอบอ่านไม่ได้ (กัน Hacker)
             secure: false,
-            maxAge: 24 * 60 * 60 * 1000
+            maxAge: cookieLife
         });
 
         // ส่งข้อมูลกลับ (Mapping ชื่อให้หน้าบ้านใช้ง่าย)

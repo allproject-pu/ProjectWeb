@@ -10,6 +10,9 @@ document.querySelector('.login-form').addEventListener('submit', async function 
     const formData = new FormData(this);
     const data = Object.fromEntries(formData.entries());
 
+    const rememberMeCheckbox = document.getElementById('remember-me');
+    data.rememberMe = rememberMeCheckbox.checked;
+
     // #region Validation ตรวจสอบ Email KMUTT 
     const kmuttEmailRegex = /^[a-zA-Z0-9._%+-]+@(mail\.)?kmutt\.ac\.th$/i;
     if (!kmuttEmailRegex.test(data.email)) {
