@@ -1,3 +1,21 @@
+// #region ตรวจสอบการล็อกอิน (Auth Guard)
+(async function checkAlreadyLoggedIn() {
+    try {
+        // ยิงเช็ค Session ที่ Server
+        const response = await fetch('/api/me');
+        const result = await response.json();
+
+        // ถ้าล็อกอิน (loggedIn = false)
+        if (result.loggedIn) {
+            window.location.href = '/home-page.html';
+        }
+    } catch (error) {
+        console.error('Auth Guard Error:', error);
+        window.location.href = '/home-page.html';
+    }
+})();
+// #endregion
+
 // #region กดปุ่มล็อกอิน
 const notifiText = document.getElementById('notifi-text');
 document.querySelector('.login-form').addEventListener('submit', async function (e) {

@@ -1,3 +1,22 @@
+// #region ตรวจสอบการล็อกอิน (Auth Guard)
+(async function checkAlreadyLoggedIn() {
+    try {
+        // ยิงเช็ค Session ที่ Server
+        const response = await fetch('/api/me');
+        const result = await response.json();
+
+        // ถ้าล็อกอิน (loggedIn = false)
+        if (result.loggedIn) {
+            window.location.href = '/home-page.html';
+        }
+    } catch (error) {
+        console.error('Auth Guard Error:', error);
+        window.location.href = '/home-page.html';
+    }
+})();
+// #endregion
+
+// #region event listener ฟอร์มลงทะเบียน
 // #region initialize elements
 const notifiText = document.getElementById('notifi-text');
 const submitBtn = document.getElementById('submitBtn');
@@ -5,12 +24,10 @@ const submitBtn = document.getElementById('submitBtn');
 const loadingScreen = document.getElementById('loading-screen');
 const loadingSpinnerBox = document.getElementById('loading-spinner-box');
 const successBox = document.getElementById('success-box');
-// #endregion
 
 // ฟังก์ชันหน่วงเวลา
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-
-// #region event listener ฟอร์มลงทะเบียน
+// #endregion
 document.querySelector('.register-form').addEventListener('submit', async function (e) {
     e.preventDefault();
 

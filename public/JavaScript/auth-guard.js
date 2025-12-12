@@ -1,4 +1,4 @@
-// #region ตรวจสอบถ้าล็อกอินอยู่แล้วให้ดีดไปหน้า Home
+// #region ตรวจสอบการล็อกอิน (Auth Guard)
 (async function checkAlreadyLoggedIn() {
     try {
         // ยิงเช็ค Session ที่ Server
@@ -7,7 +7,7 @@
 
         // ถ้าไม่ได้ล็อกอิน (loggedIn = false)
         if (!result.loggedIn) {
-            alert('กรุณาเข้าสู่ระบบเพื่อใช้งานหน้านี้'); // (ลบออกได้ถ้าไม่อยากให้เด้งเตือน)
+            alert('กรุณาเข้าสู่ระบบเพื่อใช้งานหน้านี้');
             window.location.href = '/home-page.html'; // ดีดกลับหน้า Home
         }
     } catch (error) {
