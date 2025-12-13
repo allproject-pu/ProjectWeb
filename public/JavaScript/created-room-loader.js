@@ -66,7 +66,7 @@ function createRoomItem(room) {
     const tagsHTML = room.TAGS ? room.TAGS.split(',').map(tag => `<li>${tag}</li>`).join('') : '<li>-</li>';
 
     const endTime = new Date(room.ROOM_EVENT_DATE);
-    const [endHour, endMinute] = room.format_end_time.split(':');
+    const [endHour, endMinute] = room.FORMAT_END_TIME.split(':');
     endTime.setHours(endHour, endMinute, 0);
 
     const now = new Date();
