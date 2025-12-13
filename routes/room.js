@@ -24,7 +24,7 @@ function dbQuery(sql, params) {
 router.get('/locations', (req, res) => {
     // ดึงรายชื่อสถานที่หมด
     db.query('SELECT * FROM LOCATIONS', (err, results) => {
-    // ส่วนที่เหลือเป็นการแจ้งเตือนกรณี error
+    // ส่วนที่เหลือเป็นเช็ค error เฉยๆ
         if (err) {
             console.error(err);
             return res.status(500).json({ error: 'Database error' });
@@ -534,8 +534,8 @@ router.get('/rooms', async (req, res) => {
 });
 // #endregion
 
-// #region --- API ดึงกิจกรรมของฉัน (My Activities) --- 
-router.get('/my-activities', async (req, res) => {
+// #region --- API ดึงห้องกิจกรรมที่สร้างโดย User ปัจจุบัน (my-created-rooms) --- 
+router.get('/my-created-rooms', async (req, res) => {
     const token = req.cookies.token;
     if (!token) return res.json({ success: false, message: 'กรุณาเข้าสู่ระบบ' });
 
@@ -544,48 +544,33 @@ router.get('/my-activities', async (req, res) => {
         const userId = decoded.id;
         const userRole = decoded.role;
 
-        // รับค่า Query Params
-        const { type, search, date, start_time, end_time, locations, tags, page = 1, limit = 20 } = req.query;
+        // รับค่า Query Params (search, date, tags, etc.) เหมือน API /rooms
+        const { search, date, start_time, end_time, locations, tags } = req.query;
 
         let whereClauses = [];
         let queryParams = [];
-        let roommembersJoin = "";
-        let orderBy = "";
 
-        if (type === 'history') {
-            roommembersJoin = "INNER JOIN ROOMMEMBERS rm_me ON r.ROOM_ID = rm_me.ROOM_ID AND rm_me.USER_ID = ?";
+        // เงื่อนไขต้องเป็นห้องที่ User คนนั้นๆสร้างเท่านั้น
+        if (userRole !== 'admin') {
+            whereClauses.push("r.ROOM_LEADER_ID = ?");
             queryParams.push(userId);
-
-            whereClauses.push(`(
-                r.ROOM_EVENT_DATE < CURRENT_DATE() OR 
-                (r.ROOM_EVENT_DATE = CURRENT_DATE() AND r.ROOM_EVENT_END_TIME < CURRENT_TIME())
-            )`);
-            orderBy = "r.ROOM_EVENT_DATE DESC, r.ROOM_EVENT_START_TIME DESC";
-
-        } else if (type === 'created') {
-            if (userRole !== 'admin') {
-                whereClauses.push("r.ROOM_LEADER_ID = ?");
-                queryParams.push(userId);
-            }
-            orderBy = "ROOM_STATUS ASC, r.ROOM_EVENT_DATE ASC, r.ROOM_EVENT_START_TIME ASC";
-            
-        } else {
-            return res.json({ success: false, message: 'กรุณาระบุประเภทกิจกรรม (filter)' });
         }
-
-        // การค้นหาและกรอง
-        // พิมพ์ค้นหา
+        // เงื่อนไขการค้นหาอื่นๆ (/rooms)
         if (search) {
+            // เช็คก่อนว่าสิ่งที่พิมพ์มาเป็นตัวเลขหรือไม่?
             const isNumeric = !isNaN(search) && search.trim() !== '';
+
             if (isNumeric) {
+                // กรณีเป็นตัวเลข: ค้นหาทั้งใน "ชื่อห้อง" หรือ "ไอดีห้อง"
+                // ต้องใส่วงเล็บ () ครอบไว้ เพื่อไม่ให้ตีกับเงื่อนไขอื่น (เช่น วันที่)
                 whereClauses.push("(r.ROOM_TITLE LIKE ? OR r.ROOM_ID = ?)");
                 queryParams.push(`%${search}%`, search);
             } else {
+                // กรณีเป็นตัวหนังสือ: ค้นหาเฉพาะ "ชื่อห้อง" (เพราะไอดีเป็นตัวเลข ค้นไปก็ไม่เจอ/อาจ error)
                 whereClauses.push("r.ROOM_TITLE LIKE ?");
                 queryParams.push(`%${search}%`);
             }
         }
-        // Date & Time
         if (date) {
             whereClauses.push("r.ROOM_EVENT_DATE >= ?");
             queryParams.push(date);
@@ -600,8 +585,6 @@ router.get('/my-activities', async (req, res) => {
             whereClauses.push("r.ROOM_EVENT_END_TIME <= ?");
             queryParams.push(end_time);
         }
-
-        // Locations & Tags
         if (locations) {
             const locationNames = locations.split(',').map(name => name.trim()).filter(name => name !== '');
             if (locationNames.length > 0) {
@@ -619,7 +602,7 @@ router.get('/my-activities', async (req, res) => {
 
         const whereSql = whereClauses.length > 0 ? `WHERE ${whereClauses.join(' AND ')}` : '';
 
-        // SQL Query หลัก
+        // SQL Query (ใช้ DISTINCT เหมือนเดิม)
         const sql = `
             SELECT 
                 r.ROOM_ID,
@@ -627,36 +610,121 @@ router.get('/my-activities', async (req, res) => {
                 r.ROOM_EVENT_DATE,
                 TIME_FORMAT(r.ROOM_EVENT_START_TIME, '%H:%i') AS FORMAT_START_TIME,
                 TIME_FORMAT(r.ROOM_EVENT_END_TIME, '%H:%i') AS FORMAT_END_TIME,
-                
-                -- คำนวณสถานะเสมอ (จะได้มีใช้ทั้งสองแบบ)
                 CASE 
                     WHEN NOW() < TIMESTAMP(r.ROOM_EVENT_DATE, r.ROOM_EVENT_START_TIME) THEN 0 -- pending
                     WHEN NOW() > TIMESTAMP(r.ROOM_EVENT_DATE, r.ROOM_EVENT_END_TIME) THEN 2 -- completed
                 ELSE 1 -- inProgress
                 END AS ROOM_STATUS,
-
                 r.ROOM_CAPACITY,
                 r.ROOM_IMG,
                 l.LOCATION_NAME,
-                COUNT(DISTINCT rm_all.USER_ID) AS MEMBER_COUNT,
+                COUNT(DISTINCT rm.USER_ID) AS MEMBER_COUNT,
                 GROUP_CONCAT(DISTINCT t.TAG_NAME ORDER BY rt.ID ASC) AS TAGS
             FROM ROOMS r
-            ${roommembersJoin}
-            LEFT JOIN ROOMMEMBERS rm_all ON r.ROOM_ID = rm_all.ROOM_ID
             LEFT JOIN LOCATIONS l ON r.ROOM_EVENT_LOCATION = l.LOCATION_ID
+            LEFT JOIN ROOMMEMBERS rm ON r.ROOM_ID = rm.ROOM_ID
             LEFT JOIN ROOMTAGS rt ON r.ROOM_ID = rt.ROOM_ID
             LEFT JOIN TAGS t ON rt.TAG_ID = t.TAG_ID
             ${whereSql}
             GROUP BY r.ROOM_ID
-            ORDER BY ${orderBy}
-            LIMIT ? OFFSET ?
-        `;    
-        const limitNum = parseInt(limit);
-        const pageNum = parseInt(page);
-        const offset = (pageNum - 1) * limitNum;
-        queryParams.push(limitNum, offset);
+            ORDER BY ROOM_STATUS ASC, r.ROOM_EVENT_DATE ASC, r.ROOM_EVENT_START_TIME ASC
+        `;
 
         const rooms = await dbQuery(sql, queryParams);
+        res.json({ success: true, rooms });
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ success: false, message: 'Database error' });
+    }
+});
+// #endregion
+
+// #region --- API ดึงประวัติกิจกรรมที่จบไปแล้ว (History) ---
+router.get('/my-history', async (req, res) => {
+    const token = req.cookies.token;
+    if (!token) return res.json({ success: false, message: 'กรุณาเข้าสู่ระบบ' });
+
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const userId = decoded.id;
+        const { search, date, start_time, end_time, locations, tags } = req.query;
+
+        let whereClauses = [];
+        let queryParams = [];
+
+        // 1. เงื่อนไข "กิจกรรมที่จบไปแล้ว" (เวลาปัจจุบัน เลยเวลาจบกิจกรรมแล้ว)
+        whereClauses.push(`(
+            r.ROOM_EVENT_DATE < CURRENT_DATE() OR 
+            (r.ROOM_EVENT_DATE = CURRENT_DATE() AND r.ROOM_EVENT_END_TIME < CURRENT_TIME())
+        )`);
+
+        // 2. เงื่อนไขการค้นหา (Filter)
+        if (search) {
+            // เช็คก่อนว่าสิ่งที่พิมพ์มาเป็นตัวเลขหรือไม่?
+            const isNumeric = !isNaN(search) && search.trim() !== '';
+
+            if (isNumeric) {
+                // กรณีเป็นตัวเลข: ค้นหาทั้งใน "ชื่อห้อง" หรือ "ไอดีห้อง"
+                // ต้องใส่วงเล็บ () ครอบไว้ เพื่อไม่ให้ตีกับเงื่อนไขอื่น (เช่น วันที่)
+                whereClauses.push("(r.ROOM_TITLE LIKE ? OR r.ROOM_ID = ?)");
+                queryParams.push(`%${search}%`, search);
+            } else {
+                // กรณีเป็นตัวหนังสือ: ค้นหาเฉพาะ "ชื่อห้อง" (เพราะไอดีเป็นตัวเลข ค้นไปก็ไม่เจอ/อาจ error)
+                whereClauses.push("r.ROOM_TITLE LIKE ?");
+                queryParams.push(`%${search}%`);
+            }
+        }
+        if (date) {
+            whereClauses.push("r.ROOM_EVENT_DATE = ?");
+            queryParams.push(date);
+        }
+        if (locations) {
+            const locationNames = locations.split(',').map(name => name.trim()).filter(name => name !== '');
+            if (locationNames.length > 0) {
+                whereClauses.push(`l.LOCATION_NAME IN (?)`);
+                queryParams.push(locationNames);
+            }
+        }
+        if (tags) {
+            const tagList = tags.split(',').map(t => t.trim()).filter(t => t !== '');
+            if (tagList.length > 0) {
+                whereClauses.push(`t.TAG_NAME IN (?)`);
+                queryParams.push(tagList);
+            }
+        }
+
+        const whereSql = whereClauses.length > 0 ? `AND ${whereClauses.join(' AND ')}` : '';
+
+        // SQL Query
+        // ใช้ INNER JOIN กับ ROOMMEMBERS เพื่อดึง "เฉพาะห้องที่ User นี้เข้าร่วม (หรือเป็น Leader)"
+        const sql = `
+            SELECT 
+                r.ROOM_ID,
+                r.ROOM_TITLE,
+                r.ROOM_EVENT_DATE,
+                TIME_FORMAT(r.ROOM_EVENT_START_TIME, '%H:%i') AS FORMAT_START_TIME,
+                TIME_FORMAT(r.ROOM_EVENT_END_TIME, '%H:%i') AS FORMAT_END_TIME,
+                r.ROOM_CAPACITY,
+                r.ROOM_IMG,
+                l.LOCATION_NAME,
+                COUNT(DISTINCT rm_all.USER_ID) AS MEMBER_COUNT,
+                GROUP_CONCAT(DISTINCT t.TAG_NAME) AS TAGS
+            FROM ROOMS r
+            INNER JOIN ROOMMEMBERS rm_me ON r.ROOM_ID = rm_me.ROOM_ID AND rm_me.USER_ID = ? 
+            LEFT JOIN ROOMMEMBERS rm_all ON r.ROOM_ID = rm_all.ROOM_ID
+            LEFT JOIN LOCATIONS l ON r.ROOM_EVENT_LOCATION = l.LOCATION_ID
+            LEFT JOIN ROOMTAGS rt ON r.ROOM_ID = rt.ROOM_ID
+            LEFT JOIN TAGS t ON rt.TAG_ID = t.TAG_ID
+            WHERE 1=1 ${whereSql}
+            GROUP BY r.ROOM_ID
+            ORDER BY r.ROOM_EVENT_DATE DESC, r.ROOM_EVENT_START_TIME DESC
+        `;
+
+        // ใส่ userId เป็น parameter ตัวแรก (สำหรับ rm_me.USER_ID = ?)
+        const finalParams = [userId, ...queryParams];
+
+        const rooms = await dbQuery(sql, finalParams);
         res.json({ success: true, rooms });
 
     } catch (err) {
@@ -814,7 +882,6 @@ router.post('/room/:id/generate-code', async (req, res) => {
         if (roomCheck[0].ROOM_LEADER_ID != userId) return res.json({ success: false, message: 'ไม่มีสิทธิ์ดำเนินการ' });
 
         const room = roomCheck[0];
-        
         if (room.DURATION_MINUTE < 15)
             return res.json({ success: false, message: 'กิจกรรมนี้มีระยะเวลาน้อยกว่า 15 นาที ไม่สามารถเปิดระบบเช็คชื่อได้' });
         if (room.IS_NOT_STARTED === 1)
@@ -828,7 +895,6 @@ router.post('/room/:id/generate-code', async (req, res) => {
         for (let i = 0; i < 6; i++) {
             code += chars.charAt(Math.floor(Math.random() * chars.length));
         }
-
         const sqlUpdate = `
             UPDATE ROOMS 
             SET ROOM_CHECKIN_CODE = ?, 
