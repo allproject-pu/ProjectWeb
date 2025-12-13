@@ -72,23 +72,43 @@ CREATE TABLE ROOMMEMBERS (
 
 -- 7. ตารางจับคู่ห้อง-แท็ก
 CREATE TABLE ROOMTAGS (
-    ID INT AUTO_INCREMENT,
+    ID INT AUTO_INCREMENT PRIMARY KEY,
     ROOM_ID INT,
     TAG_ID INT,
-    PRIMARY KEY (ID, ROOM_ID, TAG_ID),
+    UNIQUE KEY (ROOM_ID, TAG_ID),
     FOREIGN KEY (ROOM_ID) REFERENCES ROOMS(ROOM_ID) ON DELETE CASCADE,
     FOREIGN KEY (TAG_ID) REFERENCES TAGS(TAG_ID) ON DELETE CASCADE
 );
 
 -- 8. ตารางจับคู่ผู้ใช้-แท็ก
 CREATE TABLE USERTAGS (
-    ID INT AUTO_INCREMENT,
+    ID INT AUTO_INCREMENT PRIMARY KEY,
     USER_ID INT,
     TAG_ID INT,
-    PRIMARY KEY (ID, USER_ID, TAG_ID),
+    UNIQUE KEY (USER_ID, TAG_ID),
     FOREIGN KEY (USER_ID) REFERENCES USERS(USER_ID) ON DELETE CASCADE,
     FOREIGN KEY (TAG_ID) REFERENCES TAGS(TAG_ID) ON DELETE CASCADE
 );
+
+-- --- สร้างดัชนี (Indexes) ---
+-- เวลา User เข้าเว็บ มันจะ Sort ตาม วันที่ -> เวลาเริ่ม
+CREATE INDEX idx_rooms_event_sort ON ROOMS(ROOM_EVENT_DATE, ROOM_EVENT_START_TIME);
+-- API /my-created-rooms ใช้ WHERE ROOM_LEADER_ID = ?
+CREATE INDEX idx_rooms_leader ON ROOMS(ROOM_LEADER_ID);
+-- สำหรับการกรองสถานที่ (Filter Location)
+CREATE INDEX idx_rooms_location ON ROOMS(ROOM_EVENT_LOCATION);
+-- สำหรับการค้นหาด้วยชื่อ (Search Title) *หมายเหตุด้านล่าง
+CREATE INDEX idx_rooms_title ON ROOMS(ROOM_TITLE);
+
+-- เราต้องค้นหาว่า User คนนี้ (USER_ID) ไป Join ห้องไหนบ้าง
+CREATE INDEX idx_roommembers_user ON ROOMMEMBERS(USER_ID);
+-- สำหรับการจอยตาราง (เช่น ดูว่า User คนนี้อยู่คณะอะไร)
+CREATE INDEX idx_users_faculty ON USERS(USER_FACULTY);
+
+-- สำหรับการค้นหาว่า "Tag นี้มีห้องไหนบ้าง" (Filter by Tags)
+CREATE INDEX idx_roomtags_tag ON ROOMTAGS(TAG_ID);
+-- สำหรับการค้นหาว่า "Tag นี้มี User คนไหนสนใจบ้าง"
+CREATE INDEX idx_usertags_tag ON USERTAGS(TAG_ID);
 
 -- --- ข้อมูลเริ่มต้น (Seed Data) ---
 INSERT INTO FACULTYS (FACULTY_NAME) VALUES ('ครุศาสตร์อุตสาหกรรมและเทคโนโลยี'),('วิทยาลัยสหวิทยาการ'),('วิทยาศาสตร์'),('วิศวกรรมศาสตร์'),('สถาบันวิทยาการหุ่นยนต์ภาคสนาม'),('สถาปัตยกรรมศาสตร์และการออกแบบ'),('เทคโนโลยีสารสนเทศ');
