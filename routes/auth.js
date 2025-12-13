@@ -103,17 +103,17 @@ router.get('/me', (req, res) => {
         const decoded = jwt.verify(token, JWT_SECRET);
         const sql = `
             SELECT 
-                U.USER_ID, U.USER_EMAIL, U.USER_FNAME, U.USER_LNAME, 
-                U.USER_ROLE, U.USER_IMG, U.USER_CREDIT_SCORE, 
-                U.USER_YEAR, U.USER_DESCRIPTION, U.USER_FACULTY,
-                F.FACULTY_NAME,
-                GROUP_CONCAT(T.TAG_NAME ORDER BY UT.id ASC) AS user_tags
-            FROM USERS U
-            LEFT JOIN FACULTYS F ON U.USER_FACULTY = F.FACULTY_ID
-            LEFT JOIN USERTAGS UT ON U.USER_ID = UT.USER_ID
-            LEFT JOIN TAGS T ON UT.TAG_ID = T.TAG_ID
-            WHERE U.USER_ID = ?
-            GROUP BY U.USER_ID
+                u.USER_ID, u.USER_EMAIL, u.USER_FNAME, u.USER_LNAME, 
+                u.USER_ROLE, u.USER_IMG, u.USER_CREDIT_SCORE, 
+                u.USER_YEAR, u.USER_DESCRIPTION, u.USER_FACULTY,
+                f.FACULTY_NAME,
+                GROUP_CONCAT(t.TAG_NAME ORDER BY ut.id ASC) AS TAG_NAMES
+            FROM USERS u
+            LEFT JOIN FACULTYS f ON u.USER_FACULTY = f.FACULTY_ID
+            LEFT JOIN USERTAGS ut ON u.USER_ID = ut.USER_ID
+            LEFT JOIN TAGS t ON ut.TAG_ID = t.TAG_ID
+            WHERE u.USER_ID = ?
+            GROUP BY u.USER_ID
         `;
         db.query(sql, [decoded.id], (err, results) => {
             // ที่เหลือเป็นการทำ json ส่งข้อมูลกลับไปให้หน้าบ้าน
@@ -123,7 +123,7 @@ router.get('/me', (req, res) => {
                 const user = results[0];
 
                 // แปลง string "Tag1,Tag2" ให้กลับเป็น Array ["Tag1", "Tag2"]
-                const tagsArray = user.user_tags ? user.user_tags.split(',') : [];
+                const tagsArray = user.TAG_NAMES ? user.TAG_NAMES.split(',') : [];
 
                 // ส่งข้อมูลกลับไปให้หน้าบ้าน
                 res.json({
