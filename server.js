@@ -30,41 +30,34 @@ app.get('/', (req, res) => {
     res.redirect('/home-page.html');
 });
 
-cron.schedule('* * * * *', () => {
-    // โค้ดจะทำงานทุกๆ 1 นาที
-    
-    // 1. หัก 5 คะแนน (เฉพาะห้องที่จบแล้ว + ยังไม่เช็คชื่อ + มีรหัสเช็คชื่อตั้งไว้)
-    const deductSql = `
-        UPDATE USERS U
-        JOIN ROOMMEMBERS RM ON U.USER_ID = RM.USER_ID
-        JOIN ROOMS R ON RM.ROOM_ID = R.ROOM_ID
-        SET U.USER_CREDIT_SCORE = GREATEST(U.USER_CREDIT_SCORE - 5, 0)
-        WHERE RM.ROOMMEMBER_STATUS = 'pending' 
-        AND TIMESTAMP(R.ROOM_EVENT_DATE, R.ROOM_EVENT_END_TIME) < NOW()
-        AND R.ROOM_CHECKIN_CODE IS NOT NULL 
-        AND R.ROOM_CHECKIN_CODE != ''; 
-    `;
+// ให้ Server เช็คทุกๆ 5 นาที
+cron.schedule('*/5 * * * *', () => { 
+    console.log('[Cron] เริ่มตรวจสอบคนที่ยังไม่เช็คชื่อ...');
 
-    db.query(deductSql, (err, result) => {
-        if (err) return console.error('Error deduct score:', err);
-        if (result && result.changedRows > 0) {
-            console.log(`[Auto-Deduct] หักคะแนนผู้ที่ไม่เช็คชื่อไปแล้ว ${result.changedRows} คน`);
+    const sql = `
+        UPDATE ROOMMEMBERS rm
+        JOIN USERS u ON rm.USER_ID = u.USER_ID
+        JOIN ROOMS r ON rm.ROOM_ID = r.ROOM_ID
+        SET 
+            u.USER_CREDIT_SCORE = GREATEST(u.USER_CREDIT_SCORE - 5, 0),
+            rm.ROOMMEMBER_STATUS = 'absent'
+        WHERE 
+            rm.ROOMMEMBER_STATUS = 'pending' 
+            AND TIMESTAMP(r.ROOM_EVENT_DATE, r.ROOM_EVENT_END_TIME) < NOW()
+            AND r.ROOM_CHECKIN_CODE IS NOT NULL 
+            AND r.ROOM_CHECKIN_CODE != '';
+    `;
+    db.query(sql, (err, result) => {
+        // ที่เหลือเป็นเช็ค error เฉยๆ
+        if (err) {
+            return console.error('[Cron Error] ไม่สามารถหักคะแนนได้:', err);
         }
 
-        // 2. เปลี่ยนสถานะเป็น 'absent' (ขาด) เพื่อไม่ให้โดนหักซ้ำ
-        const updateStatusSql = `
-            UPDATE ROOMMEMBERS RM
-            JOIN ROOMS R ON RM.ROOM_ID = R.ROOM_ID
-            SET RM.ROOMMEMBER_STATUS = 'absent'
-            WHERE RM.ROOMMEMBER_STATUS = 'pending'
-            AND TIMESTAMP(R.ROOM_EVENT_DATE, R.ROOM_EVENT_END_TIME) < NOW()
-            AND R.ROOM_CHECKIN_CODE IS NOT NULL 
-            AND R.ROOM_CHECKIN_CODE != '';
-        `;
-
-        db.query(updateStatusSql, (err, res) => {
-            if (err) console.error('Error update status:', err);
-        });
+        if (result.changedRows > 0) {
+            console.log(`[Auto-Deduct] ดำเนินการเช็คขาดและหักคะแนนเรียบร้อย: ${result.changedRows} รายการ`);
+        } else {
+            console.log('[Auto-Deduct] ไม่มีรายการต้องดำเนินการ');
+        }
     });
 });
 

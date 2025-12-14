@@ -20,6 +20,36 @@ function dbQuery(sql, params) {
 }
 // #endregion
 
+// #region --- API ดึงรายชื่อคณะทั้งหมด ---
+// ดึงรายชื่อคณะทั้งหมด เพื่อไปแนะนำในเวลากรอกข้อมูลโปรไฟล์
+router.get('/faculties', (req, res) => {
+    db.query('SELECT * FROM FACULTYS', (err, results) => {
+        // ที่เหลือเป็นการส่งข้อมูลกลับไปให้หน้าบ้าน
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ error: 'Database error' });
+        }
+        res.json(results);
+    });
+});
+// #endregion
+
+// #region --- API ดึงรายชื่อ Tag ทั้งหมด ---
+// ดึงรายชื่อ Tag ทั้งหมด
+router.get('/tags', (req, res) => {
+    db.query('SELECT TAG_NAME FROM TAGS', (err, results) => {
+        // ที่เหลือเป็นการส่งข้อมูลกลับไปให้หน้าบ้าน
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ error: 'Database error' });
+        }
+        // ส่งกลับเป็น Array ของชื่อ Tag เช่น ["Calculus", "Coding", ...]
+        const tagList = results.map(row => row.TAG_NAME);
+        res.json(tagList);
+    });
+});
+// #endregion
+
 // #region --- API register --- 
 router.post('/register', async (req, res) => {
     const { email, fullname, lastname, password } = req.body;
@@ -94,6 +124,13 @@ router.post('/login', (req, res) => {
 });
 // #endregion
 
+// #region --- API Logout --- 
+router.post('/logout', (req, res) => {
+    res.clearCookie('token');
+    res.json({ success: true });
+});
+// #endregion
+
 // #region --- API เช็คว่า User ล็อกอินอยู่ไหม (Me) --- 
 router.get('/me', (req, res) => {
     const token = req.cookies.token;
@@ -154,13 +191,6 @@ router.get('/me', (req, res) => {
 });
 // #endregion
 
-// #region --- API Logout --- 
-router.post('/logout', (req, res) => {
-    res.clearCookie('token');
-    res.json({ success: true });
-});
-// #endregion
-
 // #region --- ตั้งค่าการเก็บไฟล์รูปภาพ (Multer Config) --- 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -194,23 +224,15 @@ router.post('/update', upload.single('profile_image'), async (req, res) => {
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         const userId = decoded.id;
-
-        // รับค่า Text จากฟอร์ม
+        // รับค่าจากฟอร์ม
         const { fullname, lastname, faculty, year, about, tags } = req.body;
 
-        // จัดการกรณีที่ faculty เป็นค่าว่าง (ให้เก็บเป็น NULL ในฐานข้อมูล)
         let finalFaculty = faculty;
-        if (faculty === '') {
-            finalFaculty = null;
-        }
+        if (faculty === '') finalFaculty = null;
 
-        // รับค่าไฟล์รูป (ถ้ามีการอัปโหลดใหม่)
-        // ถ้ามีไฟล์ใหม่ ให้เก็บ Path เอาไว้ (ตัด public ออกเพราะเรา serve static ที่ root)
         let imagePath = null;
         if (req.file) imagePath = '/uploads/' + req.file.filename;
 
-        // สร้าง SQL Query แบบ Dynamic (อัปเดตเฉพาะค่าที่ส่งมา)
-        // เทคนิค: ถ้า imagePath มีค่า ให้รวมเข้าไปในการอัปเดตด้วย
         let sql = `UPDATE USERS SET USER_FNAME=?, USER_LNAME=?, USER_FACULTY=?, USER_YEAR=?, USER_DESCRIPTION=?`;
         let params = [fullname, lastname, finalFaculty, year, about];
 
@@ -222,67 +244,35 @@ router.post('/update', upload.single('profile_image'), async (req, res) => {
         sql += ` WHERE USER_ID=?`;
         params.push(userId);
 
-        // รอให้ Update ข้อมูล User เสร็จก่อน
         await dbQuery(sql, params);
 
-        // 2. จัดการ Tags (Logic: ลบของเก่า -> วนลูปใส่ของใหม่)
-        // เช็คว่า "มีการส่งค่า tags มาไหม" (ไม่ว่าจะเป็นข้อความหรือค่าว่าง)
+        // Tags
         if (typeof tags !== 'undefined') {
-            // แปลง string "Tag1,Tag2" เป็น array
-            const tagList = tags.split(',').map(t => t.trim()).filter(t => t !== '');
-            // 2.1 ลบ Tag เดิมของ User คนนี้ออกให้หมดก่อน (Reset)
+            const tagList = tags.split(',');
+            // ลบ Tag เดิมของ User ก่อน
             await dbQuery('DELETE FROM USERTAGS WHERE USER_ID = ?', [userId]);
-            // 2.2 วนลูปเช็คและเพิ่ม Tag ใหม่
+            // ลูปเพิ่ม Tag ใหม่
             for (const tagName of tagList) {
                 let tagId;
-
-                // เช็คว่ามี Tag นี้ในระบบหรือยัง?
+                // เช็คว่ามี Tag นี้ในระบบอยู่แล้วมั้ย
                 const existingTags = await dbQuery('SELECT TAG_ID FROM TAGS WHERE TAG_NAME = ?', [tagName]);
-
                 if (existingTags.length > 0) {
-                    // มีแล้ว -> เอา ID มาใช้
+                    // ถ้ามีแล้วก็ใช้ ID เดิม
                     tagId = existingTags[0].TAG_ID;
                 } else {
-                    // ยังไม่มี -> Insert ใหม่ลงตาราง TAGS
+                    // ถ้าไม่มีก็ให้เพิ่ม Tag ใหม่ลงตาราง TAGS
                     const newTag = await dbQuery('INSERT INTO TAGS (TAG_NAME) VALUES (?)', [tagName]);
                     tagId = newTag.insertId;
                 }
-
-                // จับคู่ User กับ Tag ลงตาราง USERTAGS
                 await dbQuery('INSERT INTO USERTAGS (USER_ID, TAG_ID) VALUES (?, ?)', [userId, tagId]);
             }
         }
+        // ที่เหลือส่งผลลัพธ์กลับไปให้หน้าบ้าน
         res.json({ success: true, message: 'อัปเดตข้อมูลและแท็กสำเร็จ!' });
     } catch (err) {
         console.error(err);
         res.json({ success: false, message: 'Session หมดอายุ' });
     }
-});
-// #endregion
-
-// #region --- API ดึงรายชื่อคณะทั้งหมด ---
-router.get('/faculties', (req, res) => {
-    db.query('SELECT * FROM FACULTYS', (err, results) => {
-        if (err) {
-            console.error(err);
-            return res.status(500).json({ error: 'Database error' });
-        }
-        res.json(results);
-    });
-});
-// #endregion
-
-// #region --- API ดึงรายชื่อ Tag ทั้งหมด ---
-router.get('/tags', (req, res) => {
-    db.query('SELECT TAG_NAME FROM TAGS', (err, results) => {
-        if (err) {
-            console.error(err);
-            return res.status(500).json({ error: 'Database error' });
-        }
-        // ส่งกลับเป็น Array ของชื่อ Tag เช่น ["Calculus", "Coding", ...]
-        const tagList = results.map(row => row.TAG_NAME);
-        res.json(tagList);
-    });
 });
 // #endregion
 
