@@ -95,6 +95,7 @@ router.post('/create-room', upload.single('room_image'), async (req, res) => {
             }
         }
         // ส่วนที่เหลือเป็นการแจ้งเตือนสถานะการสร้างห้อง
+        
         res.json({ success: true, message: 'สร้างห้องกิจกรรมสำเร็จ!', roomId: newRoomId });
     } catch (err) {
         console.error(err);
@@ -539,7 +540,6 @@ router.get('/my-activities', async (req, res) => {
 
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
         const userId = decoded.id;
         const userRole = decoded.role;
         const { type, search, date, start_time, end_time, locations, tags, page = 1, limit = 20 } = req.query;
