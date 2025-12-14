@@ -2,26 +2,26 @@ let currentPage = 1;
 let isLoading = false;
 let hasMore = true;
 let currentFilters = {};
+let pageType = null;
 
 document.addEventListener("DOMContentLoaded", function () {
     const listElement = document.getElementById('rooms-list');
 
     // ตรวจสอบ URL เพื่อกำหนดประเภทกิจกรรม (Created หรือ History)
     const path = window.location.pathname;
-    let initialFilter = {};
 
     if (path.includes('created-room'))
-        initialFilter = { type: 'created' };
+        pageType = 'created';
     else if (path.includes('history'))
-        initialFilter = { type: 'history' };
+        pageType = 'history';
 
-    if (listElement && initialFilter.type) {
-        loadMyActivities(initialFilter);
+    if (listElement && pageType) {
+        loadMyActivities({});
 
         window.addEventListener('scroll', () => {
             if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 100) {
                 if (!isLoading && hasMore) {
-                    loadMyActivities(currentFilters, true); // true = โหมด Append
+                    loadMyActivities(currentFilters, true);
                 }
             }
         });
@@ -36,7 +36,7 @@ export async function loadMyActivities(filterParams = {}, isAppend = false) {
 
     // --- กรณี: โหลดใหม่ (Reset) ---
     if (!isAppend) {
-        currentFilters = filterParams; // จำค่า Filter ไว้
+        currentFilters = { ...filterParams, type: pageType };
         currentPage = 1;
         hasMore = true;
         if (list) {
@@ -74,7 +74,7 @@ export async function loadMyActivities(filterParams = {}, isAppend = false) {
         }
         // --- กรณีไม่พบข้อมูลเลย ---
         if (data.rooms.length === 0) {
-            hasMore = false; // หมดข้อมูลแล้ว
+            hasMore = false;
             if (!isAppend && message) {
                 message.style.display = 'block';
                 message.innerText = 'ไม่พบห้องกิจกรรมตามเงื่อนไขที่ระบุ';
@@ -90,8 +90,7 @@ export async function loadMyActivities(filterParams = {}, isAppend = false) {
             if (data.rooms.length < ITEMS_PER_PAGE) {
                 hasMore = false;
             } else {
-                currentPage++; // เตรียมโหลดหน้าถัดไป
-
+                currentPage++;
                 setTimeout(() => {
                     if (document.body.offsetHeight <= window.innerHeight && hasMore) {
                         console.log('จอใหญ่เกิน... กำลังโหลดเพิ่มอัตโนมัติ');
