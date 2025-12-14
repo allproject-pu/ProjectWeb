@@ -5,7 +5,10 @@ let currentFilters = {};
 
 document.addEventListener('DOMContentLoaded', () => {
     const listElement = document.getElementById('rooms-list');
-
+    const path = window.location.pathname;
+    if (path.includes('created-room') || path.includes('history-page')) {
+        return;
+    }
     if (listElement) {
         loadRooms();
 
