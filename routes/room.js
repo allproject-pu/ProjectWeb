@@ -21,10 +21,10 @@ function dbQuery(sql, params) {
 // #endregion
 
 // #region --- API ดึงรายชื่อสถานที่ --- 
+// ดึงรายชื่อสถานที่หมด
 router.get('/locations', (req, res) => {
-    // ดึงรายชื่อสถานที่หมด
     db.query('SELECT * FROM LOCATIONS', (err, results) => {
-    // ส่วนที่เหลือเป็นเช็ค error เฉยๆ
+    // ที่เหลือเป็นการส่งข้อมูลกลับไปให้หน้าบ้าน
         if (err) {
             console.error(err);
             return res.status(500).json({ error: 'Database error' });
@@ -488,6 +488,7 @@ router.get('/rooms', async (req, res) => {
                     ORDER BY ut.ID ASC
                 `;
                 const userTagResult = await dbQuery(sqlUserTags, [decoded.id]);
+                // ส่วนที่เหลือเป็นการจัดเรียงห้องตาม Tag ของผู้ใช้
 
                 const userTags = userTagResult.map(row => row.TAG_NAME); // ดึงชื่อ Tag มาเป็น Array
 
