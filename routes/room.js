@@ -24,7 +24,7 @@ function dbQuery(sql, params) {
 // ดึงรายชื่อสถานที่หมด
 router.get('/locations', (req, res) => {
     db.query('SELECT * FROM LOCATIONS', (err, results) => {
-    // ที่เหลือเป็นการส่งข้อมูลกลับไปให้หน้าบ้าน
+        // ที่เหลือเป็นการส่งข้อมูลกลับไปให้หน้าบ้าน
         if (err) {
             console.error(err);
             return res.status(500).json({ error: 'Database error' });
@@ -63,7 +63,7 @@ router.post('/create-room', upload.single('room_image'), async (req, res) => {
 
         // ดึงข้อมูลจากฟอร์ม
         const { roomTitle, roomEventStartTime, roomEventEndTime, roomEventDate, roomLocation, roomDescription, roomCapacity, tags } = req.body;
-        
+
         let imagePath = '/Resource/img/bangmod.png';
         if (req.file) imagePath = '/uploads/rooms/' + req.file.filename;
 
@@ -80,8 +80,7 @@ router.post('/create-room', upload.single('room_image'), async (req, res) => {
             VALUES (?, ?, 'present')`, [newRoomId, leaderId]);
         // Tags
         if (typeof tags !== 'undefined') {
-            const tagList = tags.split(',').map(t => t.trim()).filter(t => t !== '');
-
+            const tagList = tags.split(',');
             for (const tagName of tagList) {
                 let tagId;
                 const existingTags = await dbQuery('SELECT TAG_ID FROM TAGS WHERE TAG_NAME = ?', [tagName]);
@@ -94,8 +93,8 @@ router.post('/create-room', upload.single('room_image'), async (req, res) => {
                 await dbQuery('INSERT INTO ROOMTAGS (ROOM_ID, TAG_ID) VALUES (?, ?)', [newRoomId, tagId]);
             }
         }
-        // ส่วนที่เหลือเป็นการแจ้งเตือนสถานะการสร้างห้อง
-        
+        // ที่เหลือเป็นการส่งผลลัพธ์กลับไปให้หน้าบ้าน
+
         res.json({ success: true, message: 'สร้างห้องกิจกรรมสำเร็จ!', roomId: newRoomId });
     } catch (err) {
         console.error(err);
@@ -114,14 +113,14 @@ router.post('/update-room/:id', upload.single('room_image'), async (req, res) =>
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         const userId = decoded.id;
         const userRole = decoded.role;
-
-        // 1. เช็คก่อนว่า User คนนี้เป็นเจ้าของห้องนี้จริงไหม?
+        // ดึงข้อมูลหัวหน้าห้องมาเพื่อตรวจสอบสิทธิ์
         const checkOwner = await dbQuery(`
             SELECT 
                 ROOM_LEADER_ID, 
                 CASE WHEN NOW() >= TIMESTAMP(ROOM_EVENT_DATE, ROOM_EVENT_START_TIME) THEN 1 ELSE 0 END AS IS_STARTED
             FROM ROOMS 
             WHERE ROOM_ID = ?`, [roomId]);
+        // ที่เหลือเป็นการข้อมูลที่ดึงมาไปตรวจสอบว่าUserเป็นเจ้าของห้องนี้มั้ย?
         if (checkOwner.length === 0)
             return res.json({ success: false, message: 'ไม่พบห้องกิจกรรม' });
         const roomInfo = checkOwner[0];
@@ -132,7 +131,6 @@ router.post('/update-room/:id', upload.single('room_image'), async (req, res) =>
 
         const { roomTitle, roomEventDate, roomEventStartTime, roomEventEndTime, roomLocation, roomCapacity, roomDescription, tags } = req.body;
 
-        // 3. จัดการรูปภาพ (ถ้าไม่อัปโหลดใหม่ ให้ใช้รูปเดิม -> ไม่ต้องอัปเดตคอลัมน์ ROOM_IMG)
         let imageUpdateSql = "";
         let params = [roomTitle, roomEventDate, roomEventStartTime, roomEventEndTime, roomLocation, roomCapacity, roomDescription];
 
@@ -141,18 +139,15 @@ router.post('/update-room/:id', upload.single('room_image'), async (req, res) =>
             imageUpdateSql = ", ROOM_IMG = ?";
             params.push(imagePath);
         }
-
-        // ใส่ roomId ปิดท้าย params
         params.push(roomId);
 
-        // 4. อัปเดตตาราง ROOMS
+        // อัปเดตตาราง ROOMS
         const sql = `
             UPDATE ROOMS 
             SET ROOM_TITLE=?, ROOM_EVENT_DATE=?, ROOM_EVENT_START_TIME=?, ROOM_EVENT_END_TIME=?, 
                 ROOM_EVENT_LOCATION=?, ROOM_CAPACITY=?, ROOM_DESCRIPTION=? ${imageUpdateSql}
             WHERE ROOM_ID = ?
         `;
-
         await dbQuery(sql, params);
 
         // 5. จัดการ Tags (ลบของเก่า -> ใส่ของใหม่)
@@ -193,8 +188,7 @@ router.delete('/delete-room/:id', async (req, res) => {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         const userId = decoded.id;
         const userRole = decoded.role;
-
-        // 1. เช็คสิทธิ์ (ต้องเป็นเจ้าของ หรือ Admin)
+        // ดึงข้อมูลหัวหน้าห้องมาเพื่อตรวจสอบสิทธิ์
         const checkOwner = await dbQuery(`
             SELECT 
                 ROOM_LEADER_ID, 
@@ -202,7 +196,7 @@ router.delete('/delete-room/:id', async (req, res) => {
                 CASE WHEN NOW() >= TIMESTAMP(ROOM_EVENT_DATE, ROOM_EVENT_START_TIME) THEN 1 ELSE 0 END AS IS_STARTED
             FROM ROOMS 
             WHERE ROOM_ID = ?`, [roomId]);
-
+        // ที่เหลือเป็นการข้อมูลที่ดึงมาไปตรวจสอบว่าUserเป็นเจ้าของห้องนี้มั้ย? และลบไฟล์รูปภาพถ้าใส่ไว้
         if (checkOwner.length === 0)
             return res.json({ success: false, message: 'ไม่พบห้องกิจกรรม' });
         const roomInfo = checkOwner[0];
@@ -224,8 +218,8 @@ router.delete('/delete-room/:id', async (req, res) => {
             }
         }
 
-        // 3. ลบข้อมูลจาก Database 
-        // (เนื่องจากตั้ง Foreign Key ON DELETE CASCADE ไว้แล้ว ข้อมูลใน ROOMMEMBERS, ROOMTAGS จะหายไปเอง)
+        // ลบข้อมูลจาก Database 
+        // (เราตั้ง Foreign Key ON DELETE CASCADE ไว้แล้ว ดังนั้นข้อมูลใน ROOMMEMBERS, ROOMTAGS จะหายไปเอง)
         await dbQuery('DELETE FROM ROOMS WHERE ROOM_ID = ?', [roomId]);
 
         res.json({ success: true, message: 'ลบห้องกิจกรรมเรียบร้อยแล้ว' });
@@ -285,13 +279,12 @@ router.post('/room/:id/join', async (req, res) => {
 router.post('/room/:id/leave', async (req, res) => {
     const token = req.cookies.token;
     if (!token) return res.json({ success: false, message: 'กรุณาเข้าสู่ระบบ' });
-
+    //(เจ้าของห้ามออก ต้องลบห้องอย่างเดียว)
     const roomId = req.params.id;
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         const userId = decoded.id;
-
-        // เช็คก่อนว่าเป็นเจ้าของห้องไหม? (เจ้าของห้ามออก ต้องลบห้องอย่างเดียว)
+        // ดึงข้อมูลหัวหน้าห้องมาเพื่อตรวจสอบสิทธิ์
         const room = await dbQuery(`
             SELECT ROOM_LEADER_ID, ROOM_EVENT_DATE, ROOM_EVENT_START_TIME,
                 CASE 
@@ -305,7 +298,7 @@ router.post('/room/:id/leave', async (req, res) => {
         if (room[0].IS_STARTED === 1)
             return res.json({ success: false, message: 'ไม่สามารถยกเลิกได้ เนื่องจากกิจกรรมเริ่มไปแล้ว' });
 
-        // ลบออกจากตาราง
+        // ลบผู้ใช้ออกจากตาราง ROOMMEMBERS
         await dbQuery('DELETE FROM ROOMMEMBERS WHERE ROOM_ID = ? AND USER_ID = ?', [roomId, userId]);
 
         res.json({ success: true, message: 'ยกเลิกการเข้าร่วมแล้ว' });
@@ -543,7 +536,7 @@ router.get('/my-activities', async (req, res) => {
         const userId = decoded.id;
         const userRole = decoded.role;
         const { type, search, date, start_time, end_time, locations, tags, page = 1, limit = 20 } = req.query;
-        
+
         let whereClauses = [];
         let queryParams = [];
         let roommembersJoin = "";
@@ -565,7 +558,7 @@ router.get('/my-activities', async (req, res) => {
                 queryParams.push(userId);
             }
             orderBy = "ROOM_STATUS ASC, r.ROOM_EVENT_DATE ASC, r.ROOM_EVENT_START_TIME ASC";
-            
+
         } else {
             return res.json({ success: false, message: 'ไม่พบหน้าที่ต้องการ' });
         }
@@ -643,13 +636,13 @@ router.get('/my-activities', async (req, res) => {
             GROUP BY r.ROOM_ID
             ORDER BY ${orderBy}
             LIMIT ? OFFSET ?
-        `;    
+        `;
         const limitNum = parseInt(limit);
         const pageNum = parseInt(page);
         const offset = (pageNum - 1) * limitNum;
         queryParams.push(limitNum, offset);
         const rooms = await dbQuery(sql, queryParams);
-        
+
         res.json({ success: true, rooms });
 
     } catch (err) {
@@ -757,8 +750,7 @@ router.get('/room/:id', (req, res) => {
 // #region --- API ดึงรายชื่อสมาชิกในห้องกิจกรรม (room/:id/members) --- 
 router.get('/room/:id/members', (req, res) => {
     const roomId = req.params.id;
-
-    // Join ตาราง ROOMMEMBERS กับ USERS เพื่อเอารูปและชื่อ
+    // ดึงข้อมูลสมาชิกในห้องกิจกรรม
     const sql = `
         SELECT 
             u.USER_ID, u.USER_FNAME, u.USER_LNAME, u.USER_IMG, u.USER_CREDIT_SCORE , rm.ROOMMEMBER_STATUS, rm.ROOMMEMBER_CHECKIN_TIME
@@ -766,7 +758,7 @@ router.get('/room/:id/members', (req, res) => {
         JOIN USERS u ON rm.USER_ID = u.USER_ID
         WHERE rm.ROOM_ID = ?
     `;
-
+    // ที่เหลือเป็นการเช็ค error หรือส่งข้อมูลสมาชิกกลับ
     db.query(sql, [roomId], (err, results) => {
         if (err) {
             console.error(err);
@@ -798,7 +790,8 @@ router.post('/room/:id/generate-code', async (req, res) => {
                     ELSE 0 
                 END AS IS_NOT_STARTED,
                 TIMESTAMPDIFF(MINUTE, NOW(), TIMESTAMP(ROOM_EVENT_DATE, ROOM_EVENT_END_TIME)) AS MINUTES_UNTIL_END,
-                TIMESTAMPDIFF(MINUTE, TIMESTAMP(ROOM_EVENT_DATE, ROOM_EVENT_START_TIME), TIMESTAMP(ROOM_EVENT_DATE, ROOM_EVENT_END_TIME)) AS DURATION_MINUTE
+                TIMESTAMPDIFF(MINUTE, TIMESTAMP(ROOM_EVENT_DATE, ROOM_EVENT_START_TIME)
+                                    , TIMESTAMP(ROOM_EVENT_DATE, ROOM_EVENT_END_TIME)) AS DURATION_MINUTE
             FROM ROOMS 
             WHERE ROOM_ID = ?
             `;
@@ -812,7 +805,7 @@ router.post('/room/:id/generate-code', async (req, res) => {
         if (room.IS_NOT_STARTED === 1)
             return res.json({ success: false, message: 'ยังไม่ถึงเวลาเริ่มกิจกรรม (กรุณารอให้ถึงเวลาก่อน)' });
         if (room.MINUTES_UNTIL_END <= 10)
-            return res.json({ success: false, message: 'ไม่สามารถเปิดระบบเช็คชื่อได้ เนื่องจากเหลือเวลาทำกิจกรรมน้อยกว่า 10 นาที หรือกิจกรรมจบไปแล้ว' });
+            return res.json({ success: false, message: 'ไม่สามารถเปิดเช็คชื่อได้ เนื่องจากเหลือเวลาทำกิจกรรมน้อยกว่า 10 นาที หรือกิจกรรมจบไปแล้ว' });
 
         // สุ่มรหัส 6 หลัก (ตัวอักษรใหญ่ + ตัวเลข)
         const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
