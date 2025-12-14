@@ -35,18 +35,18 @@ async function loadGlobalUserData() {
                 ? `<span class="material-symbols-outlined" style="color: #FFD700; margin-left: 5px; vertical-align: middle; font-size: 1.1em;" title="ผู้ดูแลระบบ">crown</span>` : '';
 
             // 1. อัปเดต Sidebar & Header
-            if (sidebarUserName) sidebarUserName.textContent = firstName;
+            if (sidebarUserName) sidebarUserName.textContent = firstName + adminBadge;
             if (sidebarUserEmail) sidebarUserEmail.textContent = u.email;
             if (sidebarUserCredit) sidebarUserCredit.textContent = u.credit;
             sidebarImgs.forEach(img => img.src = imgSrc);
 
             // 2. อัปเดต Dropdown
-            dropdownNames.forEach(el => el.textContent = fullName);
+            dropdownNames.forEach(el => el.innerHTML = fullName + adminBadge);
             dropdownEmails.forEach(el => el.textContent = u.email);
             dropdownImgs.forEach(img => img.src = imgSrc);
 
             // 3. อัปเดตหน้า "บัญชีของฉัน" (ถ้ามี Element เหล่านี้อยู่)
-            if (myAccountName) myAccountName.textContent = fullName;
+            if (myAccountName) myAccountName.innerHTML = fullName + adminBadge;
             if (myAccountEmail) myAccountEmail.textContent = u.email;
             if (myAccountEducation) {
                 // ตัวอย่าง: "คณะวิศวกรรมศาสตร์ ระดับชั้นปีที่ 3"
