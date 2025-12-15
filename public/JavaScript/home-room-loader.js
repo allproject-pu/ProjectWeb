@@ -28,7 +28,7 @@ export async function loadRooms(filterParams = {}, isAppend = false) {
     if (isLoading) return; // ป้องกันการเรียกซ้ำ
     const list = document.getElementById('rooms-list');
     const message = document.getElementById('message');
-    const ITEMS_PER_PAGE = 20; // จำนวนห้องต่อหน้า
+    const ITEMS_PER_PAGE = 12; // จำนวนห้องต่อหน้า
 
     // --- กรณี: โหลดใหม่ (กดค้นหา หรือ เข้าหน้าเว็บครั้งแรก) ---
     if (!isAppend) {

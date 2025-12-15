@@ -32,7 +32,7 @@ export async function loadMyActivities(filterParams = {}, isAppend = false) {
     if (isLoading) return;
     const list = document.getElementById('rooms-list');
     const message = document.getElementById('message');
-    const ITEMS_PER_PAGE = 20;
+    const ITEMS_PER_PAGE = 12;
 
     // --- กรณี: โหลดใหม่ (Reset) ---
     if (!isAppend) {
